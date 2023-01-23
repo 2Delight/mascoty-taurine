@@ -58,7 +58,7 @@ fn main() {
             fps: 30,
         },
     };
-    
+
     info!("Config: {:?}", conf);
 
     debug!("Getting devices");

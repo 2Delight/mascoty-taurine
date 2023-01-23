@@ -33,7 +33,7 @@ fn voice_ml() -> (String, u8) {
 
 pub fn get_mascot(devices: &Devices) -> Mascot {
     debug!("Getting mascot");
-    // let input = panic_error!(get_input(devices), "getting input");
+    let input = panic_error!(get_input(devices), "getting input");
 
     debug!("Initializing mascot");
     let mut mascot = Mascot::default();
