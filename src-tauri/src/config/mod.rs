@@ -26,13 +26,36 @@ pub struct Camera {
     pub fps: u32,
 }
 
-pub fn import_config(path: &str) -> Result<Config, Box<dyn std::error::Error>> {
+pub fn import_config(path: &str) -> Config {
     debug!("Reading config file");
-    let file = File::open(path)?;
+    let file = match File::open(path) {
+        Ok(file) => file,
+        Err(err) => {
+            debug!("Failed to read config file, using default one, {}", err);
+            return init_standard_config();
+        },
+    };
 
     debug!("Deserializing YAML");
     match serde_yaml::from_reader(file) {
-        Ok(conf) => Ok(conf),
-        Err(err) => Err(Box::new(err)),
+        Ok(conf) => conf,
+        Err(err) => {
+            debug!("Failed to pass config file, using default one, {}", err);
+            init_standard_config()
+        },
+    }
+}
+
+fn init_standard_config() -> Config {
+    Config {
+        service: Service{
+            port: 8080,
+            url: "127.0.0.1".to_string(),
+        },
+        camera: Camera {
+            height: 720,
+            width: 1280,
+            fps: 30,
+        },
     }
 }

@@ -46,7 +46,6 @@ fn main() {
     };
 
     debug!("Config parsing");
-    // let conf = panic_error!(import_config("src/config/config.yaml"), "config parsing");
     let conf = Config {
         service: Service{
             port: 8080,
