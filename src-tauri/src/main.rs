@@ -17,7 +17,7 @@ mod input;
 mod mascot;
 mod utils;
 
-use crate::config::import_config;
+use crate::config::{import_config, Camera, Config, Service};
 use crate::input::get_devices;
 
 use dotenv::dotenv;
@@ -46,7 +46,19 @@ fn main() {
     };
 
     debug!("Config parsing");
-    let conf = panic_error!(import_config("src/config/config.yaml"), "config parsing");
+    // let conf = panic_error!(import_config("src/config/config.yaml"), "config parsing");
+    let conf = Config {
+        service: Service{
+            port: 8080,
+            url: "127.0.0.1".to_string(),
+        },
+        camera: Camera {
+            height: 720,
+            width: 1280,
+            fps: 30,
+        },
+    };
+    
     info!("Config: {:?}", conf);
 
     debug!("Getting devices");

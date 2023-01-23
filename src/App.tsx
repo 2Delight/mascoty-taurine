@@ -14,7 +14,6 @@ function App() {
   const [msg, setMsg] = useState("");
 
   async function get_mascot() {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
     setMsg(await invoke("get_mascot", {}));
   }
 
