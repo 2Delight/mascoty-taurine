@@ -1,0 +1,33 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Build
+build/
+target/
+
+# Lock
+package-lock.json
+Cargo.lock
+
+# Editor directories and files
+.vscode/
+.idea/
+.fleet/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Other
+node_modules/
+dist
+dist-ssr
+*.local
