@@ -46,17 +46,7 @@ fn main() {
     };
 
     debug!("Config parsing");
-    let conf = Config {
-        service: Service{
-            port: 8080,
-            url: "127.0.0.1".to_string(),
-        },
-        camera: Camera {
-            height: 720,
-            width: 1280,
-            fps: 30,
-        },
-    };
+    let conf = import_config("src/config/config.yaml");
 
     info!("Config: {:?}", conf);
 
