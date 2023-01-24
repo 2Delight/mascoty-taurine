@@ -17,7 +17,7 @@ mod input;
 mod mascot;
 mod utils;
 
-use crate::config::{import_config, Camera, Config, Service};
+use crate::config::{import_config};
 use crate::input::get_devices;
 
 use dotenv::dotenv;
