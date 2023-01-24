@@ -3,7 +3,7 @@ import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 
-type TMascot = {
+interface IMascot {
   blink: boolean;
   emotion: string;
   lips: boolean;
@@ -11,39 +11,33 @@ type TMascot = {
 }
 
 function App() {
-  const [msg, setMsg] = useState("");
+  const [mascot, setMascot] = useState({
+    blink: false,
+    emotion: "",
+    lips: false,
+    voice: "",
+});
 
   async function get_mascot() {
-    setMsg(await invoke("get_mascot", {}));
+    setMascot(await invoke("get_mascot", {}));
+    
   }
 
   return (
     <div className="container">
-      <h1>Welcome to Tauri!</h1>
-
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      
+      <img src={"./pics/face.png"} className="image vite" style={{ position: "absolute", top: "100px", zIndex: 1, height: "100%", width: "100%", objectFit: "contain"}} />
+      <img src={mascot.blink?"./pics/eyes_c.png": "./pics/eyes_o.png"} className="image vite" style={{ position: "absolute", top: "100px", zIndex: 2, height: "100%", width: "100%", objectFit: "contain", }} />
+      <img src={mascot.lips? "./pics/mouth_c.png": "./pics/mouth_o.png"} className="image vite" style={{ position: "absolute", top: "100px", zIndex: 3, height: "100%", width: "100%", objectFit: "contain", }} />
+      <div>
+        <button type="button" onClick={get_mascot} style={{ zIndex: 4 }}>
+          Get mascot
+        </button>
       </div>
 
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <div className="row">
-        <div>
-          <button type="button" onClick={get_mascot}>
-            Get mascot
-          </button>
-        </div>
-      </div>
-      <p>{JSON.stringify(msg)}</p>
+      <p>{"BLINK: "+mascot.blink + " | EMOTION: " + mascot.emotion + " |  LIPS: "  +mascot.lips + " | VOICE: " + mascot.voice}</p>
     </div>
+
   );
 }
 
