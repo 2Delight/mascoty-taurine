@@ -21,4 +21,4 @@ jobs:
         uses: actions/setup-node@v3
       
       - name: Tauri Build
-        uses: npx tauri build
+        run: npx tauri build
