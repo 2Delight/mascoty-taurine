@@ -1,6 +1,6 @@
 #[macro_export]
 macro_rules! check_error {
-    ($e:expr, $s:expr) => {
+    ($e:expr, $s:expr $(,)?) => {
         match $e {
             Ok(val) => {
                 crate::debug!("Successfully complited {}", $s);
@@ -16,7 +16,7 @@ macro_rules! check_error {
 
 #[macro_export]
 macro_rules! panic_error {
-    ($e:expr, $s:expr) => {
+    ($e:expr, $s:expr $(,)?) => {
         match $e {
             Ok(val) => {
                 crate::debug!("Successfully completed {}", $s);

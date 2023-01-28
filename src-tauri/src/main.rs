@@ -30,15 +30,15 @@ fn get_mascot(state: tauri::State<Devices>) -> mascot::Mascot {
 }
 
 #[tauri::command]
-fn set_fps(fps: u8, state: tauri::State<Devices>) {
+fn set_fps(fps: u32, state: tauri::State<Devices>) {
+    state.set_fps(fps);
 }
 
 fn main() {
     match SimpleLogger::new()
         .with_level(log::LevelFilter::Debug)
-        .init()
-    {
-        Ok(()) => {}
+        .init() {
+        Ok(()) => {},
         Err(err) => panic!("Cannot initialize logger: {:?}", err),
     };
 
@@ -49,7 +49,7 @@ fn main() {
 
     debug!("Getting devices");
 
-    let devices = panic_error!(get_devices(&conf), "getting devices");
+    let devices = panic_error!(get_devices(conf.clone()), "getting devices");
 
     tauri::Builder::default()
         .manage(devices)
