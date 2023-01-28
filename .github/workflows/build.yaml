@@ -3,16 +3,22 @@ name: Build
 
 on:
   push:
-    branches: [ "master", "ci" ]
+    branches: [
+      "master",
+      "ci",
+    ]
   pull_request:
-    branches: [ "master" ]
+    branches: [
+      "master",
+      "ci",
+    ]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  rust:
-    runs-on: ubuntu-latest
+  app:
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v3
