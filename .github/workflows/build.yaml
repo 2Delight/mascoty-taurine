@@ -28,8 +28,11 @@ jobs:
       
       - name: Update Node.js
         run: npm install
+
+      - name: Tauri debug build
+        run: npx tauri dev
       
-      - name: Tauri Build
+      - name: Tauri release build
         run: npx tauri build
   
   # windows:
