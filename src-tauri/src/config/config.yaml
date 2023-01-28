@@ -1,6 +1,3 @@
-service:
-  url: 127.0.0.1
-  port: 50051
 camera:
   height: 720
   width: 1280

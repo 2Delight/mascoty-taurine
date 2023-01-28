@@ -17,7 +17,7 @@ mod input;
 mod mascot;
 mod utils;
 
-use crate::config::{import_config, Camera, Config, Service};
+use crate::config::{import_config};
 use crate::input::get_devices;
 
 use dotenv::dotenv;
@@ -29,6 +29,10 @@ use simple_logger::SimpleLogger;
 #[tauri::command]
 fn get_mascot(state: tauri::State<Devices>) -> mascot::Mascot {
     mascot::get_mascot(&state)
+}
+
+#[tauri::command]
+fn set_fps(fps: u8, state: tauri::State<Devices>) {
 }
 
 fn main() {
@@ -46,7 +50,7 @@ fn main() {
     };
 
     debug!("Config parsing");
-    let conf = import_config("src/config/config.yaml");
+    let conf = panic_error!(import_config(), "parsing config");
 
     info!("Config: {:?}", conf);
 
