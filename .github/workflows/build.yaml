@@ -3,7 +3,7 @@ name: Build
 
 on:
   push:
-    branches: [ "master", ci ]
+    branches: [ "master", "ci" ]
   pull_request:
     branches: [ "master" ]
 
@@ -21,4 +21,4 @@ jobs:
         uses: actions/setup-node@v3
       
       - name: Tauri Build
-        run: npx tauri build
+        run: npx tauri dev
