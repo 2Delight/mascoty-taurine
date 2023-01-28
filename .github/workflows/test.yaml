@@ -1,0 +1,33 @@
+
+name: Test
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install ProtocolBuffers
+        run: sudo apt install -y protobuf-compiler
+      
+      # - name: Debug Build
+      #   run: cargo build --verbose --verbose
+      #   working-directory: builder
+
+      # - name: Release Build
+      #   run: cargo build --release --verbose --verbose
+      #   working-directory: builder
+
+      - name: Test
+        run: cargo test --verbose --verbose
+        working-directory: builder
