@@ -31,6 +31,10 @@ fn get_mascot(state: tauri::State<Devices>) -> mascot::Mascot {
     mascot::get_mascot(&state)
 }
 
+#[tauri::command]
+fn set_fps(fps: u8, state: tauri::State<Devices>) {
+}
+
 fn main() {
     match SimpleLogger::new()
         .with_level(log::LevelFilter::Debug)
@@ -46,7 +50,7 @@ fn main() {
     };
 
     debug!("Config parsing");
-    let conf = import_config("src/config/config.yaml");
+    let conf = panic_error!(import_config(), "parsing config");
 
     info!("Config: {:?}", conf);
 
