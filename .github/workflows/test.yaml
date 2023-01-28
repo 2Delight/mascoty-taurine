@@ -3,7 +3,7 @@ name: Test
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", ci ]
   pull_request:
     branches: [ "master" ]
 
@@ -30,4 +30,4 @@ jobs:
 
       - name: Test
         run: cargo test --verbose --verbose
-        working-directory: builder
+        working-directory: src-tauri
