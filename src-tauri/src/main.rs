@@ -20,7 +20,6 @@ mod utils;
 use crate::config::{import_config};
 use crate::input::get_devices;
 
-use dotenv::dotenv;
 use input::Devices;
 use log::{debug, error, info, warn};
 use simple_logger::SimpleLogger;
@@ -42,11 +41,6 @@ fn main() {
     {
         Ok(()) => {}
         Err(err) => panic!("Cannot initialize logger: {:?}", err),
-    };
-
-    match dotenv().ok() {
-        Some(_) => debug!("Successfully imported data from .env"),
-        None => debug!("Failed to work with .env"),
     };
 
     debug!("Config parsing");
