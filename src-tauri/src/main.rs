@@ -3,7 +3,6 @@
     windows_subsystem = "windows"
 )]
 
-extern crate dotenv;
 extern crate log;
 extern crate nokhwa;
 extern crate rand;
