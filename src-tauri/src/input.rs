@@ -12,6 +12,17 @@ use log::{debug, error, info, warn};
 
 pub struct Devices {
     camera: Mutex<Camera>,
+    conf: Mutex<Config>,
+}
+
+impl Devices {
+    pub fn set_fps(&self, fps: u32) {
+        let mut conf_guard = self.conf.lock().unwrap();
+        conf_guard.camera.fps = fps;
+
+        let mut cam_guard = self.camera.lock().unwrap();
+        *cam_guard = new_camera(&conf_guard).unwrap();
+    }
 }
 
 unsafe impl Sync for Devices {}
@@ -20,7 +31,7 @@ unsafe impl Send for Devices {}
 
 pub struct Input {}
 
-pub fn get_devices(config: &Config) -> Result<Devices, NokhwaError> {
+fn new_camera(config: &Config) -> Result<Camera, NokhwaError> {
     debug!("Getting devices");
     let cams = query(ApiBackend::Auto)?;
 
@@ -49,11 +60,15 @@ pub fn get_devices(config: &Config) -> Result<Devices, NokhwaError> {
     
     debug!("Openning stream");
     camera.open_stream()?;
+    Ok(camera)
+}
 
+pub fn get_devices(config: Config) -> Result<Devices, NokhwaError> {
     debug!("Camera has been initialized");
     Ok(
         Devices {
-            camera: Mutex::new(camera),
+            camera: Mutex::new(new_camera(&config).unwrap()),
+            conf: Mutex::new(config),
         },
     )
 }
