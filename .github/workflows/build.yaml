@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-node@v3
       
       - name: Update Node.js
-        uses: npm install
+        run: npm install
       
       - name: Tauri Build
         run: npx tauri build
