@@ -1,0 +1,48 @@
+
+name: Build
+
+on:
+  push:
+    branches: [
+      "master",
+      "ci",
+    ]
+  pull_request:
+    branches: [
+      "master",
+      "ci",
+    ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  macos:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+      
+      - name: Update Node.js
+        run: npm install
+      
+      - name: Tauri Build
+        run: npx tauri build
+  
+  windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+      
+      - name: Update Node.js
+        run: npm install
+      
+      - name: Tauri Build
+        run: npx tauri build

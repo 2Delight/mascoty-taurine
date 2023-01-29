@@ -3,7 +3,6 @@
     windows_subsystem = "windows"
 )]
 
-extern crate dotenv;
 extern crate log;
 extern crate nokhwa;
 extern crate rand;
@@ -17,10 +16,9 @@ mod input;
 mod mascot;
 mod utils;
 
-use crate::config::{import_config, Camera, Config, Service};
+use crate::config::{import_config};
 use crate::input::get_devices;
 
-use dotenv::dotenv;
 use input::Devices;
 use log::{debug, error, info, warn};
 use simple_logger::SimpleLogger;
@@ -31,28 +29,27 @@ fn get_mascot(state: tauri::State<Devices>) -> mascot::Mascot {
     mascot::get_mascot(&state)
 }
 
+#[tauri::command]
+fn set_fps(fps: u32, state: tauri::State<Devices>) {
+    state.set_fps(fps);
+}
+
 fn main() {
     match SimpleLogger::new()
         .with_level(log::LevelFilter::Debug)
-        .init()
-    {
-        Ok(()) => {}
+        .init() {
+        Ok(()) => {},
         Err(err) => panic!("Cannot initialize logger: {:?}", err),
     };
 
-    match dotenv().ok() {
-        Some(_) => debug!("Successfully imported data from .env"),
-        None => debug!("Failed to work with .env"),
-    };
-
     debug!("Config parsing");
-    let conf = import_config("src/config/config.yaml");
+    let conf = panic_error!(import_config(), "parsing config");
 
     info!("Config: {:?}", conf);
 
     debug!("Getting devices");
 
-    let devices = panic_error!(get_devices(&conf), "getting devices");
+    let devices = panic_error!(get_devices(conf.clone()), "getting devices");
 
     tauri::Builder::default()
         .manage(devices)
