@@ -4,12 +4,15 @@ import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 import { flushSync } from 'react-dom';
 import { setIntervalAsync, clearIntervalAsync } from 'set-interval-async';
-import { Button, Card, CardActions, CardContent, createTheme, FormControl, Grid, InputLabel, List, ListItem, ListItemButton, ListItemIcon, MenuItem, Select, Slider, Stack, ThemeProvider, Typography } from "@mui/material";
+import { Button, Card, CardActions, CardContent, createTheme, FormControl, Grid, InputLabel, List, ListItem, ListItemButton, ListItemIcon, MenuItem, Select, SelectChangeEvent, Slider, Stack, ThemeProvider, Typography } from "@mui/material";
 import { AspectRatio, VolumeDown, VolumeUp } from "@mui/icons-material";
 import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
+import VisibilityOffTwoToneIcon from '@mui/icons-material/VisibilityOffTwoTone';
 import DeleteOutlineTwoToneIcon from '@mui/icons-material/DeleteOutlineTwoTone';
 import CreateTwoToneIcon from '@mui/icons-material/CreateTwoTone';
 import AddCircleOutlineTwoToneIcon from '@mui/icons-material/AddCircleOutlineTwoTone';
+import KeyboardVoiceTwoToneIcon from '@mui/icons-material/KeyboardVoiceTwoTone';
+import CameraAltTwoToneIcon from '@mui/icons-material/CameraAltTwoTone';
 import { minHeight, minWidth } from "@mui/system";
 import React from "react";
 
@@ -34,10 +37,73 @@ const theme = createTheme({
           },
           '&:hover': {
             backgroundColor: '#767676',
-          }
+          },
         },
       },
     },
+    MuiSelect: {
+      styleOverrides: {
+        select: {
+          // backgroundColor: "black",
+          borderColor: "black",
+          filter: "",
+          padding: 7,
+        },
+        outlined: {
+          borderColor: "black",
+        }
+
+      }
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+
+          select: {
+            '& .MuiOutlinedInput-notchedOutline': {
+              border: 'none',
+            },
+          },
+
+          borderRadius: 4,
+          backgroundColor: "#808080",
+          fontSize: 20,
+          color: "white",
+          width: "100%",
+          '&.Mui-selected': {
+            backgroundColor: '#616161',
+            '&:hover': {
+              backgroundColor: '#494949',
+            }
+          },
+          '&:input': {
+            padding: 0,
+            borderColor: "black"
+          },
+          '&:focus': {
+            borderRadius: 4,
+            backgroundColor: '#C4C1C1',
+            borderColor: '#C4C1C1',
+            boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+          },
+          '&:hover': {
+            backgroundColor: '#767676',
+          },
+          '&.MuiOutlinedInput-notchedOutline': {
+            borderColor: 'white',
+          },
+        },
+      }
+    },
+    MuiList: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#808080",
+          borders: 0,
+          color: "white"
+        }
+      }
+    }
   },
 });
 
@@ -84,6 +150,8 @@ function SelectedListItem() {
 }
 
 function Emotion() {
+  const [visible, setVisible] = useState(true)
+
   return <div style={{ display: "flex", flexDirection: "row", width: "100%", borderRadius: "5px" }}>
     <a style={{
       margin: 0,
@@ -93,7 +161,14 @@ function Emotion() {
     <div style={{
       flex: 4
     }}></div>
-    <VisibilityTwoToneIcon className="eye"  onClick={() => {console.log("click")}}/>
+    <div onClick={() => {
+      setVisible(!visible)
+      console.log(visible)
+    }}>
+      {visible && <VisibilityTwoToneIcon className="eye" />}
+      {!visible && <VisibilityOffTwoToneIcon className="eye" />}
+    </div>
+
 
   </div>
 }
@@ -185,6 +260,28 @@ function Emo() {
   </div>
 }
 
+function SelectLabels() {
+  const [age, setAge] = React.useState('');
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setAge(event.target.value);
+  };
+
+  return (
+    <div style={{ flex: 4 }}>
+      <Select
+        value={age}
+        onChange={handleChange}
+        displayEmpty
+      >
+        <MenuItem value={10}>Ten</MenuItem>
+        <MenuItem value={20}>Twenty</MenuItem>
+        <MenuItem value={30}>Thirty</MenuItem>
+      </Select>
+    </div>
+  );
+}
+
 function App() {
   const [mascot, setMascot] = useState({
     blink: false,
@@ -220,7 +317,6 @@ function App() {
             {/* <h1 style={{}}>emotionsNparts</h1> */}
             <Emo></Emo>
             <Emo></Emo>
-
           </div>
 
           <div className="settings" style={{
@@ -229,7 +325,20 @@ function App() {
             minWidth: 400,
             flex: 2,
           }}>
-            settings
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <div style={{ display: "flex", flexDirection: "row", borderRadius: "20px", backgroundColor: "#E6E6E6", justifyContent: "center", alignItems: "center", flex: 1, margin: 4 }}>
+                  <KeyboardVoiceTwoToneIcon className="dumbIcon" />
+                  <SelectLabels />
+                </div>
+                {/* <div style={{ display: "flex", flexDirection: "row", borderRadius: "20px", backgroundColor: "#E6E6E6", justifyContent: "center", alignItems: "center", flex: 1, margin: 4 }}>
+                  <CameraAltTwoToneIcon  />
+                  <SelectLabels />
+                </div> */}
+              </div>
+
+            </div>
+
           </div>
 
           <div className="mascotPlace" style={{

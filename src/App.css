@@ -40,10 +40,20 @@
 .icon {
   color: black;
   cursor: pointer;
+  justify-content: center;
+  align-items: center;
   margin-left: 10px;
 }
 .icon:hover {
   color: rgb(141, 142, 148);
+}
+
+.dumbIcon {
+  color: black;
+  /* margin-left: 10px; */
+  height: 30px;
+  min-width: 50px;
+  min-height: 40px;
 }
 
 .eye {
