@@ -5,3 +5,58 @@
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafb);
 }
+
+.main {
+  display: flex;
+  min-height: 100%;
+  justify-content: center;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #808080;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(59, 59, 59);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(59, 59, 59);
+}
+
+.listSelected {
+  background-color: #ffa600;
+}
+
+.icon {
+  color: black;
+  cursor: pointer;
+  margin-left: 10px;
+}
+.icon:hover {
+  color: rgb(141, 142, 148);
+}
+
+.eye {
+  color: white;
+  cursor: pointer;
+  margin-left: 10px;
+}
+.eye:hover {
+  color: rgb(177, 177, 177);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
