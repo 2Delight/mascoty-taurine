@@ -4,7 +4,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 import { flushSync } from 'react-dom';
 import { setIntervalAsync, clearIntervalAsync } from 'set-interval-async';
-import { Button, Card, CardActions, CardContent, createTheme, FormControl, Grid, InputLabel, List, ListItem, ListItemButton, ListItemIcon, MenuItem, Select, SelectChangeEvent, Slider, Stack, ThemeProvider, Typography } from "@mui/material";
+import { Button, Card, CardActions, CardContent, createTheme, FormControl, Grid, InputLabel, List, ListItem, ListItemButton, ListItemIcon, MenuItem, Modal, Select, SelectChangeEvent, Slider, Stack, ThemeProvider, Typography } from "@mui/material";
 import { AspectRatio, VolumeDown, VolumeUp } from "@mui/icons-material";
 import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
 import VisibilityOffTwoToneIcon from '@mui/icons-material/VisibilityOffTwoTone';
@@ -15,6 +15,7 @@ import KeyboardVoiceTwoToneIcon from '@mui/icons-material/KeyboardVoiceTwoTone';
 import CameraAltTwoToneIcon from '@mui/icons-material/CameraAltTwoTone';
 import { minHeight, minWidth } from "@mui/system";
 import React from "react";
+import { SketchPicker } from 'react-color';
 
 // interface IMascot {
 //   blink: boolean;
@@ -23,11 +24,27 @@ import React from "react";
 //   voice: number;
 // }
 const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#494949"
+    },
+    secondary: {
+      main: '#E33E7F'
+    }
+  },
   components: {
     MuiListItemButton: {
       styleOverrides: {
         root: {
           backgroundColor: 'transparent',
+          paddingTop: 2,
+          paddingBottom: 2,
+          paddingLeft: 4,
+          paddingRight: 4,
+          fontSize: 14,
+          borderRadius: 5,
+          marginRight: 3,
+          marginLeft: 3,
 
           '&.Mui-selected': {
             backgroundColor: '#616161',
@@ -47,7 +64,7 @@ const theme = createTheme({
           // backgroundColor: "black",
           borderColor: "black",
           filter: "",
-          padding: 7,
+          padding: 5,
         },
         outlined: {
           borderColor: "black",
@@ -67,7 +84,8 @@ const theme = createTheme({
 
           borderRadius: 4,
           backgroundColor: "#808080",
-          fontSize: 20,
+          fontSize: 14,
+          textAlign: "start",
           color: "white",
           width: "100%",
           '&.Mui-selected': {
@@ -124,11 +142,11 @@ function SelectedListItem() {
         width: '100%',
         bgcolor: '#808080',
         overflow: 'auto',
-        height: "calc(50vh - 100px)",
+        height: "calc(50vh - 68px)",
         borderRadius: "0px 0px 0px 20px"
         //  '& ul': { padding: 0 },
       }}>
-        <ListItemButton selected={selectedIndex === 0} classes={{ selected: 'icon' }}
+        <ListItemButton selected={selectedIndex === 0}
           onClick={(event) => handleListItemClick(event, 0)}>
           <Emotion />
         </ListItemButton >
@@ -152,16 +170,16 @@ function SelectedListItem() {
 function Emotion() {
   const [visible, setVisible] = useState(true)
 
-  return <div style={{ display: "flex", flexDirection: "row", width: "100%", borderRadius: "5px" }}>
+  return <div style={{ display: "flex", flexDirection: "row", width: "100%", borderRadius: "5px", justifyContent: "center", alignItems: "center", }}>
     <a style={{
       margin: 0,
       padding: 0,
       color: "white",
-    }}>Emotion</a>
+    }}>Aboba</a>
     <div style={{
       flex: 4
     }}></div>
-    <div onClick={() => {
+    <div style={{ justifyContent: "center", alignItems: "center", display: "flex" }} onClick={() => {
       setVisible(!visible)
       console.log(visible)
     }}>
@@ -185,12 +203,13 @@ function Emo() {
       flexDirection: "row",
       // backgroundColor: "green",
       marginRight: 10,
-      marginLeft: 10,
-      marginTop: 10,
-      marginBottom: 10,
+      marginLeft: 15,
+      marginTop: 4,
+      marginBottom: 4,
+      fontSize: 14,
     }}>
       <div style={{
-        flex: 1
+        flex: 0
       }}></div>
       <a style={{
         margin: 0,
@@ -205,58 +224,11 @@ function Emo() {
       <CreateTwoToneIcon className="icon" />
       <AddCircleOutlineTwoToneIcon className="icon" />
       <div style={{
-        flex: 1
+        flex: 0
       }}></div>
     </div>
 
     <SelectedListItem />
-    {/* 
-    <List sx={{
-      width: '100%',
-      bgcolor: '#808080',
-      overflow: 'auto',
-      height: "calc(50vh - 100px)",
-      borderRadius: "0px 0px 0px 20px"
-      //  '& ul': { padding: 0 },
-    }}>
-      <ListItem>
-        <Emotion />
-      </ListItem>
-      <ListItem>
-        <Emotion />
-      </ListItem>
-      <ListItem>
-        <Emotion />
-      </ListItem>
-      <ListItem>
-        <Emotion />
-      </ListItem>
-      <ListItem>
-        <Emotion />
-      </ListItem>
-      <ListItem>
-        <Emotion />
-      </ListItem>
-      <ListItem>
-        <Emotion />
-      </ListItem>
-      <ListItem>
-        <Emotion />
-      </ListItem>
-      <ListItem>
-        <Emotion />
-      </ListItem>
-      <ListItem>
-        <Emotion />
-      </ListItem>
-      <ListItem>
-        <Emotion />
-      </ListItem>
-      <ListItem>
-        <Emotion />
-      </ListItem>
-
-    </List> */}
   </div>
 }
 
@@ -282,6 +254,110 @@ function SelectLabels() {
   );
 }
 
+function SliderBox() {
+  return <div style={{
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
+    backgroundColor: "#E6E6E6",
+    borderRadius: 10,
+    margin: 4,
+    alignContent: "center",
+    justifyContent: "center"
+  }}>
+    <a style={{
+      margin: 0,
+      paddingTop: 4,
+      paddingLeft: 10,
+      fontSize: 14,
+      color: "black",
+    }}>
+      Mic Output
+    </a>
+    <Stack spacing={2} direction="row" sx={{
+      backgroundColor: "#808080",
+      borderRadius: 2, fles: 2
+    }} alignItems="center">
+      {/* <VolumeDown className="dumbIcon" /> */}
+      <Slider aria-label="Volume"
+        sx={{
+          marginRight: 2,
+          marginLeft: 2,
+          padding: 2,
+
+        }}
+      // value={value} 
+      // onChange={handleChange} 
+      />
+      {/* <VolumeUp className="dumbIcon" /> */}
+    </Stack>
+  </div>
+}
+
+function BasicModal() {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [color, setColor] = React.useState("#fff")
+
+
+  return (
+    <div style={{
+      display: "flex",
+      flexDirection: "row",
+      flex: 1,
+      backgroundColor: "#E6E6E6",
+      borderRadius: 10,
+      margin: 4,
+      justifyContent: "center",
+      alignContent: "center",
+    }}>
+      <a style={{
+        margin: 0,
+        fontSize: 14,
+        color: "black",
+        textAlign: "start",
+        alignContent: "center",
+        justifyContent: "center",
+        flex: 1,
+
+      }}>
+        Background Color
+      </a>
+      <div style={{
+        margin: 10,
+        backgroundColor: "black",
+        minHeight: 20,
+        minWidth: 20,
+      }} onClick={handleOpen}>
+        <div style={{
+          margin: 1, backgroundColor: color, minHeight: 18,
+          minWidth: 18,
+        }}> </div>
+      </div>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <div style={{
+          position: 'absolute' as 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: 'white',
+          padding: 4,
+        }}>
+          <SketchPicker
+            color={color}
+            onChangeComplete={(clr) => { setColor(clr.hex) }} />
+        </div>
+      </Modal>
+    </div>
+  );
+}
+
 function App() {
   const [mascot, setMascot] = useState({
     blink: false,
@@ -302,17 +378,18 @@ function App() {
         margin: 0
       }}>
         <div className="main" style={{
-          height: "calc(100vh - 40px)",
-          paddingTop: 40,
+          height: "100vh"
+          // height: "calc(100vh - 40px)",
+          // paddingTop: 40,
         }}>
           <div className="emotionsNparts" style={{
-            width: 400,
+            // minWidth: 300,
             // backgroundColor: "red",
             justifyContent: "center",
             overflow: "block",
             display: "flex",
-            flexDirection: "column"
-
+            flexDirection: "column",
+            flex: 1,
           }}>
             {/* <h1 style={{}}>emotionsNparts</h1> */}
             <Emo></Emo>
@@ -327,22 +404,55 @@ function App() {
           }}>
             <div style={{ display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", flexDirection: "row" }}>
-                <div style={{ display: "flex", flexDirection: "row", borderRadius: "20px", backgroundColor: "#E6E6E6", justifyContent: "center", alignItems: "center", flex: 1, margin: 4 }}>
+                <div style={{ display: "flex", flexDirection: "row", borderRadius: 10, backgroundColor: "#E6E6E6", justifyContent: "center", alignItems: "center", flex: 1, margin: 4 }}>
                   <KeyboardVoiceTwoToneIcon className="dumbIcon" />
                   <SelectLabels />
                 </div>
-                {/* <div style={{ display: "flex", flexDirection: "row", borderRadius: "20px", backgroundColor: "#E6E6E6", justifyContent: "center", alignItems: "center", flex: 1, margin: 4 }}>
-                  <CameraAltTwoToneIcon  />
+                <div style={{ display: "flex", flexDirection: "row", borderRadius: 10, backgroundColor: "#E6E6E6", justifyContent: "center", alignItems: "center", flex: 1, margin: 4 }}>
+                  <CameraAltTwoToneIcon className="dumbIcon" />
                   <SelectLabels />
-                </div> */}
+                </div>
               </div>
+            </div>
 
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <SliderBox />
+              <div style={{
+                display: "flex",
+                flexDirection: "column",
+                flex: 1,
+                backgroundColor: "#E6E6E6",
+                borderRadius: 10,
+                margin: 4,
+              }}>
+                <a style={{
+                  margin: 0,
+                  paddingTop: 4,
+                  paddingLeft: 10,
+                  fontSize: 14,
+                  color: "black",
+                  textAlign: "left",
+                }}>
+                  Frames Per Second
+                </a>
+                <SelectLabels />
+              </div>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <SliderBox />
+              <SliderBox />
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <BasicModal />
+              <div style={{flex: 1}}></div>
             </div>
 
           </div>
 
           <div className="mascotPlace" style={{
-            flex: 3,
+            flex: 5,
             background: "aqua",
             overflow: "auto",
           }}>

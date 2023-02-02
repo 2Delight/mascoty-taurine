@@ -43,6 +43,7 @@
   justify-content: center;
   align-items: center;
   margin-left: 10px;
+  max-height: 10;
 }
 .icon:hover {
   color: rgb(141, 142, 148);
@@ -50,16 +51,15 @@
 
 .dumbIcon {
   color: black;
-  /* margin-left: 10px; */
-  height: 30px;
-  min-width: 50px;
-  min-height: 40px;
+  min-width: 30px;
+  min-height: 20px;
 }
 
 .eye {
   color: white;
   cursor: pointer;
-  margin-left: 10px;
+  max-width: 30px;
+  max-height: 20px;
 }
 .eye:hover {
   color: rgb(177, 177, 177);
@@ -69,4 +69,12 @@ html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+}
+a {
+    margin: 0;
+    padding-top: 4;
+    padding-left: 10;
+    font-size: 14;
+    color: black;
+    text-align: left;
 }
