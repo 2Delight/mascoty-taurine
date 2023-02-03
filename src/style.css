@@ -1,11 +1,12 @@
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
+  font-size: 12px;
   line-height: 24px;
   font-weight: 400;
 
   color: #0f0f0f;
-  background-color: #f6f6f6;
+  background-color: white;
+  /* background-color: #f6f6f6; */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -46,7 +47,7 @@
   display: flex;
   justify-content: center;
 }
-
+/* 
 a {
   font-weight: 500;
   color: #646cff;
@@ -55,7 +56,7 @@ a {
 
 a:hover {
   color: #535bf2;
-}
+} */
 
 h1 {
   text-align: center;

@@ -4,7 +4,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 import { flushSync } from 'react-dom';
 import { setIntervalAsync, clearIntervalAsync } from 'set-interval-async';
-import { Button, Card, CardActions, CardContent, createTheme, FormControl, Grid, InputLabel, List, ListItem, ListItemButton, ListItemIcon, MenuItem, Modal, Select, SelectChangeEvent, Slider, Stack, ThemeProvider, Typography } from "@mui/material";
+import { Box, Button, Card, CardActions, CardContent, createTheme, FormControl, Grid, InputLabel, List, ListItem, ListItemButton, ListItemIcon, MenuItem, Modal, Select, SelectChangeEvent, Slider, Stack, ThemeProvider, Typography } from "@mui/material";
 import { AspectRatio, VolumeDown, VolumeUp } from "@mui/icons-material";
 import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
 import VisibilityOffTwoToneIcon from '@mui/icons-material/VisibilityOffTwoTone';
@@ -15,7 +15,8 @@ import KeyboardVoiceTwoToneIcon from '@mui/icons-material/KeyboardVoiceTwoTone';
 import CameraAltTwoToneIcon from '@mui/icons-material/CameraAltTwoTone';
 import { minHeight, minWidth } from "@mui/system";
 import React from "react";
-import { SketchPicker } from 'react-color';
+import { BlockPicker, CirclePicker, SketchPicker } from 'react-color';
+import { m } from "@tauri-apps/api/dialog-15855a2f";
 
 // interface IMascot {
 //   blink: boolean;
@@ -41,7 +42,7 @@ const theme = createTheme({
           paddingBottom: 2,
           paddingLeft: 4,
           paddingRight: 4,
-          fontSize: 14,
+          fontSize: 10,
           borderRadius: 5,
           marginRight: 3,
           marginLeft: 3,
@@ -72,6 +73,61 @@ const theme = createTheme({
 
       }
     },
+    MuiSlider: {
+      styleOverrides: {
+        root: {
+          '& .MuiSlider-thumb': {
+            height: 15,
+            width: 25,
+            border: '2px solid #E6E6E6',
+            borderRadius: 2,
+            backgroundColor: 'black',
+            // boxShadow: iOSBoxShadow,
+            '&:focus, &:hover, &.Mui-active': {
+              boxShadow:
+                '0 0 0 rgba(0,0,0,0.1),0 0 0 rgba(0,0,0,0.3),0 0 0 0 rgba(0,0,0,0.02)',
+              // Reset on touch devices, it doesn't add specificity
+              '@media (hover: none)': {
+                // boxShadow: iOSBoxShadow,
+              },
+            },
+          },
+          // '& .MuiSlider-valueLabel': {
+          //   fontSize: 12,
+          //   fontWeight: 'normal',
+          //   top: -6,
+          //   backgroundColor: 'unset',
+          //   // color: theme.palette.text.primary,
+          //   '&:before': {
+          //     display: 'none',
+          //   },
+          //   '& *': {
+          //     background: 'transparent',
+          //     // color: theme.palette.mode === 'dark' ? '#fff' : '#000',
+          //   },
+          // },
+          '& .MuiSlider-track': {
+            border: 'none',
+            color: "transparent"
+            // height: "10px"
+          },
+          '& .MuiSlider-rail': {
+            height: 7,
+            backgroundColor: "primary",
+            opacity: 0.7,
+          },
+          // '& .MuiSlider-mark': {
+          //   backgroundColor: '#bfbfbf',
+          //   height: 8,
+          //   width: 1,
+          //   '&.MuiSlider-markActive': {
+          //     opacity: 1,
+          //     backgroundColor: 'currentColor',
+          //   },
+          // },
+        }
+      }
+    },
     MuiInputBase: {
       styleOverrides: {
         root: {
@@ -84,7 +140,7 @@ const theme = createTheme({
 
           borderRadius: 4,
           backgroundColor: "#808080",
-          fontSize: 14,
+          fontSize: 12,
           textAlign: "start",
           color: "white",
           width: "100%",
@@ -175,6 +231,8 @@ function Emotion() {
       margin: 0,
       padding: 0,
       color: "white",
+      maxWidth: "200px",
+      overflow: "hidden"
     }}>Aboba</a>
     <div style={{
       flex: 4
@@ -206,7 +264,6 @@ function Emo() {
       marginLeft: 15,
       marginTop: 4,
       marginBottom: 4,
-      fontSize: 14,
     }}>
       <div style={{
         flex: 0
@@ -269,13 +326,12 @@ function SliderBox() {
       margin: 0,
       paddingTop: 4,
       paddingLeft: 10,
-      fontSize: 14,
       color: "black",
     }}>
       Mic Output
     </a>
     <Stack spacing={2} direction="row" sx={{
-      backgroundColor: "#808080",
+      // backgroundColor: "#808080",
       borderRadius: 2, fles: 2
     }} alignItems="center">
       {/* <VolumeDown className="dumbIcon" /> */}
@@ -283,7 +339,7 @@ function SliderBox() {
         sx={{
           marginRight: 2,
           marginLeft: 2,
-          padding: 2,
+          // padding: 2,
 
         }}
       // value={value} 
@@ -314,7 +370,7 @@ function BasicModal() {
     }}>
       <a style={{
         margin: 0,
-        fontSize: 14,
+        padding: 0,
         color: "black",
         textAlign: "start",
         alignContent: "center",
@@ -325,15 +381,14 @@ function BasicModal() {
         Background Color
       </a>
       <div style={{
-        margin: 10,
-        backgroundColor: "black",
-        minHeight: 20,
-        minWidth: 20,
+        margin: 6,
+        backgroundColor: color,
+        minHeight: 17,
+        minWidth: 17,
+        borderRadius: "6px",
+        borderColor: "black",
+        border: "2px solid black"
       }} onClick={handleOpen}>
-        <div style={{
-          margin: 1, backgroundColor: color, minHeight: 18,
-          minWidth: 18,
-        }}> </div>
       </div>
       <Modal
         open={open}
@@ -346,16 +401,72 @@ function BasicModal() {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          backgroundColor: 'white',
+          // backgroundColor: 'white',
           padding: 4,
         }}>
-          <SketchPicker
+          <CirclePicker
             color={color}
             onChangeComplete={(clr) => { setColor(clr.hex) }} />
+
+
         </div>
       </Modal>
     </div>
   );
+}
+
+function valuetext(value: number) {
+  return `${value}%`;
+}
+
+function RangeSlider() {
+  const [value, setValue] = React.useState<number[]>([0, 100]);
+
+  const handleChange = (event: Event, newValue: number | number[]) => {
+    setValue(newValue as number[]);
+  };
+
+  return <div style={{
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
+    backgroundColor: "#E6E6E6",
+    borderRadius: 10,
+    margin: 4,
+    alignContent: "center",
+    justifyContent: "center"
+  }}>
+    <a style={{
+      margin: 0,
+      paddingTop: 4,
+      paddingLeft: 10,
+      color: "black",
+    }}>
+      Mic Output
+    </a>
+    <Stack spacing={2} direction="row" sx={{
+      // backgroundColor: "#808080",
+      borderRadius: 2, fles: 2
+    }} alignItems="center">
+      {/* <VolumeDown className="dumbIcon" /> */}
+      <Slider
+        getAriaLabel={() => 'Temperature range'}
+        value={value}
+        onChange={handleChange}
+        valueLabelDisplay="auto"
+        getAriaValueText={valuetext}
+        disableSwap
+        sx={{
+          marginRight: 2,
+          marginLeft: 2,
+          // padding: 2,
+
+        }}
+      />
+
+      {/* <VolumeUp className="dumbIcon" /> */}
+    </Stack>
+  </div>
 }
 
 function App() {
@@ -429,7 +540,6 @@ function App() {
                   margin: 0,
                   paddingTop: 4,
                   paddingLeft: 10,
-                  fontSize: 14,
                   color: "black",
                   textAlign: "left",
                 }}>
@@ -440,13 +550,12 @@ function App() {
             </div>
 
             <div style={{ display: "flex", flexDirection: "row" }}>
-              <SliderBox />
-              <SliderBox />
+              <RangeSlider />
             </div>
 
             <div style={{ display: "flex", flexDirection: "row" }}>
               <BasicModal />
-              <div style={{flex: 1}}></div>
+              <div style={{ flex: 1 }}></div>
             </div>
 
           </div>
@@ -455,6 +564,8 @@ function App() {
             flex: 5,
             background: "aqua",
             overflow: "auto",
+            margin: 10,
+            borderRadius: "10px 0 0 0 "
           }}>
             <div className="mascot" style={{
 
@@ -462,7 +573,9 @@ function App() {
               height: 1000, background: "black"
 
             }}>
-              asdsad
+              <a style={{color:"white"}}>
+                asdasdasd
+                </a>
             </div>
           </div>
 
