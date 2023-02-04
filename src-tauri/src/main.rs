@@ -16,10 +16,11 @@ mod input;
 mod mascot;
 mod utils;
 
-use crate::config::import_config;
-use crate::input::get_devices;
+use std::fmt::Display;
 
-use input::Devices;
+use crate::config::import_config;
+use crate::input::{Devices, get_devices, get_cams};
+
 use log::{debug, error, info, warn};
 use simple_logger::SimpleLogger;
 
@@ -27,6 +28,21 @@ use simple_logger::SimpleLogger;
 #[tauri::command]
 fn get_mascot(state: tauri::State<Devices>) -> mascot::Mascot {
     mascot::get_mascot(&state)
+}
+
+#[tauri::command]
+fn get_cameras() -> Result<Vec<String>, String> {
+    match get_cams() {
+        Ok(val) => Ok(
+            val.iter()
+            .map(
+                |info: &nokhwa::utils::CameraInfo| {
+                    info.description().to_string()
+                },
+            ).collect(),
+        ),
+        Err(err) => Err(err.to_string()),
+    }
 }
 
 #[tauri::command]
@@ -53,7 +69,13 @@ fn main() {
 
     tauri::Builder::default()
         .manage(devices)
-        .invoke_handler(tauri::generate_handler![get_mascot])
+        .invoke_handler(
+            tauri::generate_handler![
+                get_mascot,
+                get_cameras,
+                set_fps,
+            ]
+        )
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

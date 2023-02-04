@@ -5,7 +5,7 @@ use std::sync::Mutex;
 // use std::cell::RefCell;
 
 use nokhwa::pixel_format::RgbFormat;
-use nokhwa::utils::{ApiBackend, CameraFormat, FrameFormat, RequestedFormat, RequestedFormatType};
+use nokhwa::utils::{ApiBackend, CameraFormat, CameraInfo, FrameFormat, RequestedFormat, RequestedFormatType};
 use nokhwa::{query, Camera, NokhwaError};
 
 use log::{debug, error, info, warn};
@@ -31,11 +31,8 @@ unsafe impl Send for Devices {}
 
 pub struct Input {}
 
-fn new_camera(config: &Config) -> Result<Camera, NokhwaError> {
-    debug!("Getting devices");
+pub fn get_cams() -> Result<Vec<CameraInfo>, NokhwaError> {
     let cams = query(ApiBackend::Auto)?;
-
-    info!("Number of cameras: {}", cams.len());
     if cams.len() == 0 {
         return Err(
             NokhwaError::GeneralError(
@@ -43,6 +40,13 @@ fn new_camera(config: &Config) -> Result<Camera, NokhwaError> {
             ),
         );
     }
+    
+    Ok(cams)
+}
+
+fn new_camera(config: &Config) -> Result<Camera, NokhwaError> {
+    debug!("Getting devices");
+    let cams = get_cams()?;
 
     info!("First camera index: {}", cams[0].index());
     debug!("Connecting to camera");
