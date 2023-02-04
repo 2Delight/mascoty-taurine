@@ -15,15 +15,15 @@ pub struct Devices {
     conf: Mutex<Config>,
 }
 
-impl Devices {
-    pub fn set_fps(&self, fps: u32) {
-        let mut conf_guard = self.conf.lock().unwrap();
-        conf_guard.camera.fps = fps;
+// impl Devices {
+//     pub fn set_fps(&self, fps: u32) {
+//         let mut conf_guard = self.conf.lock().unwrap();
+//         conf_guard.camera.fps = fps;
 
-        let mut cam_guard = self.camera.lock().unwrap();
-        *cam_guard = new_camera(&conf_guard).unwrap();
-    }
-}
+//         let mut cam_guard = self.camera.lock().unwrap();
+//         *cam_guard = new_camera(&conf_guard).unwrap();
+//     }
+// }
 
 unsafe impl Sync for Devices {}
 
@@ -44,10 +44,7 @@ pub fn get_cams() -> Result<Vec<CameraInfo>, NokhwaError> {
     Ok(cams)
 }
 
-fn new_camera(config: &Config) -> Result<Camera, NokhwaError> {
-    debug!("Getting devices");
-    let cams = get_cams()?;
-
+pub fn set_camera(cams: Vec<CameraInfo>, index: u8, config: &Config) -> Result<Camera, NokhwaError> {
     info!("First camera index: {}", cams[0].index());
     debug!("Connecting to camera");
     let format_type = RequestedFormatType::Exact(
@@ -71,7 +68,7 @@ pub fn get_devices(config: Config) -> Result<Devices, NokhwaError> {
     debug!("Camera has been initialized");
     Ok(
         Devices {
-            camera: Mutex::new(new_camera(&config).unwrap()),
+            camera: Mutex::new(set_camera(get_cams().unwrap(), 0, &config).unwrap()),
             conf: Mutex::new(config),
         },
     )

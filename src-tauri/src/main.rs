@@ -16,11 +16,10 @@ mod input;
 mod mascot;
 mod utils;
 
-use std::fmt::Display;
-
 use crate::config::import_config;
-use crate::input::{Devices, get_devices, get_cams};
+use crate::input::{Devices, get_devices, get_cams, set_camera};
 
+use config::Config;
 use log::{debug, error, info, warn};
 use simple_logger::SimpleLogger;
 
@@ -46,8 +45,17 @@ fn get_cameras() -> Result<Vec<String>, String> {
 }
 
 #[tauri::command]
+fn select_camera(index: u8, state: tauri::State<Config>) -> Result<(), String> {
+    match set_camera(get_cams().unwrap(), index, &state) {
+        Ok(_) => Ok(()),
+        Err(err) => Err(err.to_string()),
+    }
+}
+
+#[tauri::command]
 fn set_fps(fps: u32, state: tauri::State<Devices>) {
-    state.set_fps(fps);
+    // state.set_fps(fps);
+    todo!()
 }
 
 fn main() {
@@ -69,10 +77,12 @@ fn main() {
 
     tauri::Builder::default()
         .manage(devices)
+        .manage(conf)
         .invoke_handler(
             tauri::generate_handler![
                 get_mascot,
                 get_cameras,
+                select_camera,
                 set_fps,
             ]
         )
