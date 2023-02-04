@@ -17,7 +17,7 @@ mod mascot;
 mod utils;
 
 use crate::config::import_config;
-use crate::input::{Devices, get_devices, get_cams, set_camera};
+use crate::input::{Devices, get_cams, set_camera};
 
 use config::Config;
 use log::{debug, error, info, warn};
@@ -45,21 +45,27 @@ fn get_cameras() -> Result<Vec<String>, String> {
 }
 
 #[tauri::command]
-fn select_camera(index: u8, conf: Config, state: tauri::State<Devices>) -> Result<(), String> {
-    let cam = match set_camera(get_cams().unwrap(), index, &conf) {
+fn select_camera(index: usize, conf: Config, state: tauri::State<Devices>) -> Result<(), String> {
+    let cams = get_cams().unwrap();
+    let cam = match set_camera(get_cams().unwrap(), cams[index].index().clone(), &conf) {
         Ok(cam) => cam,
         Err(err) => {
             return Err(err.to_string())
         },
     };
-    
+
     state.set_camera(conf, cam);
     Ok(())
 }
 
 #[tauri::command]
 fn set_fps(fps: u32, state: tauri::State<Devices>) {
-    // state.set_fps(fps);
+    let mut conf = state.get_conf();
+    state.set_camera(conf, set_camera(
+        get_cams().unwrap(),
+        state.get_camera_index(),
+        &conf,
+    ).unwrap());
     todo!()
 }
 
@@ -78,10 +84,10 @@ fn main() {
 
     debug!("Getting devices");
 
-    let devices = panic_error!(get_devices(conf.clone()), "getting devices");
+    // let devices = panic_error!(get_devices(conf.clone()), "getting devices");
 
     tauri::Builder::default()
-        .manage(devices)
+        // .manage(devices)
         .manage(conf)
         .invoke_handler(
             tauri::generate_handler![

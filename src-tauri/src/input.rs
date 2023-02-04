@@ -5,7 +5,7 @@ use std::sync::{Mutex, MutexGuard};
 // use std::cell::RefCell;
 
 use nokhwa::pixel_format::RgbFormat;
-use nokhwa::utils::{ApiBackend, CameraFormat, CameraInfo, FrameFormat, RequestedFormat, RequestedFormatType};
+use nokhwa::utils::{ApiBackend, CameraFormat, CameraIndex, CameraInfo, FrameFormat, RequestedFormat, RequestedFormatType};
 use nokhwa::{query, Camera, NokhwaError};
 
 use log::{debug, error, info, warn};
@@ -22,6 +22,14 @@ impl Devices {
 
         let mut cam_guard = self.camera.lock().unwrap();
         *cam_guard = camera;
+    }
+
+    pub fn get_conf(&self) -> Config {
+        self.conf.lock().unwrap().clone()
+    }
+
+    pub fn get_camera_index(&self) -> CameraIndex {
+        self.camera.lock().unwrap().index().clone()
     }
 
     // pub fn set_fps(&self, fps: u32) {
@@ -52,8 +60,8 @@ pub fn get_cams() -> Result<Vec<CameraInfo>, NokhwaError> {
     Ok(cams)
 }
 
-pub fn set_camera(cams: Vec<CameraInfo>, index: u8, config: &Config) -> Result<Camera, NokhwaError> {
-    info!("First camera index: {}", cams[0].index());
+pub fn set_camera(cams: Vec<CameraInfo>, index: CameraIndex, config: &Config) -> Result<Camera, NokhwaError> {
+    info!("First camera index: {}", index);
     debug!("Connecting to camera");
     let format_type = RequestedFormatType::Exact(
         CameraFormat::new_from(
@@ -64,7 +72,7 @@ pub fn set_camera(cams: Vec<CameraInfo>, index: u8, config: &Config) -> Result<C
         ),
     );
     let format = RequestedFormat::new::<RgbFormat>(format_type);
-    let mut camera = Camera::new(cams[0].index().to_owned(), format)?;
+    let mut camera = Camera::new(index, format)?;
     info!("Camera info: {}", camera.info());
     
     debug!("Openning stream");
@@ -72,15 +80,16 @@ pub fn set_camera(cams: Vec<CameraInfo>, index: u8, config: &Config) -> Result<C
     Ok(camera)
 }
 
-pub fn get_devices(config: Config) -> Result<Devices, NokhwaError> {
-    debug!("Camera has been initialized");
-    Ok(
-        Devices {
-            camera: Mutex::new(set_camera(get_cams().unwrap(), 0, &config).unwrap()),
-            conf: Mutex::new(config),
-        },
-    )
-}
+// pub fn get_devices(config: Config) -> Result<Devices, NokhwaError> {
+//     debug!("Camera has been initialized");
+//     let cams = get_cams()?;
+//     Ok(
+//         Devices {
+//             camera: Mutex::new(set_camera(get_cams().unwrap(), , &config).unwrap()),
+//             conf: Mutex::new(config),
+//         },
+//     )
+// }
 
 pub fn get_input(devices: &Devices) -> Result<Input, NokhwaError> {
     debug!("Getting input");
