@@ -33,10 +33,9 @@ macro_rules! panic_error {
 #[macro_export]
 macro_rules! init_dict {
     ($( $key:expr => $val:expr ), * $(,)?) => {{
-
-	let mut hm = std::collections::HashMap::new();
-    $(
-		hm.insert($key, $val);
+        let mut hm = std::collections::HashMap::new();
+        $(
+            hm.insert($key, $val);
         )*
         hm
     }};

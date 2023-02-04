@@ -1,7 +1,7 @@
 use crate::config::Config;
 use crate::panic_error;
 
-use std::sync::{Mutex, MutexGuard};
+use std::sync::{PoisonError, Mutex, MutexGuard};
 // use std::cell::RefCell;
 
 use nokhwa::pixel_format::RgbFormat;
@@ -15,35 +15,45 @@ pub struct Devices {
     conf: Mutex<Config>,
 }
 
-impl Devices {
-    pub fn set_camera(&self, config: Config, camera: Camera) {
-        let mut conf_guard = self.conf.lock().unwrap();
-        *conf_guard = config;
-
-        let mut cam_guard = self.camera.lock().unwrap();
-        *cam_guard = camera;
-    }
-
-    pub fn get_conf(&self) -> Config {
-        self.conf.lock().unwrap().clone()
-    }
-
-    pub fn get_camera_index(&self) -> CameraIndex {
-        self.camera.lock().unwrap().index().clone()
-    }
-
-    // pub fn set_fps(&self, fps: u32) {
-    //     let mut conf_guard = self.conf.lock().unwrap();
-    //     conf_guard.camera.fps = fps;
-
-    //     let mut cam_guard = self.camera.lock().unwrap();
-    //     *cam_guard = new_camera(&conf_guard).unwrap();
-    // }
-}
-
 unsafe impl Sync for Devices {}
 
 unsafe impl Send for Devices {}
+
+impl Devices {
+    pub fn set_camera(&self, config: Config, camera: Camera) -> Result<(), String> {
+        let mut conf_guard = match self.conf.lock() {
+            Ok(val) => val,
+            Err(_) => {
+                return Err("Cannot get value from config mutex".to_string());
+            }
+        };
+        *conf_guard = config;
+
+        let mut cam_guard = match self.camera.lock() {
+            Ok(val) => val,
+            Err(_) => {
+                return Err("Cannot get value from camera mutex".to_string());
+            }
+        };
+        *cam_guard = camera;
+
+        Ok(())
+    }
+
+    pub fn get_conf(&self) -> Result<Config, String> {
+        match self.conf.lock() {
+            Ok(val) => Ok(val.clone()),
+            Err(_) => Err("Cannot get value from config mutex".to_string()),
+        }
+    }
+
+    pub fn get_camera_index(&self) -> Result<CameraIndex, String> {
+        match self.camera.lock() {
+            Ok(val) => Ok(val.index().clone()),
+            Err(_) => Err("Cannot get value from camera mutex".to_string()),
+        }
+    }
+}
 
 pub struct Input {}
 

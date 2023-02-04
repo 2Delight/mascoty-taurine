@@ -1,6 +1,6 @@
 use crate::config::Config;
+use crate::input::{get_cams, set_camera, Devices};
 use crate::mascot;
-use crate::input::{Devices, get_cams, set_camera};
 
 use log::{debug, error, info, warn};
 
@@ -15,14 +15,10 @@ pub fn get_cameras() -> Result<Vec<String>, String> {
     debug!("Handler get_cameras has been invoken");
 
     match get_cams() {
-        Ok(val) => Ok(
-            val.iter()
-            .map(
-                |info: &nokhwa::utils::CameraInfo| {
-                    info.description().to_string()
-                },
-            ).collect(),
-        ),
+        Ok(val) => Ok(val
+            .iter()
+            .map(|info: &nokhwa::utils::CameraInfo| info.description().to_string())
+            .collect()),
         Err(err) => Err(err.to_string()),
     }
 }
@@ -36,13 +32,11 @@ pub fn select_camera(index: i32, conf: Config, state: tauri::State<Devices>) -> 
     }
 
     let cams = get_cams().unwrap();
-    let ind  = cams[index as usize].index().clone();
-    
+    let ind = cams[index as usize].index().clone();
+
     let cam = match set_camera(ind, &conf) {
         Ok(cam) => cam,
-        Err(err) => {
-            return Err(err.to_string())
-        },
+        Err(err) => return Err(err.to_string()),
     };
 
     state.set_camera(conf, cam);
@@ -63,17 +57,26 @@ pub fn set_config(conf: Config, state: tauri::State<Devices>) -> Result<(), Stri
     }
 
     if !is_in_interval(conf.camera.fps as i32, 0, 10001) {
-        return Err("Camera height in pixels has to be greater than 0 and lesser than 10001!".to_string());
+        return Err(
+            "Camera height in pixels has to be greater than 0 and lesser than 10001!".to_string(),
+        );
     }
 
     if !is_in_interval(conf.camera.fps as i32, 0, 10001) {
-        return Err("Camera width in pixels has to be greater than 0 and lesser than 10001!".to_string());
+        return Err(
+            "Camera width in pixels has to be greater than 0 and lesser than 10001!".to_string(),
+        );
     }
 
-    state.set_camera(conf, set_camera(
-        state.get_camera_index(),
-        &conf,
-    ).unwrap());
+    state.set_camera(
+        conf,
+        match set_camera(state.get_camera_index()?, &conf) {
+            Ok(cam) => cam,
+            Err(err) => {
+                return Err(err.to_string());
+            }
+        },
+    )?;
 
     Ok(())
 }
