@@ -1,7 +1,7 @@
 use crate::config::Config;
 use crate::panic_error;
 
-use std::sync::Mutex;
+use std::sync::{Mutex, MutexGuard};
 // use std::cell::RefCell;
 
 use nokhwa::pixel_format::RgbFormat;
@@ -15,15 +15,23 @@ pub struct Devices {
     conf: Mutex<Config>,
 }
 
-// impl Devices {
-//     pub fn set_fps(&self, fps: u32) {
-//         let mut conf_guard = self.conf.lock().unwrap();
-//         conf_guard.camera.fps = fps;
+impl Devices {
+    pub fn set_camera(&self, config: Config, camera: Camera) {
+        let mut conf_guard = self.conf.lock().unwrap();
+        *conf_guard = config;
 
-//         let mut cam_guard = self.camera.lock().unwrap();
-//         *cam_guard = new_camera(&conf_guard).unwrap();
-//     }
-// }
+        let mut cam_guard = self.camera.lock().unwrap();
+        *cam_guard = camera;
+    }
+
+    // pub fn set_fps(&self, fps: u32) {
+    //     let mut conf_guard = self.conf.lock().unwrap();
+    //     conf_guard.camera.fps = fps;
+
+    //     let mut cam_guard = self.camera.lock().unwrap();
+    //     *cam_guard = new_camera(&conf_guard).unwrap();
+    // }
+}
 
 unsafe impl Sync for Devices {}
 

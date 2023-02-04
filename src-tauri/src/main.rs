@@ -45,11 +45,16 @@ fn get_cameras() -> Result<Vec<String>, String> {
 }
 
 #[tauri::command]
-fn select_camera(index: u8, state: tauri::State<Config>) -> Result<(), String> {
-    match set_camera(get_cams().unwrap(), index, &state) {
-        Ok(_) => Ok(()),
-        Err(err) => Err(err.to_string()),
-    }
+fn select_camera(index: u8, conf: Config, state: tauri::State<Devices>) -> Result<(), String> {
+    let cam = match set_camera(get_cams().unwrap(), index, &conf) {
+        Ok(cam) => cam,
+        Err(err) => {
+            return Err(err.to_string())
+        },
+    };
+    
+    state.set_camera(conf, cam);
+    Ok(())
 }
 
 #[tauri::command]
