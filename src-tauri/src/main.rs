@@ -55,7 +55,6 @@ fn init_menu() -> tauri::Menu {
     }
 
     let mut menu = tauri::Menu::new()
-        .add_native_item(tauri::MenuItem::Copy)
         .add_submenu(tauri::Submenu::new("File", submenu_items));
     for (id, title) in menu_items.iter() {
         menu = menu.add_item(tauri::CustomMenuItem::new(id, title));
