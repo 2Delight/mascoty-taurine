@@ -16,7 +16,7 @@ mod input;
 mod mascot;
 mod utils;
 
-use crate::config::{import_config};
+use crate::config::import_config;
 use crate::input::get_devices;
 
 use input::Devices;
@@ -38,7 +38,7 @@ fn main() {
     match SimpleLogger::new()
         .with_level(log::LevelFilter::Debug)
         .init() {
-        Ok(()) => {},
+        Ok(()) => {}
         Err(err) => panic!("Cannot initialize logger: {:?}", err),
     };
 
