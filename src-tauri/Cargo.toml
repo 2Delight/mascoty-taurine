@@ -23,7 +23,6 @@ simple_logger = "4.0.0"
 
 tauri = { version = "1.2", features = ["shell-open"] }
 rand = "0.8.4"
-dict = "0.1.5"
 
 [dependencies.nokhwa]
 version = "0.10.3"

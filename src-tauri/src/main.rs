@@ -3,7 +3,6 @@
     windows_subsystem = "windows"
 )]
 
-extern crate dict;
 extern crate log;
 extern crate nokhwa;
 extern crate rand;
@@ -35,39 +34,10 @@ fn set_fps(fps: u32, state: tauri::State<Devices>) {
     state.set_fps(fps);
 }
 
-fn init_menu() -> tauri::Menu {
-    let file_items = init_dict! {
-        "quit".to_string() => "Quit".to_string(),
-        "close".to_string() => "Close".to_string(),
-    };
-    debug!("{:?}", file_items);
-    let menu_items = init_dict! {
-        "edit".to_string() => "Edit".to_string(),
-        "save".to_string() => "Save".to_string(),
-        "guide".to_string() => "Guide".to_string(),
-        "contacts".to_string() => "Contact Us".to_string(),
-    };
-    debug!("{:?}", menu_items);
-
-    let mut submenu_items = tauri::Menu::new();
-    for (id, title) in file_items.iter() {
-        submenu_items = submenu_items.add_item(tauri::CustomMenuItem::new(id, title));
-    }
-
-    let mut menu = tauri::Menu::new()
-        .add_submenu(tauri::Submenu::new("File", submenu_items));
-    for (id, title) in menu_items.iter() {
-        menu = menu.add_item(tauri::CustomMenuItem::new(id, title));
-    }
-
-    menu
-}
-
 fn main() {
     match SimpleLogger::new()
         .with_level(log::LevelFilter::Debug)
-        .init()
-    {
+        .init() {
         Ok(()) => {}
         Err(err) => panic!("Cannot initialize logger: {:?}", err),
     };
@@ -82,7 +52,6 @@ fn main() {
     let devices = panic_error!(get_devices(conf.clone()), "getting devices");
 
     tauri::Builder::default()
-        .menu(init_menu())
         .manage(devices)
         .invoke_handler(tauri::generate_handler![get_mascot])
         .run(tauri::generate_context!())
