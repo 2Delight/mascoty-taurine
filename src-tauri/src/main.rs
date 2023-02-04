@@ -45,9 +45,12 @@ fn get_cameras() -> Result<Vec<String>, String> {
 }
 
 #[tauri::command]
-fn select_camera(index: usize, conf: Config, state: tauri::State<Devices>) -> Result<(), String> {
+fn select_camera(index: i32, conf: Config, state: tauri::State<Devices>) -> Result<(), String> {
+    if index < 0 {
+        return Err("Index has to be greater than -1".to_string());
+    }
     let cams = get_cams().unwrap();
-    let cam = match set_camera(get_cams().unwrap(), cams[index].index().clone(), &conf) {
+    let cam = match set_camera(get_cams().unwrap(), cams[index as usize].index().clone(), &conf) {
         Ok(cam) => cam,
         Err(err) => {
             return Err(err.to_string())
@@ -59,14 +62,18 @@ fn select_camera(index: usize, conf: Config, state: tauri::State<Devices>) -> Re
 }
 
 #[tauri::command]
-fn set_fps(fps: u32, state: tauri::State<Devices>) {
+fn set_fps(fps: i32, state: tauri::State<Devices>) -> Result<(), String> {
     let mut conf = state.get_conf();
+    if fps < 1 || fps > 30 {
+        return Err("FPS has to be greater than 0 and lesser than 31!".to_string());
+    }
+    conf.camera.fps = fps as u32;
     state.set_camera(conf, set_camera(
         get_cams().unwrap(),
         state.get_camera_index(),
         &conf,
     ).unwrap());
-    todo!()
+    Ok(())
 }
 
 fn main() {
@@ -83,8 +90,6 @@ fn main() {
     info!("Config: {:?}", conf);
 
     debug!("Getting devices");
-
-    // let devices = panic_error!(get_devices(conf.clone()), "getting devices");
 
     tauri::Builder::default()
         // .manage(devices)
