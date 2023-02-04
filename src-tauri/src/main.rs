@@ -17,7 +17,7 @@ mod mascot;
 mod utils;
 
 use crate::config::import_config;
-use crate::input::{Devices, get_cams, set_camera};
+use crate::input::{Devices, get_cams, set_camera, get_devices};
 
 use config::Config;
 use log::{debug, error, info, warn};
@@ -50,7 +50,9 @@ fn select_camera(index: i32, conf: Config, state: tauri::State<Devices>) -> Resu
         return Err("Index has to be greater than -1".to_string());
     }
     let cams = get_cams().unwrap();
-    let cam = match set_camera(get_cams().unwrap(), cams[index as usize].index().clone(), &conf) {
+    let ind  = cams[index as usize].index().clone();
+    
+    let cam = match set_camera(cams, ind, &conf) {
         Ok(cam) => cam,
         Err(err) => {
             return Err(err.to_string())
@@ -58,6 +60,7 @@ fn select_camera(index: i32, conf: Config, state: tauri::State<Devices>) -> Resu
     };
 
     state.set_camera(conf, cam);
+
     Ok(())
 }
 
@@ -67,12 +70,14 @@ fn set_fps(fps: i32, state: tauri::State<Devices>) -> Result<(), String> {
     if fps < 1 || fps > 30 {
         return Err("FPS has to be greater than 0 and lesser than 31!".to_string());
     }
+
     conf.camera.fps = fps as u32;
     state.set_camera(conf, set_camera(
         get_cams().unwrap(),
         state.get_camera_index(),
         &conf,
     ).unwrap());
+
     Ok(())
 }
 
@@ -87,13 +92,17 @@ fn main() {
     debug!("Config parsing");
     let conf = panic_error!(import_config(), "parsing config");
 
+    let cams = get_cams().unwrap();
+    let cam = set_camera(get_cams().unwrap(), cams[0].index().clone(), &conf).unwrap();
+
+    let devices = get_devices(conf, cam).unwrap();
+
     info!("Config: {:?}", conf);
 
     debug!("Getting devices");
 
     tauri::Builder::default()
-        // .manage(devices)
-        .manage(conf)
+        .manage(devices)
         .invoke_handler(
             tauri::generate_handler![
                 get_mascot,

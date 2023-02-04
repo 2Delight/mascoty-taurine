@@ -80,16 +80,16 @@ pub fn set_camera(cams: Vec<CameraInfo>, index: CameraIndex, config: &Config) ->
     Ok(camera)
 }
 
-// pub fn get_devices(config: Config) -> Result<Devices, NokhwaError> {
-//     debug!("Camera has been initialized");
-//     let cams = get_cams()?;
-//     Ok(
-//         Devices {
-//             camera: Mutex::new(set_camera(get_cams().unwrap(), , &config).unwrap()),
-//             conf: Mutex::new(config),
-//         },
-//     )
-// }
+pub fn get_devices(config: Config, camera: Camera) -> Result<Devices, NokhwaError> {
+    debug!("Camera has been initialized");
+    let cams = get_cams()?;
+    Ok(
+        Devices {
+            camera: Mutex::new(camera),
+            conf: Mutex::new(config),
+        },
+    )
+}
 
 pub fn get_input(devices: &Devices) -> Result<Input, NokhwaError> {
     debug!("Getting input");
