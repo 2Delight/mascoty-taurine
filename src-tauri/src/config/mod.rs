@@ -18,8 +18,10 @@ pub struct Camera {
 
 pub fn import_config() -> Result<Config, serde_yaml::Error> {
     debug!("Deserializing YAML");
+    
     let deserealizer = serde_yaml::Deserializer::from_str(
         std::include_str!("config.yaml"),
     );
+
     Config::deserialize(deserealizer)
 }
