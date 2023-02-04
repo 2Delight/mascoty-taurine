@@ -43,13 +43,19 @@ pub fn select_camera(index: i32, conf: Config, state: tauri::State<Devices>) -> 
 }
 
 #[tauri::command]
-pub fn set_fps(fps: i32, state: tauri::State<Devices>) -> Result<(), String> {
-    let mut conf = state.get_conf();
-    if fps < 1 || fps > 30 {
+pub fn set_config(conf: Config, state: tauri::State<Devices>) -> Result<(), String> {
+    if conf.camera.fps < 1 || conf.camera.fps > 30 {
         return Err("FPS has to be greater than 0 and lesser than 31!".to_string());
     }
 
-    conf.camera.fps = fps as u32;
+    if conf.camera.height < 1 || conf.camera.height > 10000 {
+        return Err("Camera height in pixels has to be greater than 0 and lesser than 10001!".to_string());
+    }
+
+    if conf.camera.width < 1 || conf.camera.width > 10000 {
+        return Err("Camera width in pixels has to be greater than 0 and lesser than 10001!".to_string());
+    }
+
     state.set_camera(conf, set_camera(
         get_cams().unwrap(),
         state.get_camera_index(),

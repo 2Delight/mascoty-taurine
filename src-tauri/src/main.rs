@@ -51,7 +51,7 @@ fn main() {
                 get_mascot,
                 get_cameras,
                 select_camera,
-                set_fps,
+                set_config,
             ]
         )
         .run(tauri::generate_context!())
