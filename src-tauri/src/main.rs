@@ -34,7 +34,9 @@ fn main() {
 
     debug!("Config parsing");
     let conf = panic_error!(import_config(), "parsing config");
+    info!("Config: {:?}", conf);
 
+    debug!("Getting default camera index");
     let cam = set_camera(
         get_cams()
             .unwrap()[0]
@@ -43,11 +45,8 @@ fn main() {
         &conf,
     ).unwrap();
 
-    let devices = get_devices(conf, cam).unwrap();
-
-    info!("Config: {:?}", conf);
-
     debug!("Getting devices");
+    let devices = get_devices(conf, cam).unwrap();
 
     tauri::Builder::default()
         .manage(devices)
