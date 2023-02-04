@@ -35,8 +35,13 @@ fn main() {
     debug!("Config parsing");
     let conf = panic_error!(import_config(), "parsing config");
 
-    let cams = get_cams().unwrap();
-    let cam = set_camera(get_cams().unwrap(), cams[0].index().clone(), &conf).unwrap();
+    let cam = set_camera(
+        get_cams()
+            .unwrap()[0]
+            .index()
+            .clone(),
+        &conf,
+    ).unwrap();
 
     let devices = get_devices(conf, cam).unwrap();
 

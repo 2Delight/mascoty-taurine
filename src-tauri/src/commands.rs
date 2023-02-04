@@ -30,7 +30,7 @@ pub fn select_camera(index: i32, conf: Config, state: tauri::State<Devices>) -> 
     let cams = get_cams().unwrap();
     let ind  = cams[index as usize].index().clone();
     
-    let cam = match set_camera(cams, ind, &conf) {
+    let cam = match set_camera(ind, &conf) {
         Ok(cam) => cam,
         Err(err) => {
             return Err(err.to_string())
@@ -57,7 +57,6 @@ pub fn set_config(conf: Config, state: tauri::State<Devices>) -> Result<(), Stri
     }
 
     state.set_camera(conf, set_camera(
-        get_cams().unwrap(),
         state.get_camera_index(),
         &conf,
     ).unwrap());
