@@ -39,7 +39,7 @@ pub fn select_camera(index: i32, conf: Config, state: tauri::State<Devices>) -> 
         Err(err) => return Err(err.to_string()),
     };
 
-    state.set_camera(conf, cam);
+    state.set_camera(conf, cam)?;
 
     Ok(())
 }
