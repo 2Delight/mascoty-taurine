@@ -1,0 +1,5 @@
+export const menuGray = "#494949"
+export const interactGray = "#494949"
+export const interactHoverGray = "#494949"
+export const interactActiveHoverGray = "#494949"
+export const dark = "#494949"
