@@ -21,6 +21,8 @@ unsafe impl Send for Devices {}
 
 impl Devices {
     pub fn set_camera(&self, config: Config, camera: Camera) -> Result<(), String> {
+        info!("Setting the camera №{:?} with config {:?}", camera.index(), config);
+
         let mut conf_guard = match self.conf.lock() {
             Ok(val) => val,
             Err(_) => {
@@ -41,6 +43,8 @@ impl Devices {
     }
 
     pub fn get_conf(&self) -> Result<Config, String> {
+        debug!("Sending config");
+
         match self.conf.lock() {
             Ok(val) => Ok(val.clone()),
             Err(_) => Err("Cannot get value from config mutex".to_string()),
@@ -48,6 +52,8 @@ impl Devices {
     }
 
     pub fn get_camera_index(&self) -> Result<CameraIndex, String> {
+        debug!("Sending camera index");
+
         match self.camera.lock() {
             Ok(val) => Ok(val.index().clone()),
             Err(_) => Err("Cannot get value from camera mutex".to_string()),
@@ -58,6 +64,8 @@ impl Devices {
 pub struct Input {}
 
 pub fn get_cams() -> Result<Vec<CameraInfo>, NokhwaError> {
+    debug!("Getting camera list");
+
     let cams = query(ApiBackend::Auto)?;
     if cams.len() == 0 {
         return Err(
@@ -71,8 +79,8 @@ pub fn get_cams() -> Result<Vec<CameraInfo>, NokhwaError> {
 }
 
 pub fn set_camera(index: CameraIndex, config: &Config) -> Result<Camera, NokhwaError> {
-    info!("First camera index: {}", index);
-    debug!("Connecting to camera");
+    info!("Setting the camera №{:?} with config {:?}", index, config);
+
     let format_type = RequestedFormatType::Exact(
         CameraFormat::new_from(
             config.camera.width,
@@ -91,7 +99,8 @@ pub fn set_camera(index: CameraIndex, config: &Config) -> Result<Camera, NokhwaE
 }
 
 pub fn get_devices(config: Config, camera: Camera) -> Result<Devices, NokhwaError> {
-    debug!("Camera has been initialized");
+    debug!("Initializeing devices");
+
     Ok(
         Devices {
             camera: Mutex::new(camera),
@@ -103,6 +112,7 @@ pub fn get_devices(config: Config, camera: Camera) -> Result<Devices, NokhwaErro
 pub fn get_input(devices: &Devices) -> Result<Input, NokhwaError> {
     debug!("Getting input");
     debug!("Getting camera instance");
+    
     let mut camera = panic_error!(devices.camera.lock(), "failed to lock mutex");
 
     debug!("Getting frame");

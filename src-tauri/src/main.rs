@@ -17,8 +17,8 @@ mod mascot;
 mod utils;
 mod commands;
 
-use crate::config::import_config;
 use crate::commands::*;
+use crate::config::import_config;
 use crate::input::{get_cams, set_camera, get_devices};
 
 use log::{debug, error, info, warn};
@@ -48,6 +48,7 @@ fn main() {
     debug!("Getting devices");
     let devices = get_devices(conf, cam).unwrap();
 
+    debug!("Building the app");
     tauri::Builder::default()
         .manage(devices)
         .invoke_handler(
