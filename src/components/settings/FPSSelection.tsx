@@ -1,5 +1,6 @@
 import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import React from "react";
+import { menuGray } from "../../utils/Colors";
 
 export default function FPSSElection() {
     const [age, setAge] = React.useState('');
@@ -12,7 +13,7 @@ export default function FPSSElection() {
         display: "flex",
         flexDirection: "column",
         flex: 1,
-        backgroundColor: "#E6E6E6",
+        backgroundColor: menuGray,
         borderRadius: 10,
         margin: 4,
       }}>
@@ -20,7 +21,6 @@ export default function FPSSElection() {
           margin: 0,
           paddingTop: 4,
           paddingLeft: 10,
-          color: "black",
           textAlign: "left",
         }}>
           Frames Per Second

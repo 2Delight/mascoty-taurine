@@ -10,6 +10,7 @@ import AddCircleOutlineTwoToneIcon from '@mui/icons-material/AddCircleOutlineTwo
 import KeyboardVoiceTwoToneIcon from '@mui/icons-material/KeyboardVoiceTwoTone';
 import CameraAltTwoToneIcon from '@mui/icons-material/CameraAltTwoTone';
 import PartPart from "./PartPart";
+import { interactGray, menuGray } from "../../utils/Colors";
 
 
 export default function PartsSelection() {
@@ -27,7 +28,7 @@ export default function PartsSelection() {
 
     return <div style={{
         flex: 1,
-        backgroundColor: "#E6E6E6",
+        backgroundColor: menuGray,
         margin: 10,
         borderRadius: "20px"
     }}>
@@ -46,7 +47,7 @@ export default function PartsSelection() {
             <a style={{
                 margin: 0,
                 padding: 0,
-                color: "black",
+                minWidth: 100,
             }}>Mascot Parts</a>
             <div style={{
                 flex: 5
@@ -62,7 +63,7 @@ export default function PartsSelection() {
 
         <List sx={{
             width: '100%',
-            bgcolor: '#808080',
+            bgcolor: interactGray,
             overflow: 'auto',
             height: "calc(50vh - 68px)",
             borderRadius: "0px 0px 0px 20px"

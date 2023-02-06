@@ -1,11 +1,12 @@
 import { Stack, Slider } from "@mui/material";
+import { menuGray } from "../../utils/Colors";
 
 export default function ShakeSettings() {
     return <div style={{
       display: "flex",
       flexDirection: "column",
       flex: 1,
-      backgroundColor: "#E6E6E6",
+      backgroundColor: menuGray,
       borderRadius: 10,
       margin: 4,
       alignContent: "center",
@@ -15,9 +16,8 @@ export default function ShakeSettings() {
         margin: 0,
         paddingTop: 4,
         paddingLeft: 10,
-        color: "black",
       }}>
-        Mic Output
+        Mascot Shaking Strength
       </a>
       <Stack spacing={2} direction="row" sx={{
         // backgroundColor: "#808080",

@@ -10,6 +10,7 @@ import AddCircleOutlineTwoToneIcon from '@mui/icons-material/AddCircleOutlineTwo
 import KeyboardVoiceTwoToneIcon from '@mui/icons-material/KeyboardVoiceTwoTone';
 import CameraAltTwoToneIcon from '@mui/icons-material/CameraAltTwoTone';
 import Emotion from "./EmotionPart";
+import { interactGray, menuGray } from "../../utils/Colors";
 
 
 export default function EmotionsSelection() {
@@ -27,7 +28,7 @@ export default function EmotionsSelection() {
 
     return <div style={{
         flex: 1,
-        backgroundColor: "#E6E6E6",
+        backgroundColor: menuGray,
         margin: 10,
         borderRadius: "20px"
     }}>
@@ -46,7 +47,6 @@ export default function EmotionsSelection() {
             <a style={{
                 margin: 0,
                 padding: 0,
-                color: "black",
             }}>Emotions</a>
             <div style={{
                 flex: 5
@@ -62,7 +62,7 @@ export default function EmotionsSelection() {
 
         <List sx={{
             width: '100%',
-            bgcolor: '#808080',
+            bgcolor: interactGray,
             overflow: 'auto',
             height: "calc(50vh - 68px)",
             borderRadius: "0px 0px 0px 20px"

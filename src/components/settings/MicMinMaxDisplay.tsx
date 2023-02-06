@@ -1,5 +1,6 @@
 import { Stack, Slider } from "@mui/material";
 import React from "react";
+import { menuGray } from "../../utils/Colors";
 
 function valuetext(value: number) {
     return `${value}%`;
@@ -16,7 +17,7 @@ export default function MicMinMaxDisplay() {
         display: "flex",
         flexDirection: "column",
         flex: 1,
-        backgroundColor: "#E6E6E6",
+        backgroundColor: menuGray,
         borderRadius: 10,
         margin: 4,
         alignContent: "center",
@@ -26,7 +27,6 @@ export default function MicMinMaxDisplay() {
             margin: 0,
             paddingTop: 4,
             paddingLeft: 10,
-            color: "black",
         }}>
             Mic Output
         </a>

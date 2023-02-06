@@ -1,37 +1,41 @@
 import { Modal } from "@mui/material";
 import React from "react";
-import { CirclePicker } from "react-color";
+import { BlockPicker, CirclePicker, SketchPicker } from "react-color";
+import { useDispatch } from "react-redux";
+import { menuGray } from "../../utils/Colors";
+import { changeColor } from "../../utils/redux_state/BackgroundSlice";
 
 
 export default function MaskotBackgroundColorPicker() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [color, setColor] = React.useState("#fff")
+  const [color, setColor] = React.useState("black")
 
+  const dispatch = useDispatch()
 
   return (
     <div style={{
       display: "flex",
       flexDirection: "row",
       flex: 1,
-      backgroundColor: "#E6E6E6",
+      backgroundColor: menuGray,
       borderRadius: 10,
       margin: 4,
       justifyContent: "center",
       alignContent: "center",
+      position: "relative"
     }}>
       <a style={{
         margin: 0,
         paddingTop: 4,
         paddingLeft: 10,
-        color: "black",
         textAlign: "left",
         flex: 1,
       }}>
         Background Color
       </a>
-      <div style={{
+      <div className="bgButt" style={{
         margin: 6,
         backgroundColor: color,
         minHeight: 17,
@@ -48,16 +52,22 @@ export default function MaskotBackgroundColorPicker() {
         aria-describedby="modal-modal-description"
       >
         <div style={{
-          position: 'absolute' as 'absolute',
+          position: "absolute",
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
           // backgroundColor: 'white',
-          padding: 4,
+          // padding: 4,
         }}>
-          <CirclePicker
+          <SketchPicker
+            disableAlpha={true}
+            presetColors={['#D0021B', '#F5A623', '#F8E71C', '#8B572A', '#7ED321', '#417505', '#BD10E0', '#9013FE', '#4A90E2', '#50E3C2', '#B8E986', '#000000', '#4A4A4A', '#9B9B9B', '#FFFFFF']}
             color={color}
-            onChangeComplete={(clr) => { setColor(clr.hex) }} />
+            onChangeComplete={(clr) => {
+              setColor(clr.hex)
+              dispatch(changeColor(clr.hex))
+              console.log("changed")
+            }} />
 
 
         </div>

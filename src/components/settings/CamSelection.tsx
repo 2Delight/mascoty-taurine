@@ -1,6 +1,7 @@
 import { SelectChangeEvent, Select, MenuItem } from "@mui/material";
 import CameraAltTwoToneIcon from '@mui/icons-material/CameraAltTwoTone';
 import React from "react";
+import { menuGray } from "../../utils/Colors";
 
 export default function CamSelection() {
     const [age, setAge] = React.useState('');
@@ -9,7 +10,7 @@ export default function CamSelection() {
         setAge(event.target.value);
     };
 
-    return <div style={{ display: "flex", flexDirection: "row", borderRadius: 10, backgroundColor: "#E6E6E6", justifyContent: "center", alignItems: "center", flex: 1, margin: 4 }}>
+    return <div style={{ display: "flex", flexDirection: "row", borderRadius: 10, backgroundColor: menuGray, justifyContent: "center", alignItems: "center", flex: 1, margin: 4 }}>
         <CameraAltTwoToneIcon className="dumbIcon" />
         <div style={{ flex: 4 }}>
             <Select
