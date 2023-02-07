@@ -22,12 +22,7 @@ export default function App() {
     voice: "",
   });
 
-  const [bgColor, setBgColor] = useState("white")
-
-  async function get_mascot() {
-    setMascot(await invoke("get_mascot", {}));
-
-  }
+  
 
   return (
     <ThemeProvider theme={theme}>
@@ -73,7 +68,6 @@ export default function App() {
               <MaskotBackgroundColorPicker/>
               <div style={{ flex: 1 }}></div>
             </div>
-
           </div>
 
           <MascotCanvas/>

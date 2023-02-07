@@ -1,6 +1,6 @@
 #![cfg_attr(
     all(not(debug_assertions), target_os = "windows"),
-    windows_subsystem = "windows"
+    windows_subsystem = "windows",
 )]
 
 extern crate log;
@@ -15,24 +15,14 @@ mod config;
 mod input;
 mod mascot;
 mod utils;
+mod commands;
 
+use crate::commands::*;
 use crate::config::import_config;
-use crate::input::get_devices;
+use crate::input::{get_cams, set_camera, get_devices};
 
-use input::Devices;
 use log::{debug, error, info, warn};
 use simple_logger::SimpleLogger;
-
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn get_mascot(state: tauri::State<Devices>) -> mascot::Mascot {
-    mascot::get_mascot(&state)
-}
-
-#[tauri::command]
-fn set_fps(fps: u32, state: tauri::State<Devices>) {
-    state.set_fps(fps);
-}
 
 fn main() {
     match SimpleLogger::new()
@@ -44,16 +34,31 @@ fn main() {
 
     debug!("Config parsing");
     let conf = panic_error!(import_config(), "parsing config");
-
     info!("Config: {:?}", conf);
 
+    debug!("Getting default camera index");
+    let cam = set_camera(
+        get_cams()
+            .unwrap()[0]
+            .index()
+            .clone(),
+        &conf,
+    ).unwrap();
+
     debug!("Getting devices");
+    let devices = get_devices(conf, cam).unwrap();
 
-    let devices = panic_error!(get_devices(conf.clone()), "getting devices");
-
+    debug!("Building the app");
     tauri::Builder::default()
         .manage(devices)
-        .invoke_handler(tauri::generate_handler![get_mascot])
+        .invoke_handler(
+            tauri::generate_handler![
+                get_mascot,
+                get_cameras,
+                select_camera,
+                set_config,
+            ]
+        )
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
