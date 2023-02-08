@@ -80,3 +80,4 @@ pub fn set_config(conf: Config, state: tauri::State<Devices>) -> Result<(), Stri
 
     Ok(())
 }
+

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
+
 import { ThemeProvider} from "@mui/material";
 import EmotionsSelection from "./components/emotions/EmotionsSelection";
 import MaskotBackgroundColorPicker from "./components/settings/BackgroundColorPicker";
