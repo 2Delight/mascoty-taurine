@@ -47,7 +47,7 @@ function getMicrophoneInfo(stream: MediaStream): number {
 
 export default function MicSelection() {
     const [age, setAge] = React.useState('');
-
+    const [uga, setUga] = React.useState(-1);
     const handleChange = (event: SelectChangeEvent) => {
         setAge(event.target.value);
     };
@@ -65,5 +65,9 @@ export default function MicSelection() {
                 <MenuItem value={30}>Thirty</MenuItem>
             </Select>
         </div>
+        {/* <a>{uga}</a>
+        <button onClick={()=> {
+            setUga(getMicrophoneVolume())
+        }}/> */}
     </div>
 };
