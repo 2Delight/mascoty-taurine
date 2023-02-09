@@ -17,7 +17,7 @@ pub fn get_cameras() -> Result<Vec<String>, String> {
     match get_cams() {
         Ok(val) => Ok(val
             .iter()
-            .map(|info: &nokhwa::utils::CameraInfo| info.description().to_string())
+            .map(|info: &nokhwa::utils::CameraInfo| info.human_name())
             .collect()),
         Err(err) => Err(err.to_string()),
     }
@@ -80,3 +80,4 @@ pub fn set_config(conf: Config, state: tauri::State<Devices>) -> Result<(), Stri
 
     Ok(())
 }
+
