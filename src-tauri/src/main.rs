@@ -46,7 +46,7 @@ fn main() {
     ).unwrap();
 
     debug!("Getting devices");
-    let devices = get_devices(conf, cam).unwrap();
+    let devices = get_devices(conf, cam);
 
     debug!("Building the app");
     tauri::Builder::default()

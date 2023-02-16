@@ -102,13 +102,13 @@ pub fn set_camera(index: CameraIndex, config: &Config) -> Result<Camera, NokhwaE
     Ok(camera)
 }
 
-pub fn get_devices(config: Config, camera: Camera) -> Result<Devices, NokhwaError> {
-    debug!("Initializeing devices");
+pub fn get_devices(config: Config, camera: Camera) -> Devices {
+    debug!("Initializing devices");
 
-    Ok(Devices {
+    Devices {
         camera: Mutex::new(camera),
         conf: Mutex::new(config),
-    })
+    }
 }
 
 pub fn get_input(devices: &Devices) -> Result<Input, NokhwaError> {
