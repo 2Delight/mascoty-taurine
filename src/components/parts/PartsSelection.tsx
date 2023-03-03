@@ -1,5 +1,5 @@
 import { List, ListItemButton } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 import { AspectRatio, VolumeDown, VolumeUp } from "@mui/icons-material";
 import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
@@ -11,6 +11,7 @@ import KeyboardVoiceTwoToneIcon from '@mui/icons-material/KeyboardVoiceTwoTone';
 import CameraAltTwoToneIcon from '@mui/icons-material/CameraAltTwoTone';
 import PartPart from "./PartPart";
 import { interactGray, menuGray } from "../../utils/Colors";
+import { MascotContext } from "../../App";
 
 
 export default function PartsSelection() {
@@ -22,9 +23,14 @@ export default function PartsSelection() {
     ) => {
         setSelectedIndex(index);
         // console.log(index)
+        if (mascot) {
+            mascot.mascot = structuredClone(mascot.mascot)
+            mascot.mascot.selectedPart = index;
+            mascot.setMascot(mascot.mascot)
+        }
     };
 
-
+    const mascot = useContext(MascotContext)
 
     return <div style={{
         flex: 1,
@@ -69,7 +75,14 @@ export default function PartsSelection() {
             borderRadius: "0px 0px 0px 20px"
             //  '& ul': { padding: 0 },
         }}>
-            <ListItemButton selected={selectedIndex === 0}
+            {mascot && mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts.map((c, i) =>
+                <ListItemButton selected={selectedIndex === i}
+                    key = {i}
+                    onClick={(event) => handleListItemClick(event, i)}>
+                    <PartPart partIndex={i}/>
+                </ListItemButton >
+            )}
+            {/* <ListItemButton selected={selectedIndex === 0}
                 onClick={(event) => handleListItemClick(event, 0)}>
                 <PartPart />
             </ListItemButton >
@@ -79,12 +92,12 @@ export default function PartsSelection() {
             </ListItemButton>
             <ListItemButton selected={selectedIndex === 2}
                 onClick={(event) => handleListItemClick(event, 2)}>
-                <PartPart />
+                <PartPart />s
             </ListItemButton>
             <ListItemButton selected={selectedIndex === 3}
                 onClick={(event) => handleListItemClick(event, 3)}>
                 <PartPart />
-            </ListItemButton>
+            </ListItemButton> */}
         </List>
     </div>
 }

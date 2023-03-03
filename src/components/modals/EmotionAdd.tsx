@@ -8,7 +8,7 @@ import { EEmotion } from "../logic/EEmotion";
 // import { changeColor } from "../../utils/redux_state/BackgroundSlice";
 
 
-export default function MaskotBackgroundColorPicker() {
+export default function EmotionAdd() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

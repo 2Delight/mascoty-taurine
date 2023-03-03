@@ -1,5 +1,5 @@
 import { List, ListItemButton } from "@mui/material";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { useState } from "react";
 import { AspectRatio, VolumeDown, VolumeUp } from "@mui/icons-material";
 import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
@@ -11,6 +11,7 @@ import KeyboardVoiceTwoToneIcon from '@mui/icons-material/KeyboardVoiceTwoTone';
 import CameraAltTwoToneIcon from '@mui/icons-material/CameraAltTwoTone';
 import Emotion from "./EmotionPart";
 import { interactGray, menuGray } from "../../utils/Colors";
+import { MascotContext } from "../../App";
 
 
 export default function EmotionsSelection() {
@@ -21,10 +22,15 @@ export default function EmotionsSelection() {
         index: number,
     ) => {
         setSelectedIndex(index);
+        if (mascot) {
+            mascot.mascot = structuredClone(mascot.mascot)
+            mascot.mascot.selectedEmotion = index;
+            mascot.setMascot(mascot.mascot)
+        }
         // console.log(index)
     };
 
-
+    const mascot = useContext(MascotContext)
 
     return <div style={{
         flex: 1,
@@ -52,7 +58,7 @@ export default function EmotionsSelection() {
                 flex: 5
             }}></div>
 
-            <DeleteOutlineTwoToneIcon className="icon" />
+            <DeleteOutlineTwoToneIcon className="icon"/>
             <CreateTwoToneIcon className="icon" />
             <AddCircleOutlineTwoToneIcon className="icon" />
             <div style={{
@@ -68,22 +74,13 @@ export default function EmotionsSelection() {
             borderRadius: "0px 0px 0px 20px"
             //  '& ul': { padding: 0 },
         }}>
-            <ListItemButton selected={selectedIndex === 0}
-                onClick={(event) => handleListItemClick(event, 0)}>
-                <Emotion />
-            </ListItemButton >
-            <ListItemButton selected={selectedIndex === 1}
-                onClick={(event) => handleListItemClick(event, 1)}>
-                <Emotion />
-            </ListItemButton>
-            <ListItemButton selected={selectedIndex === 2}
-                onClick={(event) => handleListItemClick(event, 2)}>
-                <Emotion />
-            </ListItemButton>
-            <ListItemButton selected={selectedIndex === 3}
-                onClick={(event) => handleListItemClick(event, 3)}>
-                <Emotion />
-            </ListItemButton>
+            {mascot && mascot?.mascot.emotions.map((c, i) =>
+                <ListItemButton selected={selectedIndex === i}
+                    key = {i}
+                    onClick={(event) => handleListItemClick(event, i)}>
+                    <Emotion emotionIndex={i} />
+                </ListItemButton >
+            )}
         </List>
     </div>
 }

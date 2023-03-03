@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AspectRatio, VolumeDown, VolumeUp } from "@mui/icons-material";
 import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
 import VisibilityOffTwoToneIcon from '@mui/icons-material/VisibilityOffTwoTone';
@@ -7,9 +7,11 @@ import CreateTwoToneIcon from '@mui/icons-material/CreateTwoTone';
 import AddCircleOutlineTwoToneIcon from '@mui/icons-material/AddCircleOutlineTwoTone';
 import KeyboardVoiceTwoToneIcon from '@mui/icons-material/KeyboardVoiceTwoTone';
 import CameraAltTwoToneIcon from '@mui/icons-material/CameraAltTwoTone';
+import { MascotContext } from "../../App";
+import IPart from "../logic/IPart";
 
-export default function PartPart() {
-    const [visible, setVisible] = useState(true)
+export default function PartPart({ partIndex }: { partIndex: number }) {
+    const mascot = useContext(MascotContext)
 
     return <div style={{ display: "flex", flexDirection: "row", width: "100%", borderRadius: "5px", justifyContent: "center", alignItems: "center", }}>
         <a style={{
@@ -18,16 +20,19 @@ export default function PartPart() {
             color: "white",
             maxWidth: "200px",
             overflow: "hidden"
-        }}>Aboba</a>
+        }}>{mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].name}</a>
         <div style={{
             flex: 4
         }}></div>
-        <div style={{ justifyContent: "center", alignItems: "center", display: "flex" }} onClick={() => {
-            setVisible(!visible)
-            console.log(visible)
-        }}>
-            {visible && <VisibilityTwoToneIcon className="eye" />}
-            {!visible && <VisibilityOffTwoToneIcon className="eye" />}
+        <div style={{ justifyContent: "center", alignItems: "center", display: "flex" }}
+            onClick={() => {
+                if (mascot) {
+                    mascot.mascot = structuredClone(mascot.mascot)
+                    mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].visibility = !mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].visibility
+                    mascot.setMascot(mascot.mascot)
+                }
+            }}>
+            {mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].visibility?  <VisibilityTwoToneIcon className="eye" />:  <VisibilityOffTwoToneIcon className="eye" />}
         </div>
 
 
