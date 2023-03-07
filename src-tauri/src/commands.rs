@@ -24,7 +24,7 @@ pub fn get_cameras() -> Result<Vec<String>, String> {
 }
 
 #[tauri::command]
-pub fn select_camera<'a>(index: i32, conf: CameraConfig, state: tauri::State<Devices>) -> Result<(), String> {
+pub fn select_camera(index: i32, conf: CameraConfig, state: tauri::State<Devices>) -> Result<(), String> {
     debug!("Handler select_camera has been invoken");
 
     if index < 0 {
