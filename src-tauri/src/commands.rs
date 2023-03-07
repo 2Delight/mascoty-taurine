@@ -80,4 +80,3 @@ pub fn set_config(conf: CameraConfig, state: tauri::State<Devices>) -> Result<()
 
     Ok(())
 }
-
