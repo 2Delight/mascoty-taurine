@@ -1,4 +1,4 @@
-use crate::config::{Config, CameraConfig};
+use crate::config::{CameraConfig, Config};
 use crate::panic_error;
 
 use std::io::Read;

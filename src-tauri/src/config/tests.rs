@@ -1,4 +1,4 @@
-use super::{import_config};
+use super::import_config;
 
 #[test]
 fn check_config_import() {

@@ -1,9 +1,9 @@
 use crate::input::{get_input, Devices};
 use crate::panic_error;
 
-use rand::Rng;
-use serde::{Serialize, Deserialize};
 use log::{debug, error, info, warn};
+use rand::Rng;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Mascot {
@@ -15,19 +15,12 @@ pub struct Mascot {
 
 fn face_ml() -> (String, bool, bool) {
     let mut rng = rand::thread_rng();
-    (
-        String::new(),
-        rng.gen::<bool>(),
-        rng.gen::<bool>(),
-    )
+    (String::new(), rng.gen::<bool>(), rng.gen::<bool>())
 }
 
 fn voice_ml() -> (String, u8) {
     let mut rng = rand::thread_rng();
-    (
-        String::new(),
-        rng.gen::<u8>() % 50,
-    )
+    (String::new(), rng.gen::<u8>() % 50)
 }
 
 pub fn get_mascot(devices: &Devices) -> Mascot {
