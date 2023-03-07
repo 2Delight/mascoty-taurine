@@ -1,4 +1,3 @@
-
 use crate::input::{get_input, Devices};
 use crate::panic_error;
 

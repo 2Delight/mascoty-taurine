@@ -33,7 +33,7 @@ fn main() {
     };
 
     debug!("Config parsing");
-    let conf = panic_error!(import_config(), "parsing config");
+    let conf = import_config();
     info!("Config: {:?}", conf);
 
     debug!("Getting default camera index");
@@ -42,11 +42,13 @@ fn main() {
             .unwrap()[0]
             .index()
             .clone(),
-        &conf,
+        &conf.camera,
     ).unwrap();
 
     debug!("Getting devices");
     let devices = get_devices(conf, cam);
+
+    mascot::get_mascot(&devices);
 
     debug!("Building the app");
     tauri::Builder::default()

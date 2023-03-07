@@ -1,33 +1,39 @@
 #[cfg(test)]
 mod tests;
 
-use log::{debug, info, warn, error};
-use serde::{Serialize, Deserialize};
-use tch::{CModule, vision::imagenet};
+use log::{debug, error, info, warn};
+use serde::{Deserialize, Serialize};
+use tch::{vision::imagenet, CModule};
 
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct Config {
-    pub camera: Camera,
+    pub camera: CameraConfig,
+    pub model: CModule,
+}
+
+impl std::fmt::Debug for Config {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Config")
+            .field("Camera", &self.camera)
+            .finish()
+    }
 }
 
 #[derive(Clone, Copy, Debug, Serialize, Deserialize)]
-pub struct Camera {
+pub struct CameraConfig {
     pub height: u32,
     pub width: u32,
     pub fps: u32,
 }
 
-pub fn import_config() -> Result<Config, serde_yaml::Error> {
-    let weights = std::include_bytes!("checkpoint.pt");
-    let mut model = CModule::load_data(&mut std::io::Cursor::new(weights)).unwrap();
-    model.set_eval();
-    // imagenet::load_image_from_memory();
-
-
+pub fn import_config() -> Config {
     debug!("Deserializing YAML");
-    let deserealizer = serde_yaml::Deserializer::from_str(
-        std::include_str!("config.yaml"),
-    );
+    let deserealizer = serde_yaml::Deserializer::from_str(std::include_str!("config.yaml"));
 
-    Config::deserialize(deserealizer)
+    Config {
+        camera: CameraConfig::deserialize(deserealizer).unwrap(),
+        model: tch::jit::CModule::load_data(&mut std::io::Cursor::new(std::include_bytes!(
+            "checkpoint.pt"
+        )))
+        .unwrap(),
+    }
 }
