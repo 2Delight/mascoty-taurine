@@ -1,4 +1,4 @@
-use crate::config::Config;
+use crate::config::{Config, CameraConfig};
 use crate::panic_error;
 
 use std::io::Read;
@@ -24,7 +24,7 @@ unsafe impl Sync for Devices {}
 unsafe impl Send for Devices {}
 
 impl Devices {
-    pub fn set_camera(&self, config: Config, camera: Camera) -> Result<(), String> {
+    pub fn set_camera(&self, config: &CameraConfig, camera: Camera) -> Result<(), String> {
         info!(
             "Setting the camera №{:?} with config {:?}",
             camera.index(),
@@ -37,7 +37,7 @@ impl Devices {
                 return Err("Cannot get value from config mutex".to_string());
             }
         };
-        *conf_guard = config;
+        conf_guard.camera = *config;
 
         let mut cam_guard = match self.camera.lock() {
             Ok(val) => val,
@@ -50,14 +50,14 @@ impl Devices {
         Ok(())
     }
 
-    pub fn get_conf(&self) -> Result<Config, String> {
-        debug!("Sending config");
+    // pub fn get_conf(&self) -> Result<Config, String> {
+    //     debug!("Sending config");
 
-        match self.conf.lock() {
-            Ok(val) => Ok(val.clone()),
-            Err(_) => Err("Cannot get value from config mutex".to_string()),
-        }
-    }
+    //     match self.conf.lock() {
+    //         Ok(val) => Ok(val.clone()),
+    //         Err(_) => Err("Cannot get value from config mutex".to_string()),
+    //     }
+    // }
 
     pub fn get_camera_index(&self) -> Result<CameraIndex, String> {
         debug!("Sending camera index");
@@ -84,14 +84,14 @@ pub fn get_cams() -> Result<Vec<CameraInfo>, NokhwaError> {
     Ok(cams)
 }
 
-pub fn set_camera(index: CameraIndex, config: &Config) -> Result<Camera, NokhwaError> {
+pub fn set_camera(index: CameraIndex, config: &CameraConfig) -> Result<Camera, NokhwaError> {
     info!("Setting the camera №{:?} with config {:?}", index, config);
 
     let format_type = RequestedFormatType::Exact(CameraFormat::new_from(
-        config.camera.width,
-        config.camera.height,
+        config.width,
+        config.height,
         FrameFormat::MJPEG,
-        config.camera.fps,
+        config.fps,
     ));
     let format = RequestedFormat::new::<RgbFormat>(format_type);
     let mut camera = Camera::new(index, format)?;
@@ -102,13 +102,13 @@ pub fn set_camera(index: CameraIndex, config: &Config) -> Result<Camera, NokhwaE
     Ok(camera)
 }
 
-pub fn get_devices(config: Config, camera: Camera) -> Result<Devices, NokhwaError> {
-    debug!("Initializeing devices");
+pub fn get_devices(config: Config, camera: Camera) -> Devices {
+    debug!("Initializing devices");
 
-    Ok(Devices {
+    Devices {
         camera: Mutex::new(camera),
         conf: Mutex::new(config),
-    })
+    }
 }
 
 pub fn get_input(devices: &Devices) -> Result<Input, NokhwaError> {
@@ -122,14 +122,13 @@ pub fn get_input(devices: &Devices) -> Result<Input, NokhwaError> {
 
     debug!("Decoding image");
     let rgb = frame.decode_image::<RgbFormat>()?;
-    let weights = std::include_bytes!("config/checkpoint.pt");
-    let mut model = tch::CModule::load_data(&mut std::io::Cursor::new(weights)).unwrap();
+    let model = &mut devices.conf.lock().unwrap().model;
     model.set_eval();
 
     let output = tch::vision::imagenet::load_image_from_memory(rgb.to_vec().as_slice())
         .unwrap()
         .unsqueeze(0)
-        .apply(&model);
+        .apply(model);
     info!("{}", tch::vision::imagenet::top(&output, 1)[0].1);
 
     rgb.get_pixel(10, 10);
