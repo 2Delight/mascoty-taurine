@@ -27,11 +27,12 @@ tch = "0.10.1"
 
 [dependencies.nokhwa]
 version = "0.10.3"
-features = [
-    "input-avfoundation",
-    "input-msmf",
-    "output-wgpu",
-]
+# features = [
+#     "input-avfoundation",
+#     "input-msmf",
+#     "output-wgpu",
+# ]
+features = ["input-native", "output-wgpu"]
 
 [features]
 # by default Tauri runs in production mode

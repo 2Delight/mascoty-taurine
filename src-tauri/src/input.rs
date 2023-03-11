@@ -50,15 +50,6 @@ impl Devices {
         Ok(())
     }
 
-    // pub fn get_conf(&self) -> Result<Config, String> {
-    //     debug!("Sending config");
-
-    //     match self.conf.lock() {
-    //         Ok(val) => Ok(val.clone()),
-    //         Err(_) => Err("Cannot get value from config mutex".to_string()),
-    //     }
-    // }
-
     pub fn get_camera_index(&self) -> Result<CameraIndex, String> {
         debug!("Sending camera index");
 
@@ -93,13 +84,13 @@ pub fn set_camera(index: CameraIndex, config: &CameraConfig) -> Result<Camera, N
         FrameFormat::MJPEG,
         config.fps,
     ));
-    
+
     let format = RequestedFormat::new::<RgbFormat>(format_type);
     let mut camera = Camera::new(index, format)?;
     info!("Camera info: {}", camera.info());
 
     debug!("Openning stream");
-    camera.open_stream()?;
+    camera.open_stream().unwrap();
     Ok(camera)
 }
 
