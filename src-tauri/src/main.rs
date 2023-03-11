@@ -38,7 +38,13 @@ fn main() {
     info!("Config: {:?}", conf);
 
     debug!("Getting default camera index");
-    let cam = set_camera(get_cams().unwrap()[0].index().clone(), &conf.camera).unwrap();
+    let cam = panic_error!(
+        set_camera(
+            get_cams().unwrap()[0].index().clone(),
+            &conf.camera,
+        ),
+        "setting up camera",
+    );
 
     debug!("Getting devices");
     let devices = get_devices(conf, cam);

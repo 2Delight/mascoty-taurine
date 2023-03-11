@@ -93,6 +93,7 @@ pub fn set_camera(index: CameraIndex, config: &CameraConfig) -> Result<Camera, N
         FrameFormat::MJPEG,
         config.fps,
     ));
+    
     let format = RequestedFormat::new::<RgbFormat>(format_type);
     let mut camera = Camera::new(index, format)?;
     info!("Camera info: {}", camera.info());
