@@ -7,7 +7,7 @@ use tch::CModule;
 
 pub struct Config {
     pub camera: CameraConfig,
-    pub model: CModule,
+    // pub model: CModule,
 }
 
 impl std::fmt::Debug for Config {
@@ -31,9 +31,9 @@ pub fn import_config() -> Config {
 
     Config {
         camera: CameraConfig::deserialize(deserealizer).unwrap(),
-        model: tch::CModule::load_data(&mut std::io::Cursor::new(std::include_bytes!(
-            "model.pt",
-        )))
-        .unwrap(),
+        // model: tch::CModule::load_data(&mut std::io::Cursor::new(std::include_bytes!(
+        //     "model.pt",
+        // )))
+        // .unwrap(),
     }
 }

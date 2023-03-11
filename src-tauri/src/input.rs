@@ -114,14 +114,14 @@ pub fn get_input(devices: &Devices) -> Result<Input, NokhwaError> {
 
     debug!("Decoding image");
     let rgb = frame.decode_image::<RgbFormat>()?;
-    let model = &mut devices.conf.lock().unwrap().model;
-    model.set_eval();
+    // let model = &mut devices.conf.lock().unwrap().model;
+    // model.set_eval();
 
-    let output = tch::vision::imagenet::load_image_from_memory(rgb.to_vec().as_slice())
-        .unwrap()
-        .unsqueeze(0)
-        .apply(model);
-    info!("{}", tch::vision::imagenet::top(&output, 1)[0].1);
+    // let output = tch::vision::imagenet::load_image_from_memory(rgb.to_vec().as_slice())
+    //     .unwrap()
+    //     .unsqueeze(0)
+    //     .apply(model);
+    // info!("{}", tch::vision::imagenet::top(&output, 1)[0].1);
 
     rgb.get_pixel(10, 10);
     info!(
