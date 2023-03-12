@@ -1,4 +1,4 @@
-use crate::config::{CameraConfig, Config};
+use crate::config::{CameraConfig};
 use crate::input::{get_cams, set_camera, Devices};
 use crate::mascot;
 
@@ -43,7 +43,7 @@ pub fn select_camera(
         Err(err) => return Err(err.to_string()),
     };
 
-    state.set_camera(&conf, cam)?;
+    state.set_up_camera(&conf, cam)?;
 
     Ok(())
 }
@@ -72,15 +72,8 @@ pub fn set_config(conf: CameraConfig, state: tauri::State<Devices>) -> Result<()
         );
     }
 
-    state.set_camera(
-        &conf,
-        match set_camera(state.get_camera_index()?, &conf) {
-            Ok(cam) => cam,
-            Err(err) => {
-                return Err(err.to_string());
-            }
-        },
-    )?;
-
-    Ok(())
+    match state.set_camera_settings(&conf) {
+        Ok(()) => Ok(()),
+        Err(err) => Err(err.to_string()),
+    }
 }

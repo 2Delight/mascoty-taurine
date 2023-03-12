@@ -23,7 +23,9 @@ simple_logger = "4.0.0"
 
 tauri = { version = "1.2", features = ["shell-open"] }
 rand = "0.8.4"
+
 tch = "0.10.1"
+image = "0.24.5"
 
 [dependencies.nokhwa]
 version = "0.10.3"

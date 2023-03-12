@@ -5,17 +5,18 @@ use std::io::Read;
 use std::sync::{Mutex, MutexGuard, PoisonError};
 // use std::cell::RefCell;
 
-use nokhwa::pixel_format::RgbFormat;
+use image::RgbImage;
+use nokhwa::pixel_format::*;
 use nokhwa::utils::{
     ApiBackend, CameraFormat, CameraIndex, CameraInfo, FrameFormat, RequestedFormat,
-    RequestedFormatType,
+    RequestedFormatType, Resolution,
 };
 use nokhwa::{query, Camera, NokhwaError};
 
 use log::{debug, error, info, warn};
 
 pub struct Devices {
-    camera: Mutex<Camera>,
+    pub camera: Mutex<Camera>,
     conf: Mutex<Config>,
 }
 
@@ -24,7 +25,7 @@ unsafe impl Sync for Devices {}
 unsafe impl Send for Devices {}
 
 impl Devices {
-    pub fn set_camera(&self, config: &CameraConfig, camera: Camera) -> Result<(), String> {
+    pub fn set_up_camera(&self, config: &CameraConfig, camera: Camera) -> Result<(), String> {
         info!(
             "Setting the camera №{:?} with config {:?}",
             camera.index(),
@@ -57,6 +58,18 @@ impl Devices {
             Ok(val) => Ok(val.index().clone()),
             Err(_) => Err("Cannot get value from camera mutex".to_string()),
         }
+    }
+
+    pub fn set_camera_settings(&self, config: &CameraConfig) -> Result<(), NokhwaError> {
+        let mut cam = self.camera.lock().unwrap();
+
+        cam.set_resolution(Resolution {
+            width_x: config.width,
+            height_y: config.height,
+        })?;
+        cam.set_frame_rate(config.fps)?;
+
+        Ok(())
     }
 }
 
@@ -91,6 +104,8 @@ pub fn set_camera(index: CameraIndex, config: &CameraConfig) -> Result<Camera, N
 
     debug!("Openning stream");
     camera.open_stream().unwrap();
+
+
     Ok(camera)
 }
 
@@ -107,28 +122,43 @@ pub fn get_input(devices: &Devices) -> Result<Input, NokhwaError> {
     debug!("Getting input");
     debug!("Getting camera instance");
 
-    let mut camera = panic_error!(devices.camera.lock(), "failed to lock mutex");
+    let mut camera = devices.camera.lock().unwrap();
 
     debug!("Getting frame");
-    let frame = camera.frame()?;
-
-    debug!("Decoding image");
-    let rgb = frame.decode_image::<RgbFormat>()?;
-    // let model = &mut devices.conf.lock().unwrap().model;
-    // model.set_eval();
-
-    // let output = tch::vision::imagenet::load_image_from_memory(rgb.to_vec().as_slice())
-    //     .unwrap()
-    //     .unsqueeze(0)
-    //     .apply(model);
-    // info!("{}", tch::vision::imagenet::top(&output, 1)[0].1);
-
-    rgb.get_pixel(10, 10);
-    info!(
-        "Frame resolution: {}; Pixel: {:?}",
-        frame.resolution(),
-        rgb.get_pixel(10, 10),
+    let mut img = Vec::new();
+    img.resize(
+        camera.resolution().x() as usize * camera.resolution().y() as usize * 3,
+        0,
     );
+    camera.write_frame_to_buffer::<RgbFormat>(&mut img).unwrap();
+
+    // debug!("{}", frame.source_frame_format());
+    
+
+    // debug!("Decoding image");
+    // let mut img = Vec::new();
+    // img.resize(
+    //     frame.resolution().x() as usize * frame.resolution().y() as usize * 3,
+    //     0,
+    // );
+
+    // frame.decode_image_to_buffer::<RgbFormat>(&mut img).unwrap();
+
+    let model = &mut devices.conf.lock().unwrap().model;
+    model.set_eval();
+
+    let output = tch::vision::imagenet::load_image_and_resize224_from_memory(img.as_slice())
+        .unwrap()
+        .unsqueeze(0)
+        .apply(model);
+    info!("{}", tch::vision::imagenet::top(&output, 1)[0].1);
+
+    // rgb.get_pixel(10, 10);
+    // info!(
+    //     "Frame resolution: {}; Pixel: {:?}",
+    //     frame.resolution(),
+    //     rgb.get_pixel(10, 10),
+    // );
 
     debug!("Sending info");
     Ok(Input {})
