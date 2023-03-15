@@ -1,3 +1,5 @@
+import { EPart } from "./EPart";
+
 export default interface IPart {
     name: string,
     visibility: boolean,
@@ -5,4 +7,5 @@ export default interface IPart {
     positionX: number,
     positionY: number,
     scale: number,
+    type: EPart
 }

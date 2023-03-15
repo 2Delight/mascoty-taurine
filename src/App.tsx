@@ -16,6 +16,7 @@ import PartsSelection from "./components/parts/PartsSelection";
 import IMascot from "./components/logic/IMascot";
 import { EEmotion } from "./components/logic/EEmotion";
 import { ThemeContext } from "@emotion/react";
+import { EPart } from "./components/logic/EPart";
 
 
 export const MascotContext = createContext<{
@@ -40,6 +41,7 @@ export default function App() {
           positionX: 50,
           positionY: 50,
           scale: 1,
+          type: EPart.background
         },
         {
           name: "part B",
@@ -48,6 +50,7 @@ export default function App() {
           positionX: 100,
           positionY: 100,
           scale: 1,
+          type: EPart.face
         }],
         emotion: EEmotion.angry,
       },
@@ -61,6 +64,7 @@ export default function App() {
           positionX: 0,
           positionY: 0,
           scale: 1,
+          type: EPart.eyesClosed
         },
         {
           name: "Eyes_O",
@@ -69,6 +73,7 @@ export default function App() {
           positionX: 0,
           positionY: 0,
           scale: 1,
+          type: EPart.eyesOpened
         },
         {
           name: "Face",
@@ -77,6 +82,7 @@ export default function App() {
           positionX: 0,
           positionY: 0,
           scale: 1,
+          type: EPart.face
         },
         {
           name: "Mouth_C",
@@ -85,6 +91,7 @@ export default function App() {
           positionX: 0,
           positionY: 0,
           scale: 1,
+          type: EPart.mouthClosed
         },
         {
           name: "Mouth_O",
@@ -93,6 +100,7 @@ export default function App() {
           positionX: 0,
           positionY: 0,
           scale: 1,
+          type: EPart.mouthOpened
         },
         ],
         emotion: EEmotion.angry,

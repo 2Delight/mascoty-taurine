@@ -9,6 +9,7 @@ import KeyboardVoiceTwoToneIcon from '@mui/icons-material/KeyboardVoiceTwoTone';
 import CameraAltTwoToneIcon from '@mui/icons-material/CameraAltTwoTone';
 import { MascotContext } from "../../App";
 import IPart from "../logic/IPart";
+import descriptPart from "../../utils/EPartDescriptor";
 
 export default function PartPart({ partIndex }: { partIndex: number }) {
     const mascot = useContext(MascotContext)
@@ -24,6 +25,15 @@ export default function PartPart({ partIndex }: { partIndex: number }) {
         <div style={{
             flex: 4
         }}></div>
+        <a style={{
+            marginInline:5,
+            padding: 0,
+            color: "white",
+            maxWidth: "200px",
+            overflow: "hidden"
+        }}>
+            {descriptPart(mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].type)}
+        </a>
         <div style={{ justifyContent: "center", alignItems: "center", display: "flex" }}
             onClick={() => {
                 if (mascot) {
