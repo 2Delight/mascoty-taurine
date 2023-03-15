@@ -52,7 +52,7 @@ export default function App() {
           scale: 1,
           type: EPart.face
         }],
-        emotion: EEmotion.angry,
+        emotion: EEmotion.happy,
       },
       {
         name: "robomuzhikh",

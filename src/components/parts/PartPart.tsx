@@ -9,14 +9,22 @@ import KeyboardVoiceTwoToneIcon from '@mui/icons-material/KeyboardVoiceTwoTone';
 import CameraAltTwoToneIcon from '@mui/icons-material/CameraAltTwoTone';
 import { MascotContext } from "../../App";
 import IPart from "../logic/IPart";
-import descriptPart from "../../utils/EPartDescriptor";
+import {descriptPart} from "../../utils/EDescriptor";
 
 export default function PartPart({ partIndex }: { partIndex: number }) {
     const mascot = useContext(MascotContext)
+    const [visible, setVisible] = useState(true)
 
-    return <div style={{ display: "flex", flexDirection: "row", width: "100%", borderRadius: "5px", justifyContent: "center", alignItems: "center", }}>
+    useEffect(() => {
+        if (mascot) {
+            setVisible(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].visibility)
+        }
+    }, [mascot?.mascot])
+
+    return <div style={{ display: "flex", flexDirection: "row", width: "100%", borderRadius: "5px", justifyContent: "center", alignItems: "center", opacity:visible? 1: 0.3 }}>
+        {mascot && <img src={descriptPart(mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].type)} style={{ height: 20, aspectRatio: 1 }} />}
         <a style={{
-            margin: 0,
+            marginInline:10,
             padding: 0,
             color: "white",
             maxWidth: "200px",
@@ -25,15 +33,6 @@ export default function PartPart({ partIndex }: { partIndex: number }) {
         <div style={{
             flex: 4
         }}></div>
-        <a style={{
-            marginInline:5,
-            padding: 0,
-            color: "white",
-            maxWidth: "200px",
-            overflow: "hidden"
-        }}>
-            {descriptPart(mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].type)}
-        </a>
         <div style={{ justifyContent: "center", alignItems: "center", display: "flex" }}
             onClick={() => {
                 if (mascot) {
