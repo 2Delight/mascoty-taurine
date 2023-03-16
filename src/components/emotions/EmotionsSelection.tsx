@@ -12,10 +12,12 @@ import CameraAltTwoToneIcon from '@mui/icons-material/CameraAltTwoTone';
 import Emotion from "./EmotionPart";
 import { interactGray, menuGray } from "../../utils/Colors";
 import { MascotContext } from "../../App";
+import EmotionAdd from "../modals/EmotionAdd";
 
 
 export default function EmotionsSelection() {
     const [selectedIndex, setSelectedIndex] = React.useState(0);
+    const [openAdd, setOpenAdd] = React.useState(false)
 
     const handleListItemClick = (
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -38,6 +40,7 @@ export default function EmotionsSelection() {
         margin: 10,
         borderRadius: "20px"
     }}>
+        <EmotionAdd open={openAdd} setOpen={setOpenAdd}/>
         <div style={{
             display: "flex",
             flexDirection: "row",
@@ -60,7 +63,7 @@ export default function EmotionsSelection() {
 
             <DeleteOutlineTwoToneIcon className="icon"/>
             <CreateTwoToneIcon className="icon" />
-            <AddCircleOutlineTwoToneIcon className="icon" />
+            <AddCircleOutlineTwoToneIcon className="icon" onClick={() => {setOpenAdd(true)}}/>
             <div style={{
                 flex: 0
             }}></div>

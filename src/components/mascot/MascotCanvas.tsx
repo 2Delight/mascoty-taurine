@@ -14,18 +14,28 @@ export default function MascotCanvas() {
 
   return <div className="mascotPlace" style={{
     flex: 5,
-    height: "100%", background: mascot?.mascot.bgColor,
+    // height: "100%",
+    background: mascot?.mascot.bgColor,
     overflow: "auto",
     margin: 10,
     borderRadius: "10px 0 0 0 ",
-  }}>
+  }}
+    onDragStart={() => { return false }}
+    onDrag={() => { return false }}
+  >
     <div className="mascot" style={{
       width: "100%",
-      
+
       position: "relative"
-    }}>
-      {mascot && mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts.map((c, i) => {
+    }} draggable={false}
+      onDragStart={() => { return false }}
+      onDrag={() => { return false }}>
+      {/* {mascot && mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts.map((c, i) => {
         return c.visibility ? <MascotPart partIndex={i} key={i} /> : <div key={i} />
+      }
+      )} */}
+      {mascot && mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts.map((c, i) => {
+        return c.visibility && <MascotPart partIndex={i} key={i} />
       }
       )}
       {/* {mascot && mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts.filter((e: IPart, i) => {

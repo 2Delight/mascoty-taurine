@@ -61,8 +61,8 @@ export default function App() {
           name: "Eyes_C",
           visibility: true,
           sourcePath: "/pics/eyes_c.png",
-          positionX: 0,
-          positionY: 0,
+          positionX: 100,
+          positionY: 100,
           scale: 1,
           type: EPart.eyesClosed
         },
@@ -164,10 +164,10 @@ export default function App() {
             </div>
 
             <MascotCanvas />
-
+{/* 
             <button onClick={() => console.log(mascot)}>
 
-            </button>
+            </button> */}
 
           </div>
         </div>

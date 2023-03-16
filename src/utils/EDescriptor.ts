@@ -6,6 +6,7 @@ import angry from "../assets/emotions-icons/angry.svg"
 import disgust from "../assets/emotions-icons/sick.svg"
 import fear from "../assets/emotions-icons/scared.svg"
 import surprise from "../assets/emotions-icons/shock.svg"
+import sad from "../assets/emotions-icons/sad.svg"
 
 import background from "../assets/parts-icons/background.svg"
 import closedEyes from "../assets/parts-icons/closed-eyes.svg"
@@ -56,6 +57,9 @@ export function descriptEmotion(part: EEmotion) {
         }
         case EEmotion.surprise: {
             return surprise
+        }
+        case EEmotion.sad: {
+            return sad
         }
     }
 

@@ -12,10 +12,12 @@ import CameraAltTwoToneIcon from '@mui/icons-material/CameraAltTwoTone';
 import PartPart from "./PartPart";
 import { interactGray, menuGray } from "../../utils/Colors";
 import { MascotContext } from "../../App";
+import PartAdd from "../modals/PartAdd";
 
 
 export default function PartsSelection() {
     const [selectedIndex, setSelectedIndex] = React.useState(0);
+    const [openAdd, setOpenAdd] = React.useState(false)
 
     const handleListItemClick = (
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -38,6 +40,7 @@ export default function PartsSelection() {
         margin: 10,
         borderRadius: "20px"
     }}>
+        <PartAdd open={openAdd} setOpen={setOpenAdd}/>
         <div style={{
             display: "flex",
             flexDirection: "row",
@@ -61,7 +64,7 @@ export default function PartsSelection() {
 
             <DeleteOutlineTwoToneIcon className="icon" />
             <CreateTwoToneIcon className="icon" />
-            <AddCircleOutlineTwoToneIcon className="icon" />
+            <AddCircleOutlineTwoToneIcon className="icon" onClick={() => {setOpenAdd(true)}}/>
             <div style={{
                 flex: 0
             }}></div>
