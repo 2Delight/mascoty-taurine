@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { MascotContext } from "../../App";
 import { menuGray } from "../../utils/Colors";
 import diagArrows from "../../assets/resize.svg"
@@ -28,20 +28,21 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
         mascot?.mascot.selectedEmotion
     ])
 
-    const sizeHandler = (mouseDownEvent: { pageX: any; pageY: any; }) => {
-        console.log("asdasdasd")
+    const sizeHandler = (mouseDownEvent: any) => {
+        mouseDownEvent.stopPropagation()
+        console.log("scaling mouseDown")
         const startSize = size;
         const startPosition = { x: mouseDownEvent.pageX, y: mouseDownEvent.pageY };
 
         function onMouseMove(mouseMoveEvent: { pageX: number; pageY: number; }) {
-            console.log("scaling")
+            console.log("scaling mouseMove")
             setSize(currentSize => (
-                startSize * mouseMoveEvent.pageX / startPosition.x
+                startSize * mouseMoveEvent.pageX/ startPosition.x
                 // startSize.y - startPosition.y + mouseMoveEvent.pageY
             ));
         }
         function onMouseUp() {
-            console.log("mouseUp")
+            console.log("scaling mouseUp")
             document.body.removeEventListener("mousemove", onMouseMove);
             // uncomment the following line if not using `{ once: true }`
             // document.body.removeEventListener("mouseup", onMouseUp);
@@ -61,36 +62,45 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
             mascot.setMascot(mascot.mascot)
         }
     };
+    console.log(size)
 
+    const dragref = useRef(null)
     return (
         partIndex == mascot?.mascot.selectedPart ?
+            // <div style={{ padding: 10, border: "solid 1px red", }}>
             <Draggable
+                ref={dragref}
                 onStop={handleStop}
                 position={{ x: currentPos.x, y: currentPos.y }}
                 positionOffset={mouseStart}
             >
                 {/* <Resizable> */}
                 <div style={{
-                    userSelect: "none",
-                    position: "absolute",
-                    // left: currentPos.x,
-                    // top: currentPos.y,
-                    outline: "3px dashed white",
                     zIndex: 100,
-                    // transform: "scale(" + size + ")",
-                }}
+                }} draggable={false}
                 >
-                    <img src={"https://asset.localhost/" + mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath}
-                        style={{
-                            objectFit: 'contain',
-                            // outline: "3px dashed white",
-                        }}
-                        draggable={false}
-                    ></img>
-                    {/* <img src={diagArrows} style={{ right: -15, bottom: -15, height: 30, aspectRatio: 1, position: "absolute", background: "black" }} onMouseDown={sizeHandler} /> */}
+                    <div style={{
+                        transformOrigin: "left top",
+                        transform: "scale(" + size + ")",
+                        position: "absolute",
+                        outline: "3px dashed white",
+                    }} draggable={false}
+                    >
+                        <img src={"https://asset.localhost/" + mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath}
+                            style={{
+                                objectFit: 'fill',
+                                // transform: "scale(" + size + ")",
+                                
+                                // outline: "3px dashed white",
+                            }}
+                            draggable={false}
+                        ></img>
+                        <img draggable={false} src={diagArrows} style={{ right: -15, bottom: -15, height: 30, aspectRatio: 1, position: "absolute", background: "black",transform:"unset" }} onMouseDown={sizeHandler} />
+                    </div>
                 </div>
                 {/* </Resizable> */}
             </Draggable>
+            // </div>
             :
             <Draggable
                 disabled={true}
