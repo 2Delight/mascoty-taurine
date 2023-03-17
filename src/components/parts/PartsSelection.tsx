@@ -18,6 +18,7 @@ import PartAdd from "../modals/PartAdd";
 export default function PartsSelection() {
     const [selectedIndex, setSelectedIndex] = React.useState(0);
     const [openAdd, setOpenAdd] = React.useState(false)
+    const [useRedact, setUseRedact] = React.useState(false)
 
     const handleListItemClick = (
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -40,7 +41,7 @@ export default function PartsSelection() {
         margin: 10,
         borderRadius: "20px"
     }}>
-        <PartAdd open={openAdd} setOpen={setOpenAdd}/>
+        <PartAdd open={openAdd} setOpen={setOpenAdd} redact={useRedact} />
         <div style={{
             display: "flex",
             flexDirection: "row",
@@ -62,9 +63,24 @@ export default function PartsSelection() {
                 flex: 5
             }}></div>
 
-            <DeleteOutlineTwoToneIcon className="icon" />
-            <CreateTwoToneIcon className="icon" />
-            <AddCircleOutlineTwoToneIcon className="icon" onClick={() => {setOpenAdd(true)}}/>
+            <DeleteOutlineTwoToneIcon className="icon" onClick={() => {
+                if (mascot && mascot.mascot.emotions.length > 0 && mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.length > 0) {
+                    mascot.mascot = structuredClone(mascot.mascot)
+                    mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.splice(mascot.mascot.selectedPart, 1)
+                    mascot.setMascot(mascot.mascot)
+                }
+            }} />
+            <CreateTwoToneIcon className="icon" onClick={() => {
+                if (mascot && mascot.mascot.emotions.length > 0 && mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.length > 0) {
+                    setUseRedact(true)
+                    setOpenAdd(true)
+                }
+            }} />
+            <AddCircleOutlineTwoToneIcon className="icon" onClick={() => {
+                if (mascot && mascot.mascot.emotions.length > 0)
+                    setUseRedact(false)
+                setOpenAdd(true)
+            }} />
             <div style={{
                 flex: 0
             }}></div>
@@ -78,11 +94,11 @@ export default function PartsSelection() {
             borderRadius: "0px 0px 0px 20px"
             //  '& ul': { padding: 0 },
         }}>
-            {mascot && mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts.map((c, i) =>
+            {mascot && mascot.mascot.emotions.length > 0 && mascot?.mascot.emotions[mascot.mascot.selectedEmotion]?.parts?.map((c, i) =>
                 <ListItemButton selected={selectedIndex === i}
-                    key = {i}
+                    key={i}
                     onClick={(event) => handleListItemClick(event, i)}>
-                    <PartPart partIndex={i}/>
+                    <PartPart partIndex={i} />
                 </ListItemButton >
             )}
             {/* <ListItemButton selected={selectedIndex === 0}

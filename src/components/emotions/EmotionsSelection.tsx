@@ -18,6 +18,7 @@ import EmotionAdd from "../modals/EmotionAdd";
 export default function EmotionsSelection() {
     const [selectedIndex, setSelectedIndex] = React.useState(0);
     const [openAdd, setOpenAdd] = React.useState(false)
+    const [useRedact, setUseRedact] = React.useState(false)
 
     const handleListItemClick = (
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -27,6 +28,7 @@ export default function EmotionsSelection() {
         if (mascot) {
             mascot.mascot = structuredClone(mascot.mascot)
             mascot.mascot.selectedEmotion = index;
+            console.log("selected Emotion after INTERACTION: " + index)
             mascot.setMascot(mascot.mascot)
         }
         // console.log(index)
@@ -34,13 +36,21 @@ export default function EmotionsSelection() {
 
     const mascot = useContext(MascotContext)
 
+    useEffect(() => {
+        if (mascot) {
+            setSelectedIndex(mascot.mascot.selectedEmotion)
+        }
+    }, [mascot?.mascot.selectedEmotion])
+
+
+
     return <div style={{
         flex: 1,
         backgroundColor: menuGray,
         margin: 10,
         borderRadius: "20px"
     }}>
-        <EmotionAdd open={openAdd} setOpen={setOpenAdd}/>
+        <EmotionAdd open={openAdd} setOpen={setOpenAdd} redact={useRedact} />
         <div style={{
             display: "flex",
             flexDirection: "row",
@@ -61,9 +71,25 @@ export default function EmotionsSelection() {
                 flex: 5
             }}></div>
 
-            <DeleteOutlineTwoToneIcon className="icon"/>
-            <CreateTwoToneIcon className="icon" />
-            <AddCircleOutlineTwoToneIcon className="icon" onClick={() => {setOpenAdd(true)}}/>
+            <DeleteOutlineTwoToneIcon className="icon" onClick={() => {
+                if (mascot && mascot.mascot.emotions.length > 0) {
+                    mascot.mascot = structuredClone(mascot.mascot)
+                    mascot.mascot.emotions.splice(mascot.mascot.selectedEmotion, 1)
+                    mascot.mascot.selectedEmotion = mascot.mascot.emotions.length - 1
+                    console.log("Selected Emotion after DELETE: " + mascot.mascot.selectedEmotion)
+                    mascot.setMascot(mascot.mascot)
+                }
+            }} />
+            <CreateTwoToneIcon className="icon" onClick={() => {
+                if (mascot && mascot.mascot.emotions.length > 0) {
+                    setUseRedact(true)
+                    setOpenAdd(true)
+                }
+            }} />
+            <AddCircleOutlineTwoToneIcon className="icon" onClick={() => {
+                setUseRedact(false)
+                setOpenAdd(true)
+            }} />
             <div style={{
                 flex: 0
             }}></div>
@@ -79,7 +105,7 @@ export default function EmotionsSelection() {
         }}>
             {mascot && mascot?.mascot.emotions.map((c, i) =>
                 <ListItemButton selected={selectedIndex === i}
-                    key = {i}
+                    key={i}
                     onClick={(event) => handleListItemClick(event, i)}>
                     <Emotion emotionIndex={i} />
                 </ListItemButton >

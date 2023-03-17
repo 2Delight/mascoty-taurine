@@ -1,5 +1,5 @@
 import { MenuItem, Modal, Select, SelectChangeEvent } from "@mui/material";
-import React, { ChangeEvent, useContext, useRef, useState } from "react";
+import React, { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import { BlockPicker, CirclePicker, SketchPicker } from "react-color";
 import { useDispatch } from "react-redux";
 import { MascotContext } from "../../App";
@@ -23,7 +23,7 @@ const handler = async () => {
   return aboba
 }
 
-export default function EmotionAdd({ open, setOpen }: { open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
+export default function EmotionAdd({ open, setOpen, redact }: { open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>, redact: boolean }) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -36,7 +36,15 @@ export default function EmotionAdd({ open, setOpen }: { open: boolean, setOpen: 
     setDesignation(event.target.value);
   };
 
-
+  useEffect(() => {
+    if (redact && mascot) {
+      setDesignation(mascot?.mascot.emotions[mascot.mascot.selectedEmotion].emotion + "")
+      setName(mascot?.mascot.emotions[mascot.mascot.selectedEmotion].name)
+    } else {
+      setDesignation("")
+      setName("")
+    }
+  }, [open, redact])
 
   return (
     <Modal
@@ -156,12 +164,23 @@ export default function EmotionAdd({ open, setOpen }: { open: boolean, setOpen: 
             console.log(EPart[Number(designation)])
             if (mascot) {
               mascot.mascot = structuredClone(mascot.mascot)
-              mascot.mascot.emotions.push({
-                name: name,
-                visibility: true,
-                parts: [],
-                emotion: Number(designation),
-              })
+              if (redact) {
+                mascot.mascot.emotions[mascot.mascot.selectedEmotion] = {
+                  name: name,
+                  visibility: true,
+                  parts: mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts,
+                  emotion: Number(designation),
+                }
+              } else {
+                mascot.mascot.emotions.push({
+                  name: name,
+                  visibility: true,
+                  parts: [],
+                  emotion: Number(designation),
+                })
+                mascot.mascot.selectedEmotion = mascot.mascot.emotions.length-1
+                console.log("Selected Emotion after ADDITION: " + mascot.mascot.selectedEmotion )
+              }
               mascot.setMascot(mascot.mascot)
               handleClose()
             }

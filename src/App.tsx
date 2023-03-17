@@ -34,24 +34,8 @@ export default function App() {
       {
         name: "abiba",
         visibility: true,
-        parts: [{
-          name: "part A",
-          visibility: true,
-          sourcePath: "",
-          positionX: 50,
-          positionY: 50,
-          scale: 1,
-          type: EPart.background
-        },
-        {
-          name: "part B",
-          visibility: false,
-          sourcePath: "",
-          positionX: 100,
-          positionY: 100,
-          scale: 1,
-          type: EPart.face
-        }],
+        parts: [
+          ],
         emotion: EEmotion.happy,
       },
       {

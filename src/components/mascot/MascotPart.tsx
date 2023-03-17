@@ -19,56 +19,14 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
     useEffect(() => {
         if (mascot) {
             setSize(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].scale)
-            setMouseStart({
+            setCurrentPos({
                 x: mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionX,
                 y: mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionY
             })
         }
     }, [
-        // mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex]
+        mascot?.mascot.selectedEmotion
     ])
-
-    // useEffect(() => {
-    //     if (mascot) {
-    //         mascot.mascot = structuredClone(mascot.mascot)
-    //         mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionX = mouseEnd.x
-    //         mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionY = mouseEnd.y
-    //         mascot.setMascot(mascot.mascot)
-    //     }
-    // }, [
-    //    mouseStart
-    // ]) 
-
-    // const moveHandler = (mouseDownEvent: { pageX: any; pageY: any; }) => {
-    //     console.log("start dragging")
-    //     const startPosition = { x: mouseStart.x, y: mouseStart.y };
-    //     const startPositionBase = { x: mouseDownEvent.pageX, y: mouseDownEvent.pageY };
-
-    //     function onMouseMove(mouseMoveEvent: { pageX: number; pageY: number; }) {
-    //         console.log("moved")
-    //         let end = mouseEnd
-    //         end.x = startPosition.x + mouseMoveEvent.pageX - startPositionBase.x
-    //         end.y = startPosition.y + mouseMoveEvent.pageY - startPositionBase.y
-    //         setMouseEnd(end)
-    //         setCurrentPos(end)
-    //         // setMouseStart(end)
-    //         // if (mascot) {
-    //         //     mascot.mascot = structuredClone(mascot.mascot)
-    //         //     mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionX = mouseEnd.x
-    //         //     mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionY = mouseEnd.y
-    //         //     mascot.setMascot(mascot.mascot)
-    //         // }
-    //     }
-    //     function onMouseUp() {
-    //         console.log("mouse up")
-    //         document.body.removeEventListener("mousemove", onMouseMove);
-    //         setMouseStart(mouseEnd)
-    //     }
-
-    //     document.body.addEventListener("mousemove", onMouseMove);
-    //     document.body.addEventListener("mouseup", onMouseUp, { once: true });
-    // };
-
 
     const sizeHandler = (mouseDownEvent: { pageX: any; pageY: any; }) => {
         console.log("asdasdasd")
@@ -93,60 +51,6 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
         document.body.addEventListener("mouseup", onMouseUp, { once: true });
     };
 
-    // return (
-    //     <div id="container" style={{ width: size.x, height: size.y }}>
-    //         <button id="draghandle" type="button" onMouseDown={handler} >Resize</button>
-    //     </div>
-    // );
-
-
-    // const moveHandler = (mouseDownEvent: { pageX: any; pageY: any; }) => {
-    //     if (dragging) {
-    //         // return
-    //         setDragging(false)
-    //         document.removeEventListener("mousemove", onMouseMove);
-    //         document.removeEventListener("mouseup", onMouseUp);
-    //         return
-    //     }
-    //     console.log("start dragging")
-    //     setDragging(true)
-    //     const startPosition = { x: mouseStart.x, y: mouseStart.y };
-    //     const startPositionBase = { x: mouseDownEvent.pageX, y: mouseDownEvent.pageY };
-
-    //     document.addEventListener("mousemove", onMouseMove);
-    //     document.addEventListener("mouseup", onMouseUp, { once: true });
-    //     // document.addEventListener("mousedown", onMouseDown, { once: true });
-
-    //     function onMouseMove(mouseMoveEvent: { pageX: number; pageY: number; }) {
-    //         console.log("moved")
-    //         let end = mouseEnd
-    //         end.x = startPosition.x + mouseMoveEvent.pageX - startPositionBase.x
-    //         end.y = startPosition.y + mouseMoveEvent.pageY - startPositionBase.y
-    //         setMouseEnd(end)
-    //         setCurrentPos(end)
-    //         // setMouseStart(end)
-    //         // if (mascot) {
-    //         //     mascot.mascot = structuredClone(mascot.mascot)
-    //         //     mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionX = mouseEnd.x
-    //         //     mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionY = mouseEnd.y
-    //         //     mascot.setMascot(mascot.mascot)
-    //         // }
-    //     }
-    //     function onMouseUp() {
-    //         console.log("mouse Up")
-
-    //         // document.body.removeEventListener("mousedown", onMouseDown);
-    //         document.removeEventListener("mousemove", onMouseMove);
-    //         document.removeEventListener("mouseup", onMouseUp);
-    //         setMouseStart(mouseEnd)
-    //         setDragging(false)
-    //     }
-    //     function onMouseDown() {
-    //         console.log("mouse Down")
-    //         // document.body.removeEventListener("mousemove", onMouseMove);
-    //         // setMouseStart(mouseEnd)
-    //     }
-    // };
     const handleStop = (event: any, dragElement: { x: any; y: any; }) => {
         console.log("moved")
         setCurrentPos({ x: dragElement.x, y: dragElement.y })
@@ -158,11 +62,9 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
         }
     };
 
-
     return (
         partIndex == mascot?.mascot.selectedPart ?
             <Draggable
-                // disabled={isDraggerDisabled}
                 onStop={handleStop}
                 position={{ x: currentPos.x, y: currentPos.y }}
                 positionOffset={mouseStart}
@@ -177,22 +79,8 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
                     zIndex: 100,
                     // transform: "scale(" + size + ")",
                 }}
-
-
-                // draggable={true}
-                // onMouseDown={moveHandler}
-                // onDragStart={() => {return false}}
-                // onDragStart={() => {
-                //     console.log("Started Dragging")
-                // }}
-                // onDragEnd={() => {
-                //     console.log("Ended Dragging")
-                // }}
-                // onDrag={() => {
-                //     console.log("Dragging")
-                // }}
                 >
-                    <img src={mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath}
+                    <img src={"https://asset.localhost/" + mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath}
                         style={{
                             objectFit: 'contain',
                             // outline: "3px dashed white",
@@ -206,6 +94,7 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
             :
             <Draggable
                 disabled={true}
+                position={{ x: currentPos.x, y: currentPos.y }}
                 positionOffset={mouseStart}
             // positionOffset={mascot ? { x: mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionX, y: mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionY } : { x: 0, y: 0 }}
             >
@@ -218,7 +107,7 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
                     opacity: 0.7,
                     transform: "scale(" + size + ")",
                 }}>
-                    <img src={mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath} style={{ objectFit: 'contain' }} draggable={false}></img>
+                    <img src={"https://asset.localhost/" + mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath} style={{ objectFit: 'contain' }} draggable={false}></img>
                 </div>
             </Draggable>
     )

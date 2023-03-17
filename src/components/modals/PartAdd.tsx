@@ -1,5 +1,5 @@
 import { MenuItem, Modal, Select, SelectChangeEvent } from "@mui/material";
-import React, { ChangeEvent, useContext, useRef, useState } from "react";
+import React, { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import { BlockPicker, CirclePicker, SketchPicker } from "react-color";
 import { useDispatch } from "react-redux";
 import { MascotContext } from "../../App";
@@ -23,13 +23,10 @@ const handler = async () => {
   return aboba
 }
 
-export default function PartAdd({ open, setOpen }: { open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
-  const handleOpen = () => setOpen(true);
+export default function PartAdd({ open, setOpen, redact }: { open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>, redact: boolean }) {
   const handleClose = () => setOpen(false);
 
   const mascot = useContext(MascotContext);
-
-  const [file, setFile] = useState<File>()
   const [path, setPath] = useState("")
   const [designation, setDesignation] = React.useState("");
   const [name, setName] = React.useState("");
@@ -37,9 +34,18 @@ export default function PartAdd({ open, setOpen }: { open: boolean, setOpen: Rea
   const handleChange = (event: SelectChangeEvent) => {
     setDesignation(event.target.value);
   };
-  const inputFile = useRef<HTMLInputElement | null>(null);
 
-
+  useEffect(() => {
+    if (redact && mascot) {
+      setPath(mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[mascot.mascot.selectedPart].sourcePath)
+      setDesignation(mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[mascot.mascot.selectedPart].type + "")
+      setName(mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[mascot.mascot.selectedPart].name)
+    } else {
+      setPath("")
+      setDesignation("")
+      setName("")
+    }
+  }, [open, redact])
 
 
 
@@ -166,11 +172,11 @@ export default function PartAdd({ open, setOpen }: { open: boolean, setOpen: Rea
               })
             }}>
               <SearchTwoToneIcon />
-              <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              {/* <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 if (e.target.files) {
                   setFile(e.target.files[0]);
                 }
-              }} />
+              }} /> */}
             </div>
           </div>
         </div>
@@ -180,15 +186,28 @@ export default function PartAdd({ open, setOpen }: { open: boolean, setOpen: Rea
             console.log(EPart[Number(designation)])
             if (mascot) {
               mascot.mascot = structuredClone(mascot.mascot)
-              mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.push({
-                name: name,
-                visibility: true,
-                sourcePath: "https://asset.localhost/"+path,
-                positionX: 0,
-                positionY: 0,
-                scale: 1,
-                type: Number(designation)
-              })
+              if (redact) {
+                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[mascot.mascot.selectedPart] = {
+                  name: name,
+                  visibility: true,
+                  sourcePath: path,
+                  positionX: 0,
+                  positionY: 0,
+                  scale: 1,
+                  type: Number(designation)
+                }
+              } else {
+                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.push({
+                  name: name,
+                  visibility: true,
+                  // sourcePath: "https://asset.localhost/"+path,
+                  sourcePath: path,
+                  positionX: 0,
+                  positionY: 0,
+                  scale: 1,
+                  type: Number(designation)
+                })
+              }
               mascot.setMascot(mascot.mascot)
               handleClose()
             }

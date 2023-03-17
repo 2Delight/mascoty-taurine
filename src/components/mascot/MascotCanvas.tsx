@@ -34,7 +34,7 @@ export default function MascotCanvas() {
         return c.visibility ? <MascotPart partIndex={i} key={i} /> : <div key={i} />
       }
       )} */}
-      {mascot && mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts.map((c, i) => {
+      {mascot && mascot.mascot.emotions.length > 0 && mascot.mascot.emotions[mascot.mascot.selectedEmotion]?.parts?.map((c, i) => {
         return c.visibility && <MascotPart partIndex={i} key={i} />
       }
       )}
