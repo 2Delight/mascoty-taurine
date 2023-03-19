@@ -6,6 +6,7 @@ export default interface IPart {
     sourcePath: string,
     positionX: number,
     positionY: number,
-    scale: number,
+    height: number,
+    width: number,
     type: EPart
 }

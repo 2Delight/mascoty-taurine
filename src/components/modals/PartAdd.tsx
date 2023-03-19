@@ -9,6 +9,8 @@ import { EEmotion } from "../logic/EEmotion";
 import { EPart } from "../logic/EPart";
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import { open } from "@tauri-apps/api/dialog"
+import { useImageSize } from "react-image-size";
+import { getImageSize } from "react-image-size/lib/lib/getImageSize";
 // import { changeColor } from "../../utils/redux_state/BackgroundSlice";
 
 
@@ -30,6 +32,8 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
   const [path, setPath] = useState("")
   const [designation, setDesignation] = React.useState("");
   const [name, setName] = React.useState("");
+  const [height, setHeight] = React.useState(100)
+  const [width, setWidth] = React.useState(100)
 
   const handleChange = (event: SelectChangeEvent) => {
     setDesignation(event.target.value);
@@ -47,6 +51,14 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
     }
   }, [open, redact])
 
+  const getSizes = async(value: string) => {
+    const dimens = await getImageSize("https://asset.localhost/" + value)
+    if (dimens) {
+      setHeight(dimens.height)
+      setWidth(dimens.width)
+      console.log("pic dimensions: " + dimens.height + " " + dimens.width)
+    }
+  }
 
 
   return (
@@ -167,6 +179,7 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
               handler().then((response) => {
                 console.log(response)
                 if (!(response instanceof Array<String>) && response) {
+                  getSizes(response)
                   setPath(response)
                 }
               })
@@ -193,7 +206,8 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
                   sourcePath: path,
                   positionX: 0,
                   positionY: 0,
-                  scale: 1,
+                  height: height,
+                  width: width,
                   type: Number(designation)
                 }
               } else {
@@ -204,7 +218,8 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
                   sourcePath: path,
                   positionX: 0,
                   positionY: 0,
-                  scale: 1,
+                  height: height,
+                  width: width,
                   type: Number(designation)
                 })
               }

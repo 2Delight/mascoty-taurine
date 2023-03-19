@@ -35,7 +35,7 @@ export default function App() {
         name: "abiba",
         visibility: true,
         parts: [
-          ],
+        ],
         emotion: EEmotion.happy,
       },
       {
@@ -47,7 +47,8 @@ export default function App() {
           sourcePath: "/pics/eyes_c.png",
           positionX: 100,
           positionY: 100,
-          scale: 1,
+          height: 100,
+          width: 100,
           type: EPart.eyesClosed
         },
         {
@@ -56,7 +57,8 @@ export default function App() {
           sourcePath: "/pics/eyes_o.png",
           positionX: 0,
           positionY: 0,
-          scale: 1,
+          height: 100,
+          width: 100,
           type: EPart.eyesOpened
         },
         {
@@ -65,7 +67,8 @@ export default function App() {
           sourcePath: "/pics/face.png",
           positionX: 0,
           positionY: 0,
-          scale: 1,
+          height: 100,
+          width: 100,
           type: EPart.face
         },
         {
@@ -74,7 +77,8 @@ export default function App() {
           sourcePath: "/pics/mouth_c.png",
           positionX: 0,
           positionY: 0,
-          scale: 1,
+          height: 100,
+          width: 100,
           type: EPart.mouthClosed
         },
         {
@@ -83,7 +87,8 @@ export default function App() {
           sourcePath: "/pics/mouth_o.png",
           positionX: 0,
           positionY: 0,
-          scale: 1,
+          height: 100,
+          width: 100,
           type: EPart.mouthOpened
         },
         ],
@@ -148,7 +153,7 @@ export default function App() {
             </div>
 
             <MascotCanvas />
-{/* 
+            {/* 
             <button onClick={() => console.log(mascot)}>
 
             </button> */}
