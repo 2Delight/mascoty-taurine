@@ -5,7 +5,6 @@ use std::io::Read;
 use std::sync::{Mutex, MutexGuard, PoisonError};
 // use std::cell::RefCell;
 
-use image::RgbImage;
 use nokhwa::pixel_format::*;
 use nokhwa::utils::{
     ApiBackend, CameraFormat, CameraIndex, CameraInfo, FrameFormat, RequestedFormat,
@@ -131,6 +130,7 @@ pub fn get_input(devices: &Devices) -> Result<Input, NokhwaError> {
         0,
     );
     camera.write_frame_to_buffer::<RgbFormat>(&mut img).unwrap();
+    let img = image::io::Reader::new(std::io::Cursor::new(&img)).with_guessed_format().unwrap().decode().unwrap();
 
     // debug!("{}", frame.source_frame_format());
     
@@ -147,7 +147,7 @@ pub fn get_input(devices: &Devices) -> Result<Input, NokhwaError> {
     let model = &mut devices.conf.lock().unwrap().model;
     model.set_eval();
 
-    let output = tch::vision::imagenet::load_image_and_resize224_from_memory(img.as_slice())
+    let output = tch::vision::imagenet::load_image_and_resize224_from_memory(img.as_bytes())
         .unwrap()
         .unsqueeze(0)
         .apply(model);
