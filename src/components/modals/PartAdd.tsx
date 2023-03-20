@@ -12,6 +12,7 @@ import { open } from "@tauri-apps/api/dialog"
 import { useImageSize } from "react-image-size";
 import { getImageSize } from "react-image-size/lib/lib/getImageSize";
 // import { changeColor } from "../../utils/redux_state/BackgroundSlice";
+import { tauri } from "@tauri-apps/api";
 
 
 const handler = async () => {
@@ -51,7 +52,7 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
     }
   }, [open, redact])
 
-  const getSizes = async(value: string) => {
+  const getSizes = async (value: string) => {
     const dimens = await getImageSize("https://asset.localhost/" + value)
     if (dimens) {
       setHeight(dimens.height)
@@ -180,7 +181,9 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
                 console.log(response)
                 if (!(response instanceof Array<String>) && response) {
                   getSizes(response)
-                  setPath(response)
+                  let apiPath = tauri.convertFileSrc(response)
+                  console.log('API Path', apiPath)
+                  setPath(apiPath)
                 }
               })
             }}>
@@ -193,7 +196,10 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
             </div>
           </div>
         </div>
-        {path && <img src={"https://asset.localhost/" + path} style={{ maxHeight:100, flex: 1, objectFit: "scale-down" }} />}
+        {path && <img src={
+          // "https://asset.localhost/" + 
+          path
+        } style={{ maxHeight: 100, flex: 1, objectFit: "scale-down" }} />}
         <button style={{ flex: 1, width: "100%" }} onClick={() => {
           if (designation !== "" && name !== "" && path !== "") {
             console.log(EPart[Number(designation)])
@@ -230,7 +236,7 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
             alert("Can't Add Part Due To Your Irresponsability")
           }
         }}>
-          {redact? "Redact Part" : "Add Part"}
+          {redact ? "Redact Part" : "Add Part"}
         </button>
       </div>
     </Modal>

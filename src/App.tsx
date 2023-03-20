@@ -127,28 +127,32 @@ export default function App() {
 
             <div className="settings" style={{
               justifyContent: "center",
-              minWidth: 400,
+              minWidth: 200,
+              marginTop: 8,
               flex: 0,
             }}>
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <div style={{ display: "flex", flexDirection: "row" }}>
                   <MicSelection />
-                  <CamSelection />
                 </div>
+              </div>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <CamSelection />
               </div>
 
               <div style={{ display: "flex", flexDirection: "row" }}>
                 <ShakeSettings />
-                <FPSSElection />
+                {/* <FPSSElection /> */}
               </div>
 
               <div style={{ display: "flex", flexDirection: "row" }}>
                 <MicMinMaxDisplay />
               </div>
 
+
               <div style={{ display: "flex", flexDirection: "row" }}>
                 <MaskotBackgroundColorPicker />
-                <div style={{ flex: 1 }}></div>
+                {/* <div style={{ flex: 1 }}></div> */}
               </div>
             </div>
 

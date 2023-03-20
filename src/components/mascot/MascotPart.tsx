@@ -144,10 +144,11 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
                     onStop={handleStop}
                     position={{ x: currentPos.x, y: currentPos.y }}
                 >
-                    <div style={{
-                        zIndex: 100,
-                        userSelect: "none",
-                    }} draggable={false}
+                    <div className="grab"
+                        style={{
+                            zIndex: 100,
+                            userSelect: "none",
+                        }} draggable={false}
                     >
                         <div style={{
                             // zIndex: 100,
@@ -155,31 +156,36 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
                             transformOrigin: "left top",
                             position: "absolute",
                             outline: "1px dashed white",
+
                         }} draggable={false}
                         >
-                            <img src={"https://asset.localhost/" + mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath}
+                            <img src={
+                                // "https://asset.localhost/" + 
+                                mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath}
                                 style={{
                                     // zIndex: 100,
                                     userSelect: "none",
                                     objectFit: 'fill',
                                     height: height,
                                     width: width,
+                                    // margin: 0,
+                                    // paddingBottom: -10,
                                 }}
                                 draggable={false}
                             ></img>
-                            <div draggable={false}
-                                style={{ right: -5, bottom: -5, height: 10, aspectRatio: 1, position: "absolute", background: interactGray, transform: "unset", outline: "2px solid white", borderRadius: 20, }}
+                            <div className="resizelt" draggable={false}
+                                style={{ cursor: "resize", right: -5, bottom: -5, height: 10, aspectRatio: 1, position: "absolute", background: interactGray, transform: "unset", outline: "2px solid white", borderRadius: 20, }}
                                 onMouseDown={(e) => { sizeHandler(e, "rb") }}
                             />
-                            <div draggable={false}
+                            <div className="resizelt" draggable={false}
                                 style={{ left: -5, top: -5, height: 10, aspectRatio: 1, position: "absolute", background: interactGray, transform: "unset", outline: "2px solid white", borderRadius: 20 }}
                                 onMouseDown={(e) => { sizeHandler(e, "lt") }}
                             />
-                            <div draggable={false}
+                            <div className="resizerb" draggable={false}
                                 style={{ left: -5, bottom: -5, height: 10, aspectRatio: 1, position: "absolute", background: interactGray, transform: "unset", outline: "2px solid white", borderRadius: 20 }}
                                 onMouseDown={(e) => { sizeHandler(e, "lb") }}
                             />
-                            <div draggable={false}
+                            <div className="resizerb" draggable={false}
                                 style={{ right: -5, top: -5, height: 10, aspectRatio: 1, position: "absolute", background: interactGray, transform: "unset", outline: "2px solid white", borderRadius: 20 }}
                                 onMouseDown={(e) => { sizeHandler(e, "rt") }}
                             />

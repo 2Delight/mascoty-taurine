@@ -79,3 +79,12 @@ a {
     text-align: left;
     cursor:default;
 }
+.resizerb:hover {
+  cursor: ne-resize;
+}
+.resizelt:hover {
+  cursor: se-resize;
+}
+.grab {
+  cursor: grab;
+}
