@@ -1,5 +1,5 @@
 use crate::config::CameraConfig;
-use crate::input::{get_cams, get_mikes, set_cam, set_mike, Devices};
+use crate::devices::{get_cams, get_mikes, set_cam, set_mike, Devices};
 use crate::mascot;
 
 use log::{debug, error, info, warn};
@@ -26,14 +26,14 @@ pub fn get_cameras() -> Result<Vec<String>, String> {
 
 #[tauri::command]
 pub fn select_camera(
-    index: u8,
+    index: usize,
     conf: CameraConfig,
     state: tauri::State<Devices>,
 ) -> Result<(), String> {
     debug!("Handler select_camera has been invoken");
 
     let cams = get_cams().unwrap();
-    let ind = cams[index as usize].index().clone();
+    let ind = cams[index].index().clone();
 
     let cam = match set_cam(ind, &conf) {
         Ok(cam) => cam,

@@ -1,4 +1,5 @@
-use crate::input::{get_input, Devices};
+use crate::devices::Devices;
+use crate::input::get_input;
 use crate::panic_error;
 
 use log::{debug, error, info, warn};
