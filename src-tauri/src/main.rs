@@ -13,13 +13,14 @@ extern crate simple_logger;
 
 mod commands;
 mod config;
+mod devices;
 mod input;
 mod mascot;
 mod utils;
 
 use crate::commands::*;
 use crate::config::import_config;
-use crate::input::{get_cams, get_devices, set_cam, set_mike};
+use crate::devices::{get_cams, get_devices, set_cam, set_mike};
 
 use log::{debug, error, info, warn};
 use simple_logger::SimpleLogger;
@@ -39,19 +40,14 @@ fn main() {
 
     debug!("Getting default camera index");
     let cam = panic_error!(
-        set_cam(
-            get_cams().unwrap()[0].index().clone(),
-            &conf.camera,
-        ),
+        set_cam(get_cams().unwrap()[0].index().clone(), &conf.camera,),
         "setting up camera",
     );
 
     let pa = portaudio::PortAudio::new().unwrap();
 
     debug!("Getting default micro");
-    let mike = panic_error!(
-        set_mike(0, &pa), "setting up microphone"
-    );
+    let mike = panic_error!(set_mike(0, &pa), "setting up microphone");
 
     debug!("Getting devices");
     let devices = get_devices(conf, cam, mike);
