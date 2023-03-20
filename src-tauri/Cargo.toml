@@ -23,15 +23,19 @@ simple_logger = "4.0.0"
 
 tauri = { version = "1.2", features = ["shell-open"] }
 rand = "0.8.4"
-tch = "0.10.1"
+
+tch = "0.11.0"
+image = "0.24.5"
+portaudio = "0.7.0"
 
 [dependencies.nokhwa]
 version = "0.10.3"
-features = [
-    "input-avfoundation",
-    "input-msmf",
-    "output-wgpu",
-]
+# features = [
+#     "input-avfoundation",
+#     "input-msmf",
+#     "output-wgpu",
+# ]
+features = ["input-native", "output-wgpu"]
 
 [features]
 # by default Tauri runs in production mode

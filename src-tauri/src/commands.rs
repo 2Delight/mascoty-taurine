@@ -1,8 +1,9 @@
-use crate::config::{CameraConfig, Config};
-use crate::input::{get_cams, set_camera, Devices};
+use crate::config::CameraConfig;
+use crate::input::{get_cams, get_mikes, set_cam, set_mike, Devices};
 use crate::mascot;
 
 use log::{debug, error, info, warn};
+use portaudio::PortAudio;
 
 #[tauri::command]
 pub fn get_mascot(state: tauri::State<Devices>) -> mascot::Mascot {
@@ -25,25 +26,21 @@ pub fn get_cameras() -> Result<Vec<String>, String> {
 
 #[tauri::command]
 pub fn select_camera(
-    index: i32,
+    index: u8,
     conf: CameraConfig,
     state: tauri::State<Devices>,
 ) -> Result<(), String> {
     debug!("Handler select_camera has been invoken");
 
-    if index < 0 {
-        return Err("Index has to be greater than -1".to_string());
-    }
-
     let cams = get_cams().unwrap();
     let ind = cams[index as usize].index().clone();
 
-    let cam = match set_camera(ind, &conf) {
+    let cam = match set_cam(ind, &conf) {
         Ok(cam) => cam,
         Err(err) => return Err(err.to_string()),
     };
 
-    state.set_camera(&conf, cam)?;
+    state.set_up_camera(&conf, cam)?;
 
     Ok(())
 }
@@ -53,7 +50,7 @@ fn is_in_interval(value: i32, left: i32, right: i32) -> bool {
 }
 
 #[tauri::command]
-pub fn set_config(conf: CameraConfig, state: tauri::State<Devices>) -> Result<(), String> {
+pub fn set_camera_config(conf: CameraConfig, state: tauri::State<Devices>) -> Result<(), String> {
     debug!("Handler set_config has been invoken");
 
     if !is_in_interval(conf.fps as i32, 0, 31) {
@@ -72,15 +69,33 @@ pub fn set_config(conf: CameraConfig, state: tauri::State<Devices>) -> Result<()
         );
     }
 
-    state.set_camera(
-        &conf,
-        match set_camera(state.get_camera_index()?, &conf) {
-            Ok(cam) => cam,
-            Err(err) => {
-                return Err(err.to_string());
-            }
-        },
-    )?;
+    match state.set_camera_settings(&conf) {
+        Ok(()) => Ok(()),
+        Err(err) => Err(err.to_string()),
+    }
+}
 
-    Ok(())
+#[tauri::command]
+pub fn get_microphones(state: tauri::State<PortAudio>) -> Result<Vec<String>, String> {
+    match get_mikes(&*state) {
+        Ok(mikes) => Ok(mikes
+            .iter()
+            .map(|mike| format!("{:?}. {}", mike.0, mike.1.name))
+            .collect()),
+        Err(err) => {
+            return Err(err.to_string());
+        }
+    }
+}
+
+#[tauri::command]
+pub fn select_microphone(
+    index: usize,
+    pa: tauri::State<PortAudio>,
+    state: tauri::State<Devices>,
+) -> Result<(), String> {
+    state.set_up_microphone(match set_mike(index, &pa) {
+        Ok(val) => val,
+        Err(err) => return Err(err.to_string()),
+    })
 }
