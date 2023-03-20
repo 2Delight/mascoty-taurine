@@ -193,7 +193,7 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
             </div>
           </div>
         </div>
-        {path && <img src={"https://asset.localhost/" + path} style={{ width: "100%", flex: 1, objectFit: "scale-down" }} />}
+        {path && <img src={"https://asset.localhost/" + path} style={{ maxHeight:100, flex: 1, objectFit: "scale-down" }} />}
         <button style={{ flex: 1, width: "100%" }} onClick={() => {
           if (designation !== "" && name !== "" && path !== "") {
             console.log(EPart[Number(designation)])
@@ -230,7 +230,7 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
             alert("Can't Add Part Due To Your Irresponsability")
           }
         }}>
-          Add Part
+          {redact? "Redact Part" : "Add Part"}
         </button>
       </div>
     </Modal>

@@ -128,7 +128,7 @@ export default function App() {
             <div className="settings" style={{
               justifyContent: "center",
               minWidth: 400,
-              flex: 2,
+              flex: 0,
             }}>
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <div style={{ display: "flex", flexDirection: "row" }}>

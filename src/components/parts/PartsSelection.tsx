@@ -21,7 +21,7 @@ export default function PartsSelection() {
     const [useRedact, setUseRedact] = React.useState(false)
 
     const handleListItemClick = (
-        event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+        event: any,
         index: number,
     ) => {
         setSelectedIndex(index);
@@ -98,7 +98,7 @@ export default function PartsSelection() {
                 <ListItemButton selected={selectedIndex === i}
                     key={i}
                     onClick={(event) => handleListItemClick(event, i)}>
-                    <PartPart partIndex={i} />
+                    <PartPart partIndex={i} setSelect = {setSelectedIndex}/>
                 </ListItemButton >
             )}
             {/* <ListItemButton selected={selectedIndex === 0}
