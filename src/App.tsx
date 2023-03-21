@@ -17,6 +17,7 @@ import IMascot from "./components/logic/IMascot";
 import { EEmotion } from "./components/logic/EEmotion";
 import { ThemeContext } from "@emotion/react";
 import { EPart } from "./components/logic/EPart";
+import Projects from "./Projects";
 
 
 export const MascotContext = createContext<{
@@ -26,10 +27,6 @@ export const MascotContext = createContext<{
 
 export default function App() {
   const [mascot, setMascot] = useState<IMascot>({
-    blink: false,
-    emotion: EEmotion.default,
-    lips: false,
-    voice: "",
     emotions: [
       {
         name: "abiba",
@@ -106,65 +103,66 @@ export default function App() {
   );
 
   return (
-    <ThemeProvider theme={theme}>
-      <MascotContext.Provider value={value}>
-        <div className="container" style={{
-          margin: 0
-        }}>
-          <div className="main" style={{
-            height: "100vh"
-          }}>
-            <div className="emotionsNparts" style={{
-              justifyContent: "center",
-              overflow: "block",
-              display: "flex",
-              flexDirection: "column",
-              flex: 1,
-            }}>
-              <EmotionsSelection />
-              <PartsSelection />
-            </div>
+    <Projects/>
+    // <ThemeProvider theme={theme}>
+    //   <MascotContext.Provider value={value}>
+    //     <div className="container" style={{
+    //       margin: 0
+    //     }}>
+    //       <div className="main" style={{
+    //         height: "100vh"
+    //       }}>
+    //         <div className="emotionsNparts" style={{
+    //           justifyContent: "center",
+    //           overflow: "block",
+    //           display: "flex",
+    //           flexDirection: "column",
+    //           flex: 1,
+    //         }}>
+    //           <EmotionsSelection />
+    //           <PartsSelection />
+    //         </div>
 
-            <div className="settings" style={{
-              justifyContent: "center",
-              minWidth: 200,
-              marginTop: 8,
-              flex: 0,
-            }}>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <div style={{ display: "flex", flexDirection: "row" }}>
-                  <MicSelection />
-                </div>
-              </div>
-              <div style={{ display: "flex", flexDirection: "row" }}>
-                <CamSelection />
-              </div>
+    //         <div className="settings" style={{
+    //           justifyContent: "center",
+    //           minWidth: 200,
+    //           marginTop: 8,
+    //           flex: 0,
+    //         }}>
+    //           <div style={{ display: "flex", flexDirection: "column" }}>
+    //             <div style={{ display: "flex", flexDirection: "row" }}>
+    //               <MicSelection />
+    //             </div>
+    //           </div>
+    //           <div style={{ display: "flex", flexDirection: "row" }}>
+    //             <CamSelection />
+    //           </div>
 
-              <div style={{ display: "flex", flexDirection: "row" }}>
-                <ShakeSettings />
-                {/* <FPSSElection /> */}
-              </div>
+    //           <div style={{ display: "flex", flexDirection: "row" }}>
+    //             <ShakeSettings />
+    //             {/* <FPSSElection /> */}
+    //           </div>
 
-              <div style={{ display: "flex", flexDirection: "row" }}>
-                <MicMinMaxDisplay />
-              </div>
+    //           <div style={{ display: "flex", flexDirection: "row" }}>
+    //             <MicMinMaxDisplay />
+    //           </div>
 
 
-              <div style={{ display: "flex", flexDirection: "row" }}>
-                <MaskotBackgroundColorPicker />
-                {/* <div style={{ flex: 1 }}></div> */}
-              </div>
-            </div>
+    //           <div style={{ display: "flex", flexDirection: "row" }}>
+    //             <MaskotBackgroundColorPicker />
+    //             {/* <div style={{ flex: 1 }}></div> */}
+    //           </div>
+    //         </div>
 
-            <MascotCanvas />
-            {/* 
-            <button onClick={() => console.log(mascot)}>
+    //         <MascotCanvas />
+    //         {/* 
+    //         <button onClick={() => console.log(mascot)}>
 
-            </button> */}
+    //         </button> */}
 
-          </div>
-        </div>
-      </MascotContext.Provider>
-    </ThemeProvider>
+    //       </div>
+    //     </div>
+    //   </MascotContext.Provider>
+    // </ThemeProvider>
   );
 }

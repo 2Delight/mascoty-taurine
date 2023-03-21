@@ -9,7 +9,6 @@ import { EEmotion } from "../logic/EEmotion";
 import { EPart } from "../logic/EPart";
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import { open } from "@tauri-apps/api/dialog"
-import { useImageSize } from "react-image-size";
 import { getImageSize } from "react-image-size/lib/lib/getImageSize";
 // import { changeColor } from "../../utils/redux_state/BackgroundSlice";
 import { tauri } from "@tauri-apps/api";

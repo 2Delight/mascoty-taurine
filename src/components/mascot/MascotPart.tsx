@@ -3,13 +3,13 @@ import { MascotContext } from "../../App";
 import { interactGray, menuGray } from "../../utils/Colors";
 import diagArrows from "../../assets/resize.svg"
 import Draggable from "react-draggable";
-import { Resizable } from "re-resizable";
 
 export default function MascotPart({ partIndex }: { partIndex: number }) {
     const mascot = useContext(MascotContext);
-    const [currentPos, setCurrentPos] = useState({ x: 0, y: 0 })
+    const [currentPos, setCurrentPos] = useState({ x: -1, y: -1 })
     const [height, setHeight] = useState(100)
     const [width, setWidth] = useState(100)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         if (mascot) {
@@ -19,10 +19,18 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
             })
             setHeight(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].height)
             setWidth(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].width)
+            // setLoading(false)
         }
     }, [
         mascot?.mascot.selectedPart
     ])
+
+    useEffect(() => {
+        if (currentPos.x !== -1 && currentPos.y !== -1) {
+            setLoading(false)
+            console.log("updated pos")
+        }
+    }, [currentPos])
 
     const sizeHandler = (mouseDownEvent: any, dir: string) => {
         mouseDownEvent.stopPropagation()
@@ -148,15 +156,19 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
                         style={{
                             zIndex: 100,
                             userSelect: "none",
+                            padding: 0,
+                            margin: 0,
                         }} draggable={false}
                     >
-                        <div style={{
+                        {!loading && <div style={{
                             // zIndex: 100,
                             userSelect: "none",
                             transformOrigin: "left top",
                             position: "absolute",
-                            outline: "1px dashed white",
-
+                            outline: "2px dashed white",
+                            height: height,
+                            padding: 0,
+                            margin: 0,
                         }} draggable={false}
                         >
                             <img src={
@@ -168,6 +180,8 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
                                     objectFit: 'fill',
                                     height: height,
                                     width: width,
+                                    padding:0,
+                                    margin:0,
                                     // margin: 0,
                                     // paddingBottom: -10,
                                 }}
@@ -189,7 +203,7 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
                                 style={{ right: -5, top: -5, height: 10, aspectRatio: 1, position: "absolute", background: interactGray, transform: "unset", outline: "2px solid white", borderRadius: 20 }}
                                 onMouseDown={(e) => { sizeHandler(e, "rt") }}
                             />
-                        </div>
+                        </div>}
                     </div>
                 </Draggable>
             </div>
@@ -209,7 +223,7 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
                     // opacity: 0.5,
                 }} draggable={false}
                 >
-                    <img src={"https://asset.localhost/" + mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath}
+                    <img src={mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath}
                         style={{
                             objectFit: 'fill',
                             height: height,
