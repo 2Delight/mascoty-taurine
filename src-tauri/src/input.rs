@@ -13,20 +13,14 @@ pub fn get_input(devices: &Devices) -> Result<Input, NokhwaError> {
 
     let mut camera = devices.camera.lock().unwrap();
 
-    debug!("Getting frame");
-    let mut img = Vec::new();
-    img.resize(
-        camera.resolution().x() as usize * camera.resolution().y() as usize * 3,
-        0,
-    );
-    camera.write_frame_to_buffer::<RgbFormat>(&mut img).unwrap();
-    let img = image::io::Reader::new(std::io::Cursor::new(&img))
-        .with_guessed_format()
-        .unwrap()
-        .decode()
-        .unwrap();
+    let buffer = camera.frame()?;
+    // let img = image::io::Reader::new(std::io::Cursor::new(&img))
+    //     .with_guessed_format()
+    //     .unwrap()
+    //     .decode()
+    //     .unwrap();
 
-    // debug!("{}", frame.source_frame_format());
+    debug!("{}", buffer.source_frame_format());
 
     // debug!("Decoding image");
     // let mut img = Vec::new();
@@ -36,6 +30,9 @@ pub fn get_input(devices: &Devices) -> Result<Input, NokhwaError> {
     // );
 
     // frame.decode_image_to_buffer::<RgbFormat>(&mut img).unwrap();
+
+    buffer.decode_image::<LumaFormat>().unwrap().save("image.png").unwrap();
+    let img = image::open("image.png").unwrap();
 
     let model = &mut devices.config.lock().unwrap().model;
     model.set_eval();
