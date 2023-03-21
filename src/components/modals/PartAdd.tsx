@@ -12,6 +12,7 @@ import { open } from "@tauri-apps/api/dialog"
 import { getImageSize } from "react-image-size/lib/lib/getImageSize";
 // import { changeColor } from "../../utils/redux_state/BackgroundSlice";
 import { tauri } from "@tauri-apps/api";
+import search from "../../assets/search.svg"
 
 
 const handler = async () => {
@@ -186,7 +187,8 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
                 }
               })
             }}>
-              <SearchTwoToneIcon />
+              <img src={search} style={{ maxHeight: 100, flex: 1, objectFit: "scale-down" }} />
+              {/* <SearchTwoToneIcon /> */}
               {/* <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 if (e.target.files) {
                   setFile(e.target.files[0]);
