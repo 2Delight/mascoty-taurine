@@ -35,7 +35,7 @@ jobs:
         run: npm install
 
       - name: Tauri Build
-        run: npx tauri build
+        run: npx tauri build --verbose
 
   macos:
     runs-on: macos-latest
@@ -53,7 +53,7 @@ jobs:
         run: npm install
 
       - name: Tauri Build
-        run: npx tauri build
+        run: npx tauri build --verbose
 
   windows:
     runs-on: windows-latest
@@ -68,4 +68,4 @@ jobs:
         run: npm install
 
       - name: Tauri Build
-        run: npx tauri build
+        run: npx tauri build --verbose
