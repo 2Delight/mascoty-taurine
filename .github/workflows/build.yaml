@@ -34,6 +34,7 @@ jobs:
         run: |
           sudo apt-get install -y libtorch1.7
 
+          cd /
           wget https://download.pytorch.org/libtorch/nightly/cpu/libtorch-shared-with-deps-latest.zip
           unzip libtorch-shared-with-deps-latest.zip
 
