@@ -6,4 +6,6 @@ export default interface IMascot {
     bgColor: string,
     selectedEmotion: number,
     selectedPart: number,
+    workingDir:string,
+    projectName:string,
 }

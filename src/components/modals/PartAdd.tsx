@@ -187,8 +187,8 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
                 }
               })
             }}>
-              <img src={search} style={{ maxHeight: 100, flex: 1, objectFit: "scale-down" }} />
-              {/* <SearchTwoToneIcon /> */}
+              {/* <img src={search} style={{ maxHeight: 100, flex: 1, objectFit: "scale-down" }} /> */}
+              <SearchTwoToneIcon />
               {/* <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 if (e.target.files) {
                   setFile(e.target.files[0]);

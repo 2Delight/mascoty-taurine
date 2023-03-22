@@ -18,6 +18,9 @@ import { EEmotion } from "./components/logic/EEmotion";
 import { ThemeContext } from "@emotion/react";
 import { EPart } from "./components/logic/EPart";
 import Projects from "./Projects";
+import { DummyMascot } from "./utils/DummyMascot";
+import { readTextFile, writeTextFile } from "@tauri-apps/api/fs";
+import { BaseDirectory, sep } from "@tauri-apps/api/path";
 
 
 export const MascotContext = createContext<{
@@ -25,78 +28,15 @@ export const MascotContext = createContext<{
   setMascot: React.Dispatch<React.SetStateAction<IMascot>>
 } | null>(null);
 
+export const ProjectContext = createContext<{
+  project: IMascot,
+  setProject: React.Dispatch<React.SetStateAction<IMascot>>
+} | null>(null);
+
+
 export default function App() {
   const [selecting, setSelecting] = useState(true)
-  const [mascot, setMascot] = useState<IMascot>({
-    emotions: [
-      {
-        name: "abiba",
-        visibility: true,
-        parts: [
-        ],
-        emotion: EEmotion.happy,
-      },
-      {
-        name: "robomuzhikh",
-        visibility: false,
-        parts: [{
-          name: "Eyes_C",
-          visibility: true,
-          sourcePath: "/pics/eyes_c.png",
-          positionX: 100,
-          positionY: 100,
-          height: 100,
-          width: 100,
-          type: EPart.eyesClosed
-        },
-        {
-          name: "Eyes_O",
-          visibility: true,
-          sourcePath: "/pics/eyes_o.png",
-          positionX: 0,
-          positionY: 0,
-          height: 100,
-          width: 100,
-          type: EPart.eyesOpened
-        },
-        {
-          name: "Face",
-          visibility: true,
-          sourcePath: "/pics/face.png",
-          positionX: 0,
-          positionY: 0,
-          height: 100,
-          width: 100,
-          type: EPart.face
-        },
-        {
-          name: "Mouth_C",
-          visibility: true,
-          sourcePath: "/pics/mouth_c.png",
-          positionX: 0,
-          positionY: 0,
-          height: 100,
-          width: 100,
-          type: EPart.mouthClosed
-        },
-        {
-          name: "Mouth_O",
-          visibility: true,
-          sourcePath: "/pics/mouth_o.png",
-          positionX: 0,
-          positionY: 0,
-          height: 100,
-          width: 100,
-          type: EPart.mouthOpened
-        },
-        ],
-        emotion: EEmotion.angry,
-      },
-    ],
-    bgColor: "black",
-    selectedEmotion: 0,
-    selectedPart: 0,
-  });
+  const [mascot, setMascot] = useState<IMascot>(DummyMascot);
 
   const value = useMemo(
     () => ({ mascot, setMascot }),
@@ -156,10 +96,17 @@ export default function App() {
               </div>
 
               <MascotCanvas />
-              {/* 
-            <button onClick={() => console.log(mascot)}>
+              
+            <button onClick={() => {
+              console.log(mascot)
+              writeTextFile(mascot.workingDir + sep + "CONF_"+mascot.projectName+".mascot", JSON.stringify(mascot), { dir: BaseDirectory.Document }).then(() => {
+                alert("Saved")
+            }).catch(() => {
+              alert("Cant save")
+            })
+            }}>
 
-            </button> */}
+            </button>
 
             </div>
           </div>

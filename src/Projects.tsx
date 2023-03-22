@@ -1,38 +1,38 @@
-import { interactGray, menuGray } from "./utils/Colors";
-import aboba from "./assets/react.svg"
+import { interactActiveGray, interactActiveHoverGray, interactGray, interactHoverGray, menuGray } from "./utils/Colors";
+import aboba from "./assets/mascoty-logo-nobg.svg"
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { fontSize } from "@mui/system";
 import { appLocalDataDir } from '@tauri-apps/api/path';
 import search from './assets/search.svg'
 import ISave from "./components/logic/IConf";
 import { exists, readFile } from "fs";
-import { readTextFile, BaseDirectory, writeTextFile } from '@tauri-apps/api/fs';
+import { readTextFile, BaseDirectory, writeTextFile, removeDir } from '@tauri-apps/api/fs';
 import { EEmotion } from "./components/logic/EEmotion";
 import { EPart } from "./components/logic/EPart";
 import IConf from "./components/logic/IConf";
 import { textToColor } from "./utils/TextToColor";
+import ProjectAdd from "./components/modals/ProjectAdd";
+import { sep } from '@tauri-apps/api/path'
+import { MascotContext } from "./App";
+import IMascot from "./components/logic/IMascot";
+import { appWindow } from "@tauri-apps/api/window";
+import DeleteOutlineTwoToneIcon from '@mui/icons-material/DeleteOutlineTwoTone';
+import Proceed from "./components/modals/Proceed";
 
-export default function Projects({ exit }: { exit: React.Dispatch<React.SetStateAction<boolean>> }) {
+export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStateAction<boolean>> }) {
+    const mascot = useContext(MascotContext);
+
     const [dataPath, setDataPath] = useState("")
-    const [projects, setProjects] = useState<IConf[] | null>([{
-        path: "test.json",
-        name: "aboba",
-        previewPath: "",
-    }, {
-        path: "first.json",
-        name: "abiba",
-        previewPath: "",
-    }, {
-        path: "second.json",
-        name: "govno",
-        previewPath: "",
-    }])
+    const [openDialog, setOpenDialog] = useState(false)
+    const [openProceed, setOpenProceed] = useState(false)
+    const [projects, setProjects] = useState<IConf[] | null>(null)
 
     useEffect(() => {
         appLocalDataDir().then(resp => {
             setDataPath(resp)
         });
+        appWindow.setTitle("Mascoty")
     }, [])
 
     useEffect(() => {
@@ -53,26 +53,68 @@ export default function Projects({ exit }: { exit: React.Dispatch<React.SetState
         }).catch((e) => {
             // alert(e.message)
             writeTextFile("conf.json", JSON.stringify(projects), { dir: BaseDirectory.AppLocalData }).then(() => {
-                console.log("wrote file")
+                console.log("created config")
             })
         })
     }
 
-    const getProject = (path: string) => {
+    const addProject = (path: string, dir: string, name: string) => {
+        let newProjects: IConf[] | null = projects
+        if (!newProjects) {
+            newProjects = []
+        }
+        newProjects?.push({ name: name, path: dir, previewPath: dir + sep + "preview_" + name + ".png" })
+        setProjects(newProjects)
+        writeTextFile("conf.json", JSON.stringify(newProjects), { dir: BaseDirectory.AppLocalData }).then(() => {
+            console.log("updated config")
+            loadData()
+        })
+    }
 
+    const setProject = (proj: IConf) => {
+        readTextFile(proj.path + sep + "CONF_"+proj.name+".mascot", { dir: BaseDirectory.Document }).then((text) => {
+            try {
+                let msct: IMascot = JSON.parse(text)
+                appWindow.setTitle(msct.projectName + " (~" + msct.workingDir + "~)")
+                mascot?.setMascot(msct)
+                exit(false)
+            } catch (e) {
+                alert(e)
+            }
+        }).catch(() => {
+
+        })
+        return true
     }
 
     const [searchReq, setSearchReq] = useState("")
 
-    return (
+    const [deleteProj, setDeleteProj] = useState(-1)
+
+    const deleteProject = () => {
+        if (deleteProj !== -1 && projects) {
+            removeDir(projects[deleteProj].path, { dir: BaseDirectory.Document, recursive: true }).catch(() =>
+                alert("Unable to remove project from: " + projects[deleteProj].path))
+            projects.splice(deleteProj, 1)
+            writeTextFile("conf.json", JSON.stringify(projects), { dir: BaseDirectory.AppLocalData }).then(() => {
+                console.log("Deleted")
+                loadData()
+            })
+        }
+    }
+
+    return (<>
+        <ProjectAdd open={openDialog} setOpen={setOpenDialog} addProject={addProject} />
+        <Proceed open={openProceed} setOpen={setOpenProceed} question={(projects && deleteProj > -1 && deleteProj < projects.length) ? "Do you want to delete " + projects[deleteProj].name  + "?": ""} proceed={deleteProject} />
         <div style={{ flexDirection: "row", display: "flex" }}>
-            <div style={{ display: "flex", flexDirection: "column", width: 200, backgroundColor: menuGray, height: "100vh" }}>
-                <img style={{ flex: 2 }} src={aboba} />
+            <div style={{ display: "flex", flexDirection: "column", width: 200, height: "100vh" }}>
                 <div style={{ flex: 1 }} />
+                <img style={{ margin: 20, backgroundColor: interactActiveGray, borderRadius: "50%" }} src={aboba} />
+                <div style={{ flex: 2 }} />
                 <div style={{ flex: 0, marginBottom: 20, flexDirection: "column" }}>
-                    <div style={{ margin: 10, textAlign: "center", padding: 7, borderRadius: 10, border: "solid", borderWidth: 2, borderColor: interactGray, backgroundColor: interactGray, color: "white" }}
+                    <div style={{ userSelect: 'none', margin: 10, textAlign: "center", padding: 7, borderRadius: 10, border: "solid", borderWidth: 2, borderColor: interactActiveHoverGray, backgroundColor: interactActiveGray, color: "white" }}
                         onClick={() => {
-                            exit(false)
+                            setOpenDialog(true)
                             console.log("exited")
                         }}>
                         Create Mascot
@@ -84,16 +126,17 @@ export default function Projects({ exit }: { exit: React.Dispatch<React.SetState
                         Open
                     </div> */}
                 </div>
+                {/* <div style={{ flex: 1 }} /> */}
             </div>
 
-            <div style={{ height: "100vh", width: "100%", }}>
+            <div style={{ height: "100vh", width: "100%", backgroundColor: menuGray }}>
                 <div style={{
-                    marginInline: 20, marginTop: 10, borderBottom: "solid", borderWidth: 1, borderBottomColor: "white", paddingBottom: 5,
+                    marginInline: 20, marginTop: 10, borderBottom: "solid", borderWidth: 2, borderBottomColor: interactHoverGray, paddingBottom: 5,
                     alignItems: "center", alignContent: "center", justifyContent: "center", justifyItems: "center"
                 }}>
-                    {/* <SearchTwoToneIcon style={{ width: 25, height: 25, justifySelf: "center", color: interactGray }} /> */}
-                    <img src={search} style={{ width: 15, aspectRatio: 1, color: interactGray, }} />
-                    <input style={{ color: menuGray, backgroundColor: "transparent", boxShadow: "none", fontSize: 14, width: "calc(100% - 100px)" }} placeholder="Search mascots" value={searchReq} onChange={(text) => setSearchReq(text.target.value)}>
+                    <SearchTwoToneIcon style={{ width: 20, height: 20, justifySelf: "center", color: interactActiveHoverGray }} />
+                    {/* <img src={search} style={{ width: 15, aspectRatio: 1,}} /> */}
+                    <input style={{ backgroundColor: "transparent", boxShadow: "none", fontSize: 14, width: "calc(100% - 100px)" }} placeholder="Search mascots" value={searchReq} onChange={(text) => setSearchReq(text.target.value)}>
 
                     </input>
                 </div>
@@ -101,23 +144,34 @@ export default function Projects({ exit }: { exit: React.Dispatch<React.SetState
 
                 <div style={{
                     overflow: "auto",
-                    margin: 40,
+                    margin: 20,
                 }}>
-                    {projects?.map((c, i) =>
-                        <div key={i} style={{ marginBottom: 20, flexDirection: "row", display: "flex", width: "100%", borderRadius:10,backgroundColor:"red" }}>
-                            <img src={c.previewPath} alt={c.name.substring(0, 2)} style={{ marginRight: 20, fontSize: 30, textAlign: "center", alignSelf: "center", justifySelf: "center", backgroundColor: textToColor(c.name), width: 50, aspectRatio: 1, border: "solid", borderRadius: 10, borderColor: "gray", borderWidth: 2, padding: 3, }} />
+                    {projects?.map((c, i) => {
+                        return c.name.includes(searchReq) && <div key={i} className="project" style={{ marginBottom: 10, padding: 10, flexDirection: "row", display: "flex", width: "calc(100%-40px)", borderRadius: 10, }}
+                            onDoubleClick={() => {
+                                setProject(c)
+                            }}>
+                            <img src={c.previewPath} alt={c.name.substring(0, 2)} style={{ objectFit: 'fill', marginRight: 20, fontSize: 30, textAlign: "center", alignSelf: "center", justifySelf: "center", backgroundColor: textToColor(c.name), width: 50, aspectRatio: 1, border: "solid", borderRadius: 10, borderColor: interactActiveHoverGray, borderWidth: 2, padding: 3, }} />
                             <div style={{ flexDirection: "column" }}>
-                                <div style={{ color: menuGray, fontSize: 20, marginTop:4, marginBottom: 2, }}>
+                                <div style={{ color: interactActiveHoverGray, fontSize: 20, marginTop: 4, marginBottom: 2, }}>
                                     {c.name}
                                 </div>
-                                <div style={{ color: interactGray, fontSize: 12, }}>
+                                <div style={{ color: interactActiveHoverGray, fontSize: 12, }}>
                                     {c.path}
                                 </div>
                             </div>
-                        </div>)}
+                            <div style={{ flex: 1 }} />
+                            <div style={{ height: "100%", marginRight: 20, aspectRatio: 1, alignSelf: "center" }} onClick={() => {
+                                setDeleteProj(i)
+                                setOpenProceed(true)
+                            }}>
+                                <DeleteOutlineTwoToneIcon style={{ height: 25, width: 25 }} />
+                            </div>
+                        </div>
+                    })}
                 </div>
             </div>
-
         </div>
+    </>
     )
 }

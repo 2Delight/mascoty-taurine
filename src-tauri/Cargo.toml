@@ -21,7 +21,7 @@ serde_yaml = "0.9.17"
 log = "0.4.17"
 simple_logger = "4.0.0"
 
-tauri = { version = "1.2", features = ["dialog-all", "fs-create-dir", "fs-read-dir", "fs-read-file", "fs-write-file", "path-all", "protocol-asset", "shell-open"] }
+tauri = { version = "1.2", features = ["dialog-all", "fs-create-dir", "fs-read-dir", "fs-read-file", "fs-remove-dir", "fs-write-file", "path-all", "protocol-asset", "shell-open", "window-set-title"] }
 rand = "0.8.4"
 
 [dependencies.nokhwa]

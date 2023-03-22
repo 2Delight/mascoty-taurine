@@ -88,3 +88,7 @@ a {
 .grab {
   cursor: grab;
 }
+.project:hover {
+  cursor: pointer;
+  background-color: #808080;
+}
