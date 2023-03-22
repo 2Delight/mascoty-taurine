@@ -1,22 +1,52 @@
-
 name: Build
 
 on:
   push:
-    branches: [
-      "master",
-      "ci",
-    ]
+    branches: ["master", "ci"]
   pull_request:
-    branches: [
-      "master",
-      "ci",
-    ]
+    branches: ["master", "ci"]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Tauri Deps
+        run: |
+          sudo apt update
+          sudo apt install libwebkit2gtk-4.0-dev
+          sudo apt install build-essential
+          sudo apt install curl
+          sudo apt install wget
+          sudo apt install libssl-dev
+          sudo apt install libgtk-3-dev
+          sudo apt install libayatana-appindicator3-dev
+          sudo apt install librsvg2-dev
+      
+      - name: Install LibTorch
+        run: |
+          wget https://download.pytorch.org/libtorch/nightly/cpu/libtorch-shared-with-deps-latest.zip
+          unzip libtorch-shared-with-deps-latest.zip
+          pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+      
+      - name: Install PortAudio
+        run: |
+          sudo apt install portaudio19-dev
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+
+      - name: Update Node.js
+        run: npm install
+
+      - name: Tauri Build
+        run: npx tauri build --verbose
+
   macos:
     runs-on: macos-latest
 
@@ -28,24 +58,27 @@ jobs:
 
       - name: Use Node.js
         uses: actions/setup-node@v3
-      
+
       - name: Update Node.js
         run: npm install
-      
+
       - name: Tauri Build
-        run: npx tauri build
-  
+        run: npx tauri build --verbose
+
   windows:
     runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install PortAudio
+        run: pip install pyaudio
+
       - name: Use Node.js
         uses: actions/setup-node@v3
-      
+
       - name: Update Node.js
         run: npm install
-      
+
       - name: Tauri Build
-        run: npx tauri build
+        run: npx tauri build --verbose
