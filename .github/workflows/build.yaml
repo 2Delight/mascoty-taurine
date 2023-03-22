@@ -20,19 +20,19 @@ jobs:
         run: |
           sudo apt update
 
-          sudo apt install curl
-          sudo apt install wget
-          sudo apt install build-essential
+          sudo apt-get install curl
+          sudo apt-get install wget
+          sudo apt-get install build-essential
 
-          sudo apt install libwebkit2gtk-4.0-dev
-          sudo apt install libssl-dev
-          sudo apt install libgtk-3-dev
-          sudo apt install libayatana-appindicator3-dev
-          sudo apt install librsvg2-dev
+          sudo apt-get install libwebkit2gtk-4.0-dev
+          sudo apt-get install libssl-dev
+          sudo apt-get install libgtk-3-dev
+          sudo apt-get install libayatana-appindicator3-dev
+          sudo apt-get install librsvg2-dev
       
       - name: Install LibTorch
         run: |
-          sudo apt install libtorch
+          sudo apt-get install -y libtorch
 
           wget https://download.pytorch.org/libtorch/nightly/cpu/libtorch-shared-with-deps-latest.zip
           unzip libtorch-shared-with-deps-latest.zip
@@ -43,7 +43,7 @@ jobs:
       
       - name: Install PortAudio
         run: |
-          sudo apt install portaudio19-dev
+          sudo apt-get install portaudio19-dev
 
       - name: Use Node.js
         uses: actions/setup-node@v3
