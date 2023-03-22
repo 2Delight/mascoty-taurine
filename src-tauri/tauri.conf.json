@@ -27,7 +27,7 @@
       },
       "fs": {
         "scope": ["**"],
-        "all": true,
+        "exists": true,
         "createDir": true,
         "readDir": true,
         "readFile": true,

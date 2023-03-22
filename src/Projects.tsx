@@ -3,11 +3,11 @@ import aboba from "./assets/mascoty-logo-nobg.svg"
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import { useEffect, useState, useContext } from "react";
 import { fontSize } from "@mui/system";
-import { appLocalDataDir } from '@tauri-apps/api/path';
+import { documentDir } from '@tauri-apps/api/path';
 import search from './assets/search.svg'
 import ISave from "./components/logic/IConf";
 import { exists, readFile } from "fs";
-import { readTextFile, BaseDirectory, writeTextFile, removeDir } from '@tauri-apps/api/fs';
+import { readTextFile, BaseDirectory, writeTextFile, removeDir, createDir } from '@tauri-apps/api/fs';
 import { EEmotion } from "./components/logic/EEmotion";
 import { EPart } from "./components/logic/EPart";
 import IConf from "./components/logic/IConf";
@@ -29,8 +29,15 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
     const [projects, setProjects] = useState<IConf[] | null>(null)
 
     useEffect(() => {
-        appLocalDataDir().then(resp => {
-            setDataPath(resp)
+        console.log("aboba")
+        documentDir().then(resp => {
+            createDir(resp + "MASCOTY").then(() => {
+                setDataPath(resp + "MASCOTY" + sep)
+                console.log(resp + "MASCOTY" + sep)
+            }).catch(() => {
+                setDataPath(resp + "MASCOTY" + sep)
+                console.log(resp + "MASCOTY" + sep)
+            })
         });
         appWindow.setTitle("Mascoty")
     }, [])
@@ -45,34 +52,35 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
         }
 
         console.log("started data loading")
-        readTextFile("conf.json", { dir: BaseDirectory.AppLocalData }).then((text) => {
+        readTextFile(dataPath + "conf.json").then((text) => {
             let a: IConf[] = JSON.parse(text)
             setProjects(a)
             console.log(a)
             console.log("working with dir: " + dataPath)
         }).catch((e) => {
-            // alert(e.message)
-            writeTextFile("conf.json", JSON.stringify(projects), { dir: BaseDirectory.AppLocalData }).then(() => {
+            alert(e)
+            writeTextFile(dataPath + "conf.json", JSON.stringify(projects)).then(() => {
                 console.log("created config")
-            })
+            }).catch((e) => alert(e))
         })
     }
 
     const addProject = (path: string, dir: string, name: string) => {
+        alert("ADD")
         let newProjects: IConf[] | null = projects
         if (!newProjects) {
             newProjects = []
         }
         newProjects?.push({ name: name, path: dir, previewPath: dir + sep + "preview_" + name + ".png" })
         setProjects(newProjects)
-        writeTextFile("conf.json", JSON.stringify(newProjects), { dir: BaseDirectory.AppLocalData }).then(() => {
+        writeTextFile(dataPath + "conf.json", JSON.stringify(newProjects)).then(() => {
             console.log("updated config")
             loadData()
         })
     }
 
     const setProject = (proj: IConf) => {
-        readTextFile(proj.path + sep + "CONF_" + proj.name + ".mascot", { dir: BaseDirectory.Document }).then((text) => {
+        readTextFile(proj.path + sep + "CONF_" + proj.name + ".mascot").then((text) => {
             try {
                 let msct: IMascot = JSON.parse(text)
                 appWindow.setTitle(msct.projectName + " (~" + msct.workingDir + "~)")
@@ -98,7 +106,7 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
         if (deleteProj !== -1 && projects) {
             removeDir(projects[deleteProj].path, { dir: BaseDirectory.Document, recursive: true }).catch(() => { })
             projects.splice(deleteProj, 1)
-            writeTextFile("conf.json", JSON.stringify(projects), { dir: BaseDirectory.AppLocalData }).then(() => {
+            writeTextFile(dataPath + "conf.json", JSON.stringify(projects)).then(() => {
                 console.log("Deleted")
                 loadData()
             })
@@ -111,7 +119,7 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
         <div style={{ flexDirection: "row", display: "flex" }}>
             <div style={{ display: "flex", flexDirection: "column", width: 200, height: "100vh" }}>
                 <div style={{ flex: 1 }} />
-                <img style={{ margin: 20, backgroundColor: interactActiveGray, borderRadius: "50%" }} src={aboba} />
+                <img style={{ margin: 20, backgroundColor: interactActiveGray, borderRadius: "50%", aspectRatio:1, }} src={aboba} />
                 <div style={{ flex: 2 }} />
                 <div style={{ flex: 0, marginBottom: 20, flexDirection: "column" }}>
                     <div style={{ userSelect: 'none', margin: 10, textAlign: "center", padding: 7, borderRadius: 10, border: "solid", borderWidth: 2, borderColor: interactActiveHoverGray, backgroundColor: interactActiveGray, color: "white" }}
