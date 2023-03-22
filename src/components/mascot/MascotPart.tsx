@@ -3,6 +3,7 @@ import { MascotContext } from "../../App";
 import { interactGray, menuGray } from "../../utils/Colors";
 import diagArrows from "../../assets/resize.svg"
 import Draggable from "react-draggable";
+import { tauri } from "@tauri-apps/api";
 
 export default function MascotPart({ partIndex }: { partIndex: number }) {
     const mascot = useContext(MascotContext);
@@ -173,15 +174,15 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
                         >
                             <img src={
                                 // "https://asset.localhost/" + 
-                                mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath}
+                                mascot ? tauri.convertFileSrc(mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath) : ""}
                                 style={{
                                     // zIndex: 100,
                                     userSelect: "none",
                                     objectFit: 'fill',
                                     height: height,
                                     width: width,
-                                    padding:0,
-                                    margin:0,
+                                    padding: 0,
+                                    margin: 0,
                                     // margin: 0,
                                     // paddingBottom: -10,
                                 }}
@@ -223,7 +224,7 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
                     // opacity: 0.5,
                 }} draggable={false}
                 >
-                    <img src={mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath}
+                    <img src={mascot ? tauri.convertFileSrc(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath) : ""}
                         style={{
                             objectFit: 'fill',
                             height: height,

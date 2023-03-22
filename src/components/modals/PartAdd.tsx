@@ -13,7 +13,8 @@ import { getImageSize } from "react-image-size/lib/lib/getImageSize";
 // import { changeColor } from "../../utils/redux_state/BackgroundSlice";
 import { tauri } from "@tauri-apps/api";
 import search from "../../assets/search.svg"
-
+import { copyFile, readTextFile, BaseDirectory, writeTextFile, removeDir, exists } from '@tauri-apps/api/fs';
+import { documentDir, sep } from "@tauri-apps/api/path";
 
 const handler = async () => {
   let aboba = await open({
@@ -53,7 +54,7 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
   }, [open, redact])
 
   const getSizes = async (value: string) => {
-    const dimens = await getImageSize("https://asset.localhost/" + value)
+    const dimens = await getImageSize(value)
     if (dimens) {
       setHeight(dimens.height)
       setWidth(dimens.width)
@@ -174,32 +175,23 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
 
             </input>
             <div style={{ position: "absolute", right: 10, top: 5 }} onClick={() => {
-              // if (inputFile.current) {
-              //   inputFile.current.click();
-              // }
               handler().then((response) => {
                 console.log(response)
                 if (!(response instanceof Array<String>) && response) {
-                  getSizes(response)
-                  let apiPath = tauri.convertFileSrc(response)
-                  console.log('API Path', apiPath)
-                  setPath(apiPath)
+
+                  // let apiPath = tauri.convertFileSrc(response)
+                  // console.log('API Path', apiPath)
+                  getSizes(tauri.convertFileSrc(response))
+                  setPath(response)
                 }
               })
             }}>
-              {/* <img src={search} style={{ maxHeight: 100, flex: 1, objectFit: "scale-down" }} /> */}
               <SearchTwoToneIcon />
-              {/* <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                if (e.target.files) {
-                  setFile(e.target.files[0]);
-                }
-              }} /> */}
             </div>
           </div>
         </div>
         {path && <img src={
-          // "https://asset.localhost/" + 
-          path
+          tauri.convertFileSrc(path)
         } style={{ maxHeight: 100, flex: 1, objectFit: "scale-down" }} />}
         <button style={{ flex: 1, width: "100%" }} onClick={() => {
           if (designation !== "" && name !== "" && path !== "") {
@@ -217,21 +209,35 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
                   width: width,
                   type: Number(designation)
                 }
+                mascot.setMascot(mascot.mascot)
+                handleClose()
               } else {
-                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.push({
-                  name: name,
-                  visibility: true,
-                  // sourcePath: "https://asset.localhost/"+path,
-                  sourcePath: path,
-                  positionX: 0,
-                  positionY: 0,
-                  height: height,
-                  width: width,
-                  type: Number(designation)
+                documentDir().then((docsPath) => {
+                  exists(docsPath + mascot.mascot.workingDir + sep + designation + "_" + name).then((resp) => {
+                    if (resp) {
+                      alert("Part with same name and destination already exists")
+                    } else {
+                      copyFile(path, docsPath + mascot.mascot.workingDir + sep + designation + "_" + name, {}).then(() => { alert("SUCCESS") }).catch((e) => alert(e))
+                      // let newPath = tauri.convertFileSrc(docsPath + mascot.mascot.workingDir + sep + designation + "_" + name)
+
+                      mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.push({
+                        name: name,
+                        visibility: true,
+                        // sourcePath: "https://asset.localhost/"+path,
+                        sourcePath: docsPath + mascot.mascot.workingDir + sep + designation + "_" + name,
+                        positionX: 0,
+                        positionY: 0,
+                        height: height,
+                        width: width,
+                        type: Number(designation)
+                      })
+                      mascot.setMascot(mascot.mascot)
+                      handleClose()
+                    }
+                  }).catch((e) => {alert(e)})
                 })
               }
-              mascot.setMascot(mascot.mascot)
-              handleClose()
+
             }
           } else {
             alert("Can't Add Part Due To Your Irresponsability")

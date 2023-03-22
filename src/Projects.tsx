@@ -72,7 +72,7 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
     }
 
     const setProject = (proj: IConf) => {
-        readTextFile(proj.path + sep + "CONF_"+proj.name+".mascot", { dir: BaseDirectory.Document }).then((text) => {
+        readTextFile(proj.path + sep + "CONF_" + proj.name + ".mascot", { dir: BaseDirectory.Document }).then((text) => {
             try {
                 let msct: IMascot = JSON.parse(text)
                 appWindow.setTitle(msct.projectName + " (~" + msct.workingDir + "~)")
@@ -82,7 +82,10 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
                 alert(e)
             }
         }).catch(() => {
-
+            alert("Can't locate config file for " + proj.name)
+            if (projects)
+                setDeleteProj(projects.findIndex(item => item === proj))
+            setOpenProceed(true)
         })
         return true
     }
@@ -93,8 +96,7 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
 
     const deleteProject = () => {
         if (deleteProj !== -1 && projects) {
-            removeDir(projects[deleteProj].path, { dir: BaseDirectory.Document, recursive: true }).catch(() =>
-                alert("Unable to remove project from: " + projects[deleteProj].path))
+            removeDir(projects[deleteProj].path, { dir: BaseDirectory.Document, recursive: true }).catch(() => { })
             projects.splice(deleteProj, 1)
             writeTextFile("conf.json", JSON.stringify(projects), { dir: BaseDirectory.AppLocalData }).then(() => {
                 console.log("Deleted")
@@ -105,7 +107,7 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
 
     return (<>
         <ProjectAdd open={openDialog} setOpen={setOpenDialog} addProject={addProject} />
-        <Proceed open={openProceed} setOpen={setOpenProceed} question={(projects && deleteProj > -1 && deleteProj < projects.length) ? "Do you want to delete " + projects[deleteProj].name  + "?": ""} proceed={deleteProject} />
+        <Proceed open={openProceed} setOpen={setOpenProceed} question={(projects && deleteProj > -1 && deleteProj < projects.length) ? "Do you want to delete " + projects[deleteProj].name + "?" : ""} proceed={deleteProject} />
         <div style={{ flexDirection: "row", display: "flex" }}>
             <div style={{ display: "flex", flexDirection: "column", width: 200, height: "100vh" }}>
                 <div style={{ flex: 1 }} />

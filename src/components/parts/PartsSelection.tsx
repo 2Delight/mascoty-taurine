@@ -13,6 +13,7 @@ import PartPart from "./PartPart";
 import { interactGray, menuGray } from "../../utils/Colors";
 import { MascotContext } from "../../App";
 import PartAdd from "../modals/PartAdd";
+import { removeFile } from "@tauri-apps/api/fs";
 
 
 export default function PartsSelection() {
@@ -66,7 +67,8 @@ export default function PartsSelection() {
             <DeleteOutlineTwoToneIcon className="icon" onClick={() => {
                 if (mascot && mascot.mascot.emotions.length > 0 && mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.length > 0) {
                     mascot.mascot = structuredClone(mascot.mascot)
-                    mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.splice(mascot.mascot.selectedPart, 1)
+                    let forDeletion = mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.splice(mascot.mascot.selectedPart, 1)
+                    removeFile(forDeletion[0].sourcePath).catch((e) => alert(e))
                     mascot.setMascot(mascot.mascot)
                 }
             }} />
