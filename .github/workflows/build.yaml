@@ -28,10 +28,14 @@ jobs:
           sudo apt install libayatana-appindicator3-dev
           sudo apt install librsvg2-dev
       
-      - name: Install Torch
+      - name: Install LibTorch
         run: |
           wget https://download.pytorch.org/libtorch/nightly/cpu/libtorch-shared-with-deps-latest.zip
           unzip libtorch-shared-with-deps-latest.zip
+      
+      - name: Install PortAudio
+        run: |
+          sudo apt install portaudio19-dev
 
       - name: Use Node.js
         uses: actions/setup-node@v3
