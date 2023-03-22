@@ -32,7 +32,7 @@ jobs:
       
       - name: Install LibTorch
         run: |
-          sudo apt-get install -y libtorch
+          sudo apt-get install -y libtorch1.7
 
           wget https://download.pytorch.org/libtorch/nightly/cpu/libtorch-shared-with-deps-latest.zip
           unzip libtorch-shared-with-deps-latest.zip
