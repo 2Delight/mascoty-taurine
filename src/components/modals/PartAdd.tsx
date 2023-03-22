@@ -166,7 +166,7 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
             </Select>
           </div>
         </div>
-        <div style={{ flexDirection: "row", display: "flex", marginBottom: 10 }}>
+        {!redact && <div style={{ flexDirection: "row", display: "flex", marginBottom: 10 }}>
           <a style={{ textAlign: "left", color: "white", width: 100 }}>
             Image
           </a>
@@ -189,7 +189,8 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
               <SearchTwoToneIcon />
             </div>
           </div>
-        </div>
+
+        </div>}
         {path && <img src={
           tauri.convertFileSrc(path)
         } style={{ maxHeight: 100, flex: 1, objectFit: "scale-down" }} />}
@@ -212,30 +213,29 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
                 mascot.setMascot(mascot.mascot)
                 handleClose()
               } else {
-                documentDir().then((docsPath) => {
-                  exists(docsPath + mascot.mascot.workingDir + sep + designation + "_" + name).then((resp) => {
-                    if (resp) {
-                      alert("Part with same name and destination already exists")
-                    } else {
-                      copyFile(path, docsPath + mascot.mascot.workingDir + sep + designation + "_" + name, {}).then(() => { alert("SUCCESS") }).catch((e) => alert(e))
-                      // let newPath = tauri.convertFileSrc(docsPath + mascot.mascot.workingDir + sep + designation + "_" + name)
+                exists(mascot.mascot.workingDir + sep + designation + "_" + name).then((resp) => {
+                  if (resp) {
+                    alert("Part with same name and destination already exists")
+                  } else {
+                    copyFile(path, mascot.mascot.workingDir + sep + designation + "_" + name, {}).then(() => { alert("SUCCESS") }).catch((e) => alert(e))
+                    // let newPath = tauri.convertFileSrc(docsPath + mascot.mascot.workingDir + sep + designation + "_" + name)
 
-                      mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.push({
-                        name: name,
-                        visibility: true,
-                        // sourcePath: "https://asset.localhost/"+path,
-                        sourcePath: docsPath + mascot.mascot.workingDir + sep + designation + "_" + name,
-                        positionX: 0,
-                        positionY: 0,
-                        height: height,
-                        width: width,
-                        type: Number(designation)
-                      })
-                      mascot.setMascot(mascot.mascot)
-                      handleClose()
-                    }
-                  }).catch((e) => {alert(e)})
-                })
+                    mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.push({
+                      name: name,
+                      visibility: true,
+                      // sourcePath: "https://asset.localhost/"+path,
+                      sourcePath: mascot.mascot.workingDir + sep + designation + "_" + name,
+                      positionX: 0,
+                      positionY: 0,
+                      height: height,
+                      width: width,
+                      type: Number(designation)
+                    })
+                    mascot.setMascot(mascot.mascot)
+                    handleClose()
+                  }
+                }).catch((e) => { alert(e) })
+
               }
 
             }

@@ -34,6 +34,11 @@ export default function ProjectAdd({ open, setOpen, addProject }: { open: boolea
     const [name, setName] = React.useState("");
     const [workDir, setWorkDir] = React.useState("")
 
+    useEffect(() => {
+        setName("")
+        setWorkDir("")
+    }, [open])
+
     return (
         <Modal
             open={open}
@@ -64,18 +69,37 @@ export default function ProjectAdd({ open, setOpen, addProject }: { open: boolea
                     }}>
                     </input>
                 </div>
-                <button style={{ flex: 1, width: "100%" }} onClick={() => {
-                    createDir("MASCOTY", { dir: BaseDirectory.Document })
+                <div style={{ flexDirection: "row", display: "flex", marginBottom: 10 }}>
+                    <a style={{ textAlign: "left", color: "white", width: 100 }}>
+                        Base Directory
+                    </a>
+                    <div style={{ position: "relative", flex: 1, flexDirection: "row", display: "flex", }} onClick={() => {
+                        handler().then((response) => {
+                            console.log(response)
+                            if (!(response instanceof Array<String>) && response) {
 
-                    createDir("MASCOTY" + sep + name, { dir: BaseDirectory.Document }).then(() => {
+                                // let apiPath = tauri.convertFileSrc(response)
+                                // console.log('API Path', apiPath)
+                                setWorkDir(response)
+                            }
+                        })
+                    }}>
+                        <input style={{ backgroundColor: menuGray, flex: 1, paddingRight: 40 }} disabled={true} placeholder="Project's Directory..." value={workDir} />
+                        <div style={{ position: "absolute", right: 10, top: 5 }} >
+                            <SearchTwoToneIcon />
+                        </div>
+                    </div>
+                </div>
+                <button style={{ flex: 1, width: "100%" }} onClick={() => {
+                    createDir(workDir + sep + name).then(() => {
                         // let apiPath = tauri.convertFileSrc(workDir)
                         // let apiPath = tauri.convertFileSrc(workDir + sep + name + ".msc")
                         // console.log('API Path', apiPath)
                         let notSoDummyMascot = DummyMascot
-                        notSoDummyMascot.workingDir = "MASCOTY" + sep + name+ sep
+                        notSoDummyMascot.workingDir = workDir + sep + name + sep
                         notSoDummyMascot.projectName = name
-                        writeTextFile("MASCOTY" + sep + name + sep + "CONF_" + name + ".mascot", JSON.stringify(notSoDummyMascot), { dir: BaseDirectory.Document }).then(() => {
-                            addProject("CONF_" + name + ".mascot", "MASCOTY" + sep + name, name) 
+                        writeTextFile(workDir + sep + name + sep + "CONF_" + name + ".mascot", JSON.stringify(notSoDummyMascot), { dir: BaseDirectory.Document }).then(() => {
+                            addProject("CONF_" + name + ".mascot", workDir + sep + name, name)
                             setOpen(false)
                         }).catch(() => {
                             alert("Can't Create Config File For Project " + name)
