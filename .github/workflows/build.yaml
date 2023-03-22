@@ -36,7 +36,7 @@ jobs:
           wget https://download.pytorch.org/libtorch/nightly/cpu/libtorch-shared-with-deps-latest.zip
           unzip libtorch-shared-with-deps-latest.zip
 
-          pip3 install torch
+          pip3 install -U torch==1.5
           pip3 install torchvision
           pip3 install torchaudio
       
