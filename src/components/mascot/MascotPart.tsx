@@ -172,7 +172,7 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
                             margin: 0,
                         }} draggable={false}
                         >
-                            <img src={
+                            <img crossOrigin='anonymous' src={
                                 // "https://asset.localhost/" + 
                                 mascot ? tauri.convertFileSrc(mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath) : ""}
                                 style={{
@@ -225,6 +225,7 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
                 }} draggable={false}
                 >
                     <img src={mascot ? tauri.convertFileSrc(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath) : ""}
+                        crossOrigin='anonymous'
                         style={{
                             objectFit: 'fill',
                             height: height,

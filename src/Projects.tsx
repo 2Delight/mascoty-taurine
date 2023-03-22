@@ -19,6 +19,7 @@ import IMascot from "./components/logic/IMascot";
 import { appWindow } from "@tauri-apps/api/window";
 import DeleteOutlineTwoToneIcon from '@mui/icons-material/DeleteOutlineTwoTone';
 import Proceed from "./components/modals/Proceed";
+import { tauri } from "@tauri-apps/api";
 
 export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStateAction<boolean>> }) {
     const mascot = useContext(MascotContext);
@@ -29,7 +30,6 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
     const [projects, setProjects] = useState<IConf[] | null>(null)
 
     useEffect(() => {
-        console.log("aboba")
         documentDir().then(resp => {
             createDir(resp + "MASCOTY").then(() => {
                 setDataPath(resp + "MASCOTY" + sep)
@@ -119,7 +119,7 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
         <div style={{ flexDirection: "row", display: "flex" }}>
             <div style={{ display: "flex", flexDirection: "column", width: 200, height: "100vh" }}>
                 <div style={{ flex: 1 }} />
-                <img style={{ margin: 20, backgroundColor: interactActiveGray, borderRadius: "50%", aspectRatio:1, }} src={aboba} />
+                <img style={{ margin: 20, backgroundColor: interactActiveGray, borderRadius: "50%", aspectRatio: 1, }} src={aboba} />
                 <div style={{ flex: 2 }} />
                 <div style={{ flex: 0, marginBottom: 20, flexDirection: "column" }}>
                     <div style={{ userSelect: 'none', margin: 10, textAlign: "center", padding: 7, borderRadius: 10, border: "solid", borderWidth: 2, borderColor: interactActiveHoverGray, backgroundColor: interactActiveGray, color: "white" }}
@@ -161,7 +161,7 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
                             onDoubleClick={() => {
                                 setProject(c)
                             }}>
-                            <img src={c.previewPath} alt={c.name.substring(0, 2)} style={{ objectFit: 'fill', marginRight: 20, fontSize: 30, textAlign: "center", alignSelf: "center", justifySelf: "center", backgroundColor: textToColor(c.name), width: 50, aspectRatio: 1, border: "solid", borderRadius: 10, borderColor: interactActiveHoverGray, borderWidth: 2, padding: 3, }} />
+                            <img src={tauri.convertFileSrc(c.previewPath)} alt={c.name.substring(0, 2)} style={{ objectFit: 'fill', marginRight: 20, fontSize: 30, textAlign: "center", alignSelf: "center", justifySelf: "center", backgroundColor: textToColor(c.name), width: 50, aspectRatio: 1, border: "solid", borderRadius: 10, borderColor: interactActiveHoverGray, borderWidth: 2, padding: 3, }} />
                             <div style={{ flexDirection: "column" }}>
                                 <div style={{ color: interactActiveHoverGray, fontSize: 20, marginTop: 4, marginBottom: 2, }}>
                                     {c.name}
