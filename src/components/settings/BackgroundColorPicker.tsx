@@ -1,9 +1,11 @@
 import { Modal } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import { BlockPicker, CirclePicker, SketchPicker } from "react-color";
 import { useDispatch } from "react-redux";
+import { MascotContext } from "../../App";
 import { menuGray } from "../../utils/Colors";
-import { changeColor } from "../../utils/redux_state/BackgroundSlice";
+import { EEmotion } from "../logic/EEmotion";
+// import { changeColor } from "../../utils/redux_state/BackgroundSlice";
 
 
 export default function MaskotBackgroundColorPicker() {
@@ -12,7 +14,9 @@ export default function MaskotBackgroundColorPicker() {
   const handleClose = () => setOpen(false);
   const [color, setColor] = React.useState("black")
 
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
+
+  const mascot = useContext(MascotContext);
 
   return (
     <div style={{
@@ -65,8 +69,13 @@ export default function MaskotBackgroundColorPicker() {
             color={color}
             onChangeComplete={(clr) => {
               setColor(clr.hex)
-              dispatch(changeColor(clr.hex))
-              console.log("changed")
+              if (mascot) {
+                mascot.mascot = structuredClone(mascot.mascot)
+                mascot.mascot.bgColor = clr.hex
+                mascot.setMascot(mascot.mascot)
+              }
+              // dispatch(changeColor(clr.hex))
+              // console.log("changed")
             }} />
 
 

@@ -3,7 +3,7 @@ mod tests;
 
 use log::{debug, error, info, warn};
 use serde::{Deserialize, Serialize};
-use tch::{vision::imagenet, CModule};
+use tch::CModule;
 
 pub struct Config {
     pub camera: CameraConfig,
@@ -29,11 +29,13 @@ pub fn import_config() -> Config {
     debug!("Deserializing YAML");
     let deserealizer = serde_yaml::Deserializer::from_str(std::include_str!("config.yaml"));
 
-    Config {
+    let conf = Config {
         camera: CameraConfig::deserialize(deserealizer).unwrap(),
-        model: tch::jit::CModule::load_data(&mut std::io::Cursor::new(std::include_bytes!(
-            "checkpoint.pt"
+        model: tch::CModule::load_data(&mut std::io::Cursor::new(std::include_bytes!(
+            "model.pt",
         )))
         .unwrap(),
-    }
+    };
+
+    conf
 }

@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { createContext, useMemo, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 
-import { ThemeProvider} from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import EmotionsSelection from "./components/emotions/EmotionsSelection";
 import MaskotBackgroundColorPicker from "./components/settings/BackgroundColorPicker";
 import MicMinMaxDisplay from "./components/settings/MicMinMaxDisplay";
@@ -13,68 +13,154 @@ import FPSSElection from "./components/settings/FPSSelection";
 import MascotCanvas from "./components/mascot/MascotCanvas";
 import { theme } from "./utils/MuiTheme";
 import PartsSelection from "./components/parts/PartsSelection";
+import IMascot from "./components/logic/IMascot";
+import { EEmotion } from "./components/logic/EEmotion";
+import { ThemeContext } from "@emotion/react";
+import { EPart } from "./components/logic/EPart";
 
+
+export const MascotContext = createContext<{
+  mascot: IMascot,
+  setMascot: React.Dispatch<React.SetStateAction<IMascot>>
+} | null>(null);
 
 export default function App() {
-  const [mascot, setMascot] = useState({
+  const [mascot, setMascot] = useState<IMascot>({
     blink: false,
-    emotion: "",
+    emotion: EEmotion.default,
     lips: false,
     voice: "",
+    emotions: [
+      {
+        name: "abiba",
+        visibility: true,
+        parts: [
+        ],
+        emotion: EEmotion.happy,
+      },
+      {
+        name: "robomuzhikh",
+        visibility: false,
+        parts: [{
+          name: "Eyes_C",
+          visibility: true,
+          sourcePath: "/pics/eyes_c.png",
+          positionX: 100,
+          positionY: 100,
+          height: 100,
+          width: 100,
+          type: EPart.eyesClosed
+        },
+        {
+          name: "Eyes_O",
+          visibility: true,
+          sourcePath: "/pics/eyes_o.png",
+          positionX: 0,
+          positionY: 0,
+          height: 100,
+          width: 100,
+          type: EPart.eyesOpened
+        },
+        {
+          name: "Face",
+          visibility: true,
+          sourcePath: "/pics/face.png",
+          positionX: 0,
+          positionY: 0,
+          height: 100,
+          width: 100,
+          type: EPart.face
+        },
+        {
+          name: "Mouth_C",
+          visibility: true,
+          sourcePath: "/pics/mouth_c.png",
+          positionX: 0,
+          positionY: 0,
+          height: 100,
+          width: 100,
+          type: EPart.mouthClosed
+        },
+        {
+          name: "Mouth_O",
+          visibility: true,
+          sourcePath: "/pics/mouth_o.png",
+          positionX: 0,
+          positionY: 0,
+          height: 100,
+          width: 100,
+          type: EPart.mouthOpened
+        },
+        ],
+        emotion: EEmotion.angry,
+      },
+    ],
+    bgColor: "black",
+    selectedEmotion: 0,
+    selectedPart: 0,
   });
 
-  
+  const value = useMemo(
+    () => ({ mascot, setMascot }),
+    [mascot]
+  );
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="container" style={{
-        margin: 0
-      }}>
-        <div className="main" style={{
-          height: "100vh"
+      <MascotContext.Provider value={value}>
+        <div className="container" style={{
+          margin: 0
         }}>
-          <div className="emotionsNparts" style={{
-            justifyContent: "center",
-            overflow: "block",
-            display: "flex",
-            flexDirection: "column",
-            flex: 1,
+          <div className="main" style={{
+            height: "100vh"
           }}>
-            <EmotionsSelection/>
-            <PartsSelection/>
-          </div>
+            <div className="emotionsNparts" style={{
+              justifyContent: "center",
+              overflow: "block",
+              display: "flex",
+              flexDirection: "column",
+              flex: 1,
+            }}>
+              <EmotionsSelection />
+              <PartsSelection />
+            </div>
 
-          <div className="settings" style={{
-            justifyContent: "center",
-            minWidth: 400,
-            flex: 2,
-          }}>
-            <div style={{ display: "flex", flexDirection: "column" }}>
+            <div className="settings" style={{
+              justifyContent: "center",
+              minWidth: 400,
+              flex: 0,
+            }}>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <MicSelection />
+                  <CamSelection />
+                </div>
+              </div>
+
               <div style={{ display: "flex", flexDirection: "row" }}>
-                <MicSelection />
-                <CamSelection />
+                <ShakeSettings />
+                <FPSSElection />
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <MicMinMaxDisplay />
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <MaskotBackgroundColorPicker />
+                <div style={{ flex: 1 }}></div>
               </div>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "row" }}>
-              <ShakeSettings />
-              <FPSSElection />
-            </div>
+            <MascotCanvas />
+            {/* 
+            <button onClick={() => console.log(mascot)}>
 
-            <div style={{ display: "flex", flexDirection: "row" }}>
-              <MicMinMaxDisplay />
-            </div>
+            </button> */}
 
-            <div style={{ display: "flex", flexDirection: "row" }}>
-              <MaskotBackgroundColorPicker/>
-              <div style={{ flex: 1 }}></div>
-            </div>
           </div>
-
-          <MascotCanvas/>
-
         </div>
-      </div>
+      </MascotContext.Provider>
     </ThemeProvider>
   );
 }
