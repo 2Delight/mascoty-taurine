@@ -117,9 +117,9 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
         <ProjectAdd open={openDialog} setOpen={setOpenDialog} addProject={addProject} />
         <Proceed open={openProceed} setOpen={setOpenProceed} question={(projects && deleteProj > -1 && deleteProj < projects.length) ? "Do you want to delete " + projects[deleteProj].name + "?" : ""} proceed={deleteProject} />
         <div style={{ flexDirection: "row", display: "flex" }}>
-            <div style={{ display: "flex", flexDirection: "column", width: 200, height: "100vh" }}>
+            <div style={{ display: "flex", flexDirection: "column",  height: "100vh" }}>
                 <div style={{ flex: 1 }} />
-                <img style={{ margin: 20, backgroundColor: interactActiveGray, borderRadius: "50%", aspectRatio: 1, }} src={aboba} />
+                <img style={{ margin: 20, backgroundColor: interactActiveGray, borderRadius: "50%", aspectRatio: 1, height:140, width:140}} src={aboba} />
                 <div style={{ flex: 2 }} />
                 <div style={{ flex: 0, marginBottom: 20, flexDirection: "column" }}>
                     <div style={{ userSelect: 'none', margin: 10, textAlign: "center", padding: 7, borderRadius: 10, border: "solid", borderWidth: 2, borderColor: interactActiveHoverGray, backgroundColor: interactActiveGray, color: "white" }}
@@ -153,15 +153,16 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
 
 
                 <div style={{
-                    overflow: "auto",
+                    overflowY: "scroll",
                     margin: 20,
+                    height: "85%"
                 }}>
                     {projects?.map((c, i) => {
                         return c.name.includes(searchReq) && <div key={i} className="project" style={{ marginBottom: 10, padding: 10, flexDirection: "row", display: "flex", width: "calc(100%-40px)", borderRadius: 10, }}
                             onDoubleClick={() => {
                                 setProject(c)
                             }}>
-                            <img src={tauri.convertFileSrc(c.previewPath)} alt={c.name.substring(0, 2)} style={{ objectFit: 'fill', marginRight: 20, fontSize: 30, textAlign: "center", alignSelf: "center", justifySelf: "center", backgroundColor: textToColor(c.name), width: 50, aspectRatio: 1, border: "solid", borderRadius: 10, borderColor: interactActiveHoverGray, borderWidth: 2, padding: 3, }} />
+                            <img src={tauri.convertFileSrc(c.previewPath)} alt={c.name.substring(0, 2)} style={{ objectFit: 'fill', margin: 3, marginRight: 20, fontSize: 30, textAlign: "center", alignSelf: "center", justifySelf: "center", backgroundColor: textToColor(c.name), width: 50, aspectRatio: 1, border: "solid", borderRadius: 10, borderColor: interactActiveHoverGray, borderWidth: 2, }} />
                             <div style={{ flexDirection: "column" }}>
                                 <div style={{ color: interactActiveHoverGray, fontSize: 20, marginTop: 4, marginBottom: 2, }}>
                                     {c.name}

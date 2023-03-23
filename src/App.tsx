@@ -21,6 +21,7 @@ import Projects from "./Projects";
 import { DummyMascot } from "./utils/DummyMascot";
 import { readTextFile, writeTextFile } from "@tauri-apps/api/fs";
 import { BaseDirectory, sep } from "@tauri-apps/api/path";
+import saveMascot from "./utils/Save";
 
 
 export const MascotContext = createContext<{
@@ -46,7 +47,7 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <MascotContext.Provider value={value}>
-        {selecting ? <Projects exit={setSelecting}/> :
+        {selecting ? <Projects exit={setSelecting} /> :
           <div className="container" style={{
             margin: 0
           }}>
@@ -96,17 +97,12 @@ export default function App() {
               </div>
 
               <MascotCanvas />
-              
-            <button onClick={() => {
-              console.log(mascot)
-              writeTextFile(mascot.workingDir + sep + "CONF_"+mascot.projectName+".mascot", JSON.stringify(mascot), { dir: BaseDirectory.Document }).then(() => {
-                alert("Saved")
-            }).catch(() => {
-              alert("Cant save")
-            })
-            }}>
 
-            </button>
+              <button onClick={() => {
+                saveMascot(mascot)
+              }}>
+
+              </button>
 
             </div>
           </div>
