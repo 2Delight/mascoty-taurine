@@ -71,10 +71,10 @@ export default function App() {
             margin: 0
           }}>
 
-            <img className="selector" src={up} style={{position: "absolute", height:20, aspectRatio:1, left:-10,zIndex:3, top:"calc(50vh-30)", alignSelf: "center", margin: 10,  }} />
+            <img className="selector" src={up} style={{position: "absolute", height:20, aspectRatio:1, left:-10, top:"calc(50vh-30)", alignSelf: "center", margin: 10,  }} />
 
             <div className="context-menu" style={{
-              position: "absolute", height: "100vh", width: 220, left: 0
+              position: "absolute", height: "100vh", width: 230, left: 0
               // backgroundColor: contextMenuGray,
               // borderRight: "solid",
               // borderRightWidth: 3, borderColor: interactActiveHoverGray,
