@@ -1,5 +1,4 @@
 import { interactActiveGray, interactActiveHoverGray, interactGray, interactHoverGray, menuGray } from "./utils/Colors";
-import aboba from "./assets/mascoty-logo-nobg.svg"
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import { useEffect, useState, useContext } from "react";
 import { fontSize } from "@mui/system";
@@ -23,6 +22,9 @@ import { tauri } from "@tauri-apps/api";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import blankPreview from './assets/blank_project.png'
+import aboba from "./assets/mascoty-logo-nobg.svg"
+import logo from "./assets/mascoty_logo.png"
+
 
 export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStateAction<boolean>> }) {
     const mascot = useContext(MascotContext);
@@ -120,28 +122,38 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
     }
 
     return (<>
-        <ToastContainer />
         <ProjectAdd open={openDialog} setOpen={setOpenDialog} addProject={addProject} />
         <Proceed open={openProceed} setOpen={setOpenProceed} question={(projects && deleteProj > -1 && deleteProj < projects.length) ? "Do you want to delete " + projects[deleteProj].name + "?" : ""} proceed={deleteProject} />
         <div style={{ flexDirection: "row", display: "flex" }}>
             <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
                 <div style={{ flex: 1 }} />
-                <img style={{ margin: 20, backgroundColor: interactActiveGray, borderRadius: "50%", aspectRatio: 1, height: 140, width: 140 }} src={aboba} />
+                <img style={{ margin: 20, backgroundColor: interactActiveGray, borderRadius: "50%", aspectRatio: 1, height: 140, width: 140 }} src={logo} />
                 <div style={{ flex: 2 }} />
                 <div style={{ flex: 0, marginBottom: 20, flexDirection: "column" }}>
-                    <div style={{ userSelect: 'none', margin: 10, textAlign: "center", padding: 7, borderRadius: 10, border: "solid", borderWidth: 2, borderColor: interactActiveHoverGray, backgroundColor: interactActiveGray, color: "white" }}
+                    <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, }}
                         onClick={() => {
                             setOpenDialog(true)
                             console.log("exited")
                         }}>
-                        Create Mascot
+                        Create
                     </div>
-                    <div style={{ userSelect: 'none', margin: 10, textAlign: "center", padding: 7, borderRadius: 10, border: "solid", borderWidth: 2, borderColor: interactActiveHoverGray, backgroundColor: interactActiveGray, color: "white" }}
+                    <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, }}
                         onClick={() => {
-                            toast("Wow so easy !");
+                            if (projects && selected > -1 && selected < projects.length) {
+                                setProject(projects[selected])
+                            } else {
+                                toast.warn("Project is not selected!");
+                            }
+                        }}>
+                        Open
+                    </div>
+                    <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, }}
+                        onClick={() => {
                             if (projects && selected > -1 && selected < projects.length) {
                                 setDeleteProj(selected)
                                 setOpenProceed(true)
+                            } else {
+                                toast.warn("Project is not selected!");
                             }
                         }}>
                         Delete

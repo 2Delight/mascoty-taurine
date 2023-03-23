@@ -14,9 +14,9 @@ function _base64ToArrayBuffer(base64: string) {
     return bytes.buffer;
 }
 
-export default function saveMascot(mascot: IMascot) {
-    writeTextFile(mascot.workingDir + sep + "CONF_" + mascot.projectName + ".mascot", JSON.stringify(mascot), { dir: BaseDirectory.Document }).then(() => {
-        alert("Saved")
+export default async function saveMascot(mascot: IMascot) {
+    await writeTextFile(mascot.workingDir + sep + "CONF_" + mascot.projectName + ".mascot", JSON.stringify(mascot), { dir: BaseDirectory.Document }).then(() => {
+        // alert("Saved")
         html2canvas(document.getElementsByClassName("mascotPlace")[0] as any, { allowTaint: true, useCORS: true }).then(canvas => {
             console.log(canvas.toDataURL("image/png"))
             if (mascot) {
@@ -25,9 +25,5 @@ export default function saveMascot(mascot: IMascot) {
                 })
             }
         });
-    }).catch(() => {
-        alert("Cant save")
     })
-
-
 }

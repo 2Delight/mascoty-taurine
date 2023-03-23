@@ -22,6 +22,8 @@ import { DummyMascot } from "./utils/DummyMascot";
 import { readTextFile, writeTextFile } from "@tauri-apps/api/fs";
 import { BaseDirectory, sep } from "@tauri-apps/api/path";
 import saveMascot from "./utils/Save";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export const MascotContext = createContext<{
@@ -47,6 +49,17 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <MascotContext.Provider value={value}>
+        <ToastContainer
+          position="bottom-center"
+          autoClose={1000}
+          hideProgressBar
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark" />
         {selecting ? <Projects exit={setSelecting} /> :
           <div className="container" style={{
             margin: 0
@@ -99,7 +112,7 @@ export default function App() {
               <MascotCanvas />
 
               <button onClick={() => {
-                saveMascot(mascot)
+                saveMascot(mascot).then(() => toast.success("Project saved")).catch((e) => toast.warn("Project can not be saved due to: " + e))
               }}>
 
               </button>

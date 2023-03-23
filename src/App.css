@@ -45,6 +45,7 @@
   margin-left: 10px;
   max-height: 10;
 }
+
 .icon:hover {
   color: rgb(141, 142, 148);
 }
@@ -61,41 +62,71 @@
   max-width: 30px;
   max-height: 20px;
 }
+
 .eye:hover {
   color: rgb(177, 177, 177);
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   overflow: hidden;
 }
+
 a {
-    margin: 0;
-    padding-top: 4;
-    padding-left: 10;
-    font-size: 12;
-    color: black;
-    text-align: left;
-    cursor:default;
+  margin: 0;
+  padding-top: 4;
+  padding-left: 10;
+  font-size: 12;
+  color: black;
+  text-align: left;
+  cursor: default;
 }
+
 .resizerb:hover {
   cursor: ne-resize;
 }
+
 .resizelt:hover {
   cursor: se-resize;
 }
+
 .grab {
   cursor: grab;
 }
+
 .project:hover {
   cursor: pointer;
   background-color: #d4d4d4;
 }
+
 .selected-project {
   background-color: #bdbdbd;
 }
+
 .selected-project:hover {
   cursor: pointer;
   background-color: #9c9c9c;
+}
+
+.msct-button {
+  user-select: none;
+  text-align: center;
+  border: solid;
+  border-width: 2px;
+  border-color: #494949;
+  background-color: #616161;
+  color: white
+}
+.msct-button:hover {
+  user-select: none;
+  text-align: center;
+  border: solid;
+  border-width: 2px;
+  border-color: #00bccf;
+  /* background-color: #ffc60a; */
+  /* outline: 3px solid #00bccf; */
+  color: #fbb217;
+  font-weight: bold;
 }
