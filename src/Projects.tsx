@@ -20,6 +20,9 @@ import { appWindow } from "@tauri-apps/api/window";
 import DeleteOutlineTwoToneIcon from '@mui/icons-material/DeleteOutlineTwoTone';
 import Proceed from "./components/modals/Proceed";
 import { tauri } from "@tauri-apps/api";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import blankPreview from './assets/blank_project.png'
 
 export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStateAction<boolean>> }) {
     const mascot = useContext(MascotContext);
@@ -28,6 +31,8 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
     const [openDialog, setOpenDialog] = useState(false)
     const [openProceed, setOpenProceed] = useState(false)
     const [projects, setProjects] = useState<IConf[] | null>(null)
+
+    const [selected, setSelected] = useState(-1)
 
     useEffect(() => {
         documentDir().then(resp => {
@@ -109,17 +114,19 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
             writeTextFile(dataPath + "conf.json", JSON.stringify(projects)).then(() => {
                 console.log("Deleted")
                 loadData()
+                setSelected(-1)
             })
         }
     }
 
     return (<>
+        <ToastContainer />
         <ProjectAdd open={openDialog} setOpen={setOpenDialog} addProject={addProject} />
         <Proceed open={openProceed} setOpen={setOpenProceed} question={(projects && deleteProj > -1 && deleteProj < projects.length) ? "Do you want to delete " + projects[deleteProj].name + "?" : ""} proceed={deleteProject} />
         <div style={{ flexDirection: "row", display: "flex" }}>
-            <div style={{ display: "flex", flexDirection: "column",  height: "100vh" }}>
+            <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
                 <div style={{ flex: 1 }} />
-                <img style={{ margin: 20, backgroundColor: interactActiveGray, borderRadius: "50%", aspectRatio: 1, height:140, width:140}} src={aboba} />
+                <img style={{ margin: 20, backgroundColor: interactActiveGray, borderRadius: "50%", aspectRatio: 1, height: 140, width: 140 }} src={aboba} />
                 <div style={{ flex: 2 }} />
                 <div style={{ flex: 0, marginBottom: 20, flexDirection: "column" }}>
                     <div style={{ userSelect: 'none', margin: 10, textAlign: "center", padding: 7, borderRadius: 10, border: "solid", borderWidth: 2, borderColor: interactActiveHoverGray, backgroundColor: interactActiveGray, color: "white" }}
@@ -128,6 +135,16 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
                             console.log("exited")
                         }}>
                         Create Mascot
+                    </div>
+                    <div style={{ userSelect: 'none', margin: 10, textAlign: "center", padding: 7, borderRadius: 10, border: "solid", borderWidth: 2, borderColor: interactActiveHoverGray, backgroundColor: interactActiveGray, color: "white" }}
+                        onClick={() => {
+                            toast("Wow so easy !");
+                            if (projects && selected > -1 && selected < projects.length) {
+                                setDeleteProj(selected)
+                                setOpenProceed(true)
+                            }
+                        }}>
+                        Delete
                     </div>
                     {/* <div style={{ margin: 10, textAlign: "center", padding: 7, borderRadius: 10, border: "solid", borderWidth: 2, borderColor: interactGray, backgroundColor: interactGray, color: "white" }}
                         onClick={() => {
@@ -153,16 +170,39 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
 
 
                 <div style={{
-                    overflowY: "scroll",
+                    overflowY: "auto",
                     margin: 20,
                     height: "85%"
                 }}>
                     {projects?.map((c, i) => {
-                        return c.name.includes(searchReq) && <div key={i} className="project" style={{ marginBottom: 10, padding: 10, flexDirection: "row", display: "flex", width: "calc(100%-40px)", borderRadius: 10, }}
+                        return c.name.includes(searchReq) && <div key={i} className={i === selected ? "selected-project" : "project"} style={{ marginBottom: 10, padding: 10, flexDirection: "row", display: "flex", width: "calc(100%-40px)", borderRadius: 10, }}
                             onDoubleClick={() => {
                                 setProject(c)
+                            }} onClick={() => {
+                                setSelected(i)
                             }}>
-                            <img src={tauri.convertFileSrc(c.previewPath)} alt={c.name.substring(0, 2)} style={{ objectFit: 'fill', margin: 3, marginRight: 20, fontSize: 30, textAlign: "center", alignSelf: "center", justifySelf: "center", backgroundColor: textToColor(c.name), width: 50, aspectRatio: 1, border: "solid", borderRadius: 10, borderColor: interactActiveHoverGray, borderWidth: 2, }} />
+                            <img src={tauri.convertFileSrc(c.previewPath)} alt={c.name.substring(0, 2)} onError={(event) => {
+                                (event.target as HTMLImageElement).src = blankPreview
+                            }}
+                                style={{
+                                    objectFit: 'fill',
+                                    margin: 3,
+                                    marginRight: 20,
+                                    fontSize: 30,
+                                    textAlign: "center",
+                                    alignSelf: "center",
+                                    justifySelf: "center",
+                                    display: "flex",
+                                    justifyContent: "space-evenly",
+                                    alignItems: "center",
+                                    backgroundColor: textToColor(c.name),
+                                    width: 50,
+                                    aspectRatio: 1,
+                                    border: "solid",
+                                    borderRadius: 10,
+                                    borderColor: interactActiveHoverGray,
+                                    borderWidth: 2,
+                                }} />
                             <div style={{ flexDirection: "column" }}>
                                 <div style={{ color: interactActiveHoverGray, fontSize: 20, marginTop: 4, marginBottom: 2, }}>
                                     {c.name}

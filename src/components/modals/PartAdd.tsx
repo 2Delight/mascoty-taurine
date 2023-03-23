@@ -21,7 +21,7 @@ const handler = async () => {
     multiple: false,
     filters: [{
       name: 'Image',
-      extensions: ['png', 'jpeg']
+      extensions: ['png', 'jpeg', 'jpg']
     }]
   });
   return aboba

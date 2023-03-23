@@ -92,3 +92,10 @@ a {
   cursor: pointer;
   background-color: #d4d4d4;
 }
+.selected-project {
+  background-color: #bdbdbd;
+}
+.selected-project:hover {
+  cursor: pointer;
+  background-color: #9c9c9c;
+}
