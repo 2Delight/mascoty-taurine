@@ -3,7 +3,7 @@ import React, { ChangeEvent, useContext, useEffect, useRef, useState } from "rea
 import { BlockPicker, CirclePicker, SketchPicker } from "react-color";
 import { useDispatch } from "react-redux";
 import { MascotContext } from "../../App";
-import { interactGray, menuGray } from "../../utils/Colors";
+import { interactActiveGray, interactActiveHoverGray, interactGray, menuGray } from "../../utils/Colors";
 import { descriptEmotion, descriptPart } from "../../utils/EDescriptor";
 import { EEmotion } from "../logic/EEmotion";
 import { EPart } from "../logic/EPart";
@@ -52,12 +52,16 @@ export default function ProjectAdd({ open, setOpen, addProject }: { open: boolea
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
-                backgroundColor: interactGray,
+                backgroundColor: interactActiveGray,
+                border: "solid",
+                borderWidth: 3,
+                borderColor: interactActiveHoverGray,
+                padding: 20,
                 borderRadius: 30,
                 width: "30%",
-                // height: "40%",
+                maxWidth: 400,
                 minWidth: 300,
-                padding: 40,
+
                 flexDirection: "column",
             }}>
                 <div style={{ flexDirection: "row", display: "flex", marginBottom: 10 }}>
@@ -90,7 +94,7 @@ export default function ProjectAdd({ open, setOpen, addProject }: { open: boolea
                         </div>
                     </div>
                 </div>
-                <button style={{ flex: 1, width: "100%" }} onClick={() => {
+                <div className="msct-button" style={{padding: 7, borderRadius: 10, backgroundColor: menuGray, color:  interactActiveHoverGray , flex: 1}} onClick={() => {
                     createDir(workDir + sep + name).then(() => {
                         // let apiPath = tauri.convertFileSrc(workDir)
                         // let apiPath = tauri.convertFileSrc(workDir + sep + name + ".msc")
@@ -109,7 +113,7 @@ export default function ProjectAdd({ open, setOpen, addProject }: { open: boolea
                     })
                 }}>
                     Add Project
-                </button>
+                </div>
             </div>
         </Modal>
     );

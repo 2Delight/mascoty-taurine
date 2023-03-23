@@ -115,18 +115,47 @@ a {
   text-align: center;
   border: solid;
   border-width: 2px;
-  border-color: #494949;
-  background-color: #616161;
-  color: white
+  border-color: transparent;
+  background-color: #494949;
+  transition: border-color 0.3s
+    /* color: white */
 }
+
 .msct-button:hover {
   user-select: none;
   text-align: center;
   border: solid;
   border-width: 2px;
   border-color: #00bccf;
-  /* background-color: #ffc60a; */
+
   /* outline: 3px solid #00bccf; */
-  color: #fbb217;
-  font-weight: bold;
+  /* color: #fbb217; */
+  /* font-weight: bold; */
+}
+
+.context-menu:hover {
+  opacity: 1;
+  transform: translateX(0);
+  background-color: #121212;
+  z-index: 4;
+}
+
+.context-menu {
+  /* opacity: 0; */
+  transform: translateX(-92%);
+  background-color: #454545;
+  transition: transform 0.3s;
+  transition-timing-function: ease-out;
+  z-index: 2;
+}
+
+
+.selector:hover {
+  transform: translateX(-100%) rotate(270deg);
+}
+
+.selector {
+  transform: translateX(0) rotate(90deg);
+  transition: transform 0.1s;
+
 }

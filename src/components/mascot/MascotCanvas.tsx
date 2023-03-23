@@ -15,16 +15,24 @@ export default function MascotCanvas() {
   return <div className="mascotPlace" ref={reeeef} style={{
     flex: 10,
     // height: "100%",
-    background: mascot?.mascot.bgColor,
+
     overflow: "auto",
     margin: 10,
     borderRadius: "10px 0 0 0 ",
-    position: "relative",
+    background: mascot?.mascot.bgColor,
     // aspectRatio: 1
   }}
   >
-    {mascot && mascot.mascot.emotions.length > 0 && mascot.mascot.emotions[mascot.mascot.selectedEmotion]?.parts?.map((c, i) => {
-      return c.visibility && <MascotPart partIndex={i} key={i + c.sourcePath + c.name} />
-    })}
+    <div className="canvas"
+      style={{
+
+        position: "relative",
+        // transform:"scale(1)"
+      }}
+    >
+      {mascot && mascot.mascot.emotions.length > 0 && mascot.mascot.emotions[mascot.mascot.selectedEmotion]?.parts?.map((c, i) => {
+        return c.visibility && <MascotPart partIndex={i} key={i + c.sourcePath + c.name} />
+      })}
+    </div>
   </div>
 }

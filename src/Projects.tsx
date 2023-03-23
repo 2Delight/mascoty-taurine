@@ -1,4 +1,4 @@
-import { interactActiveGray, interactActiveHoverGray, interactGray, interactHoverGray, menuGray } from "./utils/Colors";
+import { contextButtonGray, contextMenuGray, interactActiveGray, interactActiveHoverGray, interactGray, interactHoverGray, menuGray } from "./utils/Colors";
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import { useEffect, useState, useContext } from "react";
 import { fontSize } from "@mui/system";
@@ -23,7 +23,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import blankPreview from './assets/blank_project.png'
 import aboba from "./assets/mascoty-logo-nobg.svg"
-import logo from "./assets/mascoty_logo.png"
+import logo from "./assets/mascoty_logo_inline.png"
 
 
 export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStateAction<boolean>> }) {
@@ -125,19 +125,17 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
         <ProjectAdd open={openDialog} setOpen={setOpenDialog} addProject={addProject} />
         <Proceed open={openProceed} setOpen={setOpenProceed} question={(projects && deleteProj > -1 && deleteProj < projects.length) ? "Do you want to delete " + projects[deleteProj].name + "?" : ""} proceed={deleteProject} />
         <div style={{ flexDirection: "row", display: "flex" }}>
-            <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-                <div style={{ flex: 1 }} />
-                <img style={{ margin: 20, backgroundColor: interactActiveGray, borderRadius: "50%", aspectRatio: 1, height: 140, width: 140 }} src={logo} />
-                <div style={{ flex: 2 }} />
+            <div style={{ height: "100vh", minWidth: 220, width: 220, backgroundColor: contextMenuGray, alignItems:"center", alignContent:"center" }}>
+                <img src={logo} style={{ width: 200,alignSelf:"center", margin:10, }} />
                 <div style={{ flex: 0, marginBottom: 20, flexDirection: "column" }}>
-                    <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, }}
+                    <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
                         onClick={() => {
                             setOpenDialog(true)
                             console.log("exited")
                         }}>
                         Create
                     </div>
-                    <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, }}
+                    <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
                         onClick={() => {
                             if (projects && selected > -1 && selected < projects.length) {
                                 setProject(projects[selected])
@@ -147,7 +145,7 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
                         }}>
                         Open
                     </div>
-                    <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, }}
+                    <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
                         onClick={() => {
                             if (projects && selected > -1 && selected < projects.length) {
                                 setDeleteProj(selected)

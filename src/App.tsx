@@ -24,6 +24,11 @@ import { BaseDirectory, sep } from "@tauri-apps/api/path";
 import saveMascot from "./utils/Save";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { contextMenuGray, interactActiveGray, interactActiveHoverGray, interactGray, menuGray } from "./utils/Colors";
+import logo from "./assets/mascoty_logo_inline.png"
+import { BorderColor } from "@mui/icons-material";
+import { transform } from "html2canvas/dist/types/css/property-descriptors/transform";
+import up from "./assets/parts-icons/up.svg"
 
 
 export const MascotContext = createContext<{
@@ -40,6 +45,7 @@ export const ProjectContext = createContext<{
 export default function App() {
   const [selecting, setSelecting] = useState(true)
   const [mascot, setMascot] = useState<IMascot>(DummyMascot);
+  const [contextVisible, setContextVisible] = useState(true)
 
   const value = useMemo(
     () => ({ mascot, setMascot }),
@@ -64,6 +70,34 @@ export default function App() {
           <div className="container" style={{
             margin: 0
           }}>
+
+            <img className="selector" src={up} style={{position: "absolute", height:20, aspectRatio:1, left:-10,zIndex:3, top:"calc(50vh-30)", alignSelf: "center", margin: 10,  }} />
+
+            <div className="context-menu" style={{
+              position: "absolute", height: "100vh", width: 220, left: 0
+              // backgroundColor: contextMenuGray,
+              // borderRight: "solid",
+              // borderRightWidth: 3, borderColor: interactActiveHoverGray,
+            }}
+            >
+              <img src={logo} style={{ width: 200, alignSelf: "center", margin: 10, }} />
+              <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
+                onClick={() => {
+                  saveMascot(mascot).then(() => toast.success("Project saved")).catch((e) => toast.warn("Project can not be saved due to: " + e))
+                }}>
+                Save
+              </div>
+              <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
+                onClick={() => {
+                  setSelecting(true)
+                  setContextVisible(false)
+                }}>
+                Go To Projects
+              </div>
+            </div>
+
+
+
             <div className="main" style={{
               height: "100vh"
             }}>
@@ -73,6 +107,7 @@ export default function App() {
                 display: "flex",
                 flexDirection: "column",
                 flex: 1,
+                paddingLeft: 10,
               }}>
                 <EmotionsSelection />
                 <PartsSelection />
@@ -110,13 +145,6 @@ export default function App() {
               </div>
 
               <MascotCanvas />
-
-              <button onClick={() => {
-                saveMascot(mascot).then(() => toast.success("Project saved")).catch((e) => toast.warn("Project can not be saved due to: " + e))
-              }}>
-
-              </button>
-
             </div>
           </div>
         }
