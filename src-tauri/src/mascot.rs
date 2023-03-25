@@ -1,8 +1,8 @@
 use crate::devices::Devices;
-use crate::input::get_input;
 use crate::panic_error;
 
 use log::{debug, error, info, warn};
+use nokhwa::NokhwaError;
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
@@ -14,33 +14,71 @@ pub struct Mascot {
     pub voice: u8,
 }
 
-fn face_ml() -> (String, bool, bool) {
-    let mut rng = rand::thread_rng();
-    (String::new(), rng.gen::<bool>(), rng.gen::<bool>())
-}
+pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
+    debug!("Getting input");
+    debug!("Getting camera instance");
 
-fn voice_ml() -> (String, u8) {
-    let mut rng = rand::thread_rng();
-    (String::new(), rng.gen::<u8>() % 50)
-}
+    let mut camera = devices.camera.lock().unwrap();
 
-pub fn get_mascot(devices: &Devices) -> Mascot {
-    debug!("Getting mascot");
-    let input = panic_error!(get_input(devices), "getting input");
+    debug!("Getting frame");
+    let buffer = camera.frame()?;
 
-    debug!("Initializing mascot");
-    let mut mascot = Mascot::default();
+    // buffer.decode_image::<RgbFormat>()?.save("img.png").unwrap();
 
-    debug!("Getting values");
-    let (emotion1, eyes, lips) = face_ml();
-    let (emotion2, voice) = voice_ml();
+    // image::save_buffer("img.png", buffer.buffer(), camera.resolution().width_x, camera.resolution().height_y, image::ColorType::Rgb8).unwrap();
 
-    debug!("Setting mascot values");
-    mascot.emotion = emotion1 + emotion2.as_str();
-    mascot.blink = eyes;
-    mascot.lips = lips;
-    mascot.voice = voice;
+    // let img = image::open("img.png").unwrap();
 
-    debug!("Mascot has been created");
-    mascot
+    // let mut img = Vec::new();
+    // img.resize(
+    //     camera.resolution().x() as usize * camera.resolution().y() as usize * 3,
+    //     0,
+    // );
+    // camera.write_frame_to_buffer::<RgbFormat>(&mut img).unwrap();
+    // let img = image::io::Reader::new(std::io::Cursor::new(&img))
+    //     .with_guessed_format()
+    //     .unwrap()
+    //     .decode()
+    //     .unwrap();
+
+    // debug!("{}", frame.source_frame_format());
+
+    // debug!("Decoding image");
+    // let mut img = Vec::new();
+    // img.resize(
+    //     frame.resolution().x() as usize * frame.resolution().y() as usize * 3,
+    //     0,
+    // );
+
+    // frame.decode_image_to_buffer::<RgbFormat>(&mut img).unwrap();
+
+    let model = &mut devices.config.lock().unwrap().model;
+    model.set_eval();
+
+    // let output = tch::vision::imagenet::load_image_and_resize224_from_memory(img.as_bytes())
+    //     .unwrap()
+    //     .unsqueeze(0)
+    //     .apply(model);
+
+    let output = tch::vision::imagenet::load_image_and_resize224("img.png")
+        .unwrap()
+        .unsqueeze(0)
+        .apply(model);
+
+    info!("{}", tch::vision::imagenet::top(&output, 1)[0].1);
+
+    // rgb.get_pixel(10, 10);
+    // info!(
+    //     "Frame resolution: {}; Pixel: {:?}",
+    //     frame.resolution(),
+    //     rgb.get_pixel(10, 10),
+    // );
+
+    debug!("Sending info");
+    Ok(Mascot {
+        emotion: "".to_string(),
+        blink: false,
+        lips: false,
+        voice: devices.get_volume(),
+    })
 }

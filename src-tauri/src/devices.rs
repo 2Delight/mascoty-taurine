@@ -90,6 +90,17 @@ impl Devices {
 
         Ok(())
     }
+
+    pub fn get_volume(&self) -> u8 {
+        const MAXIMUM_VOLUME: f32 = 25000f32;
+        
+        let volume: f32 = self.microphone.lock().unwrap().recv().unwrap().iter().map(|vol| vol.abs()).sum();
+        if volume < MAXIMUM_VOLUME {
+            return (volume * 100f32 / MAXIMUM_VOLUME) as u8;
+        }
+
+        100u8
+    }
 }
 
 pub fn get_mikes(pa: &PortAudio) -> Result<Vec<(DeviceIndex, DeviceInfo)>, Error> {
