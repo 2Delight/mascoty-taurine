@@ -1,4 +1,4 @@
-import { MenuItem, Modal, Select, SelectChangeEvent } from "@mui/material";
+import { MenuItem, Modal, Select, SelectChangeEvent, Slide } from "@mui/material";
 import React, { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import { BlockPicker, CirclePicker, SketchPicker } from "react-color";
 import { useDispatch } from "react-redux";
@@ -43,80 +43,82 @@ export default function ProjectAdd({ open, setOpen, addProject }: { open: boolea
 
     return (
         <Modal
+            // className={open ? "modal-visible" : "modal-invisible"}
             open={open}
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
             disableAutoFocus={true}
         >
-            <div style={{
-                position: "absolute",
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                backgroundColor: contextMenuGray,
-                border: "solid",
-                borderWidth: 3,
-                borderColor: focusBlue,
-                padding: 20,
-                borderRadius: 30,
-                width: "30%",
-                maxWidth: 400,
-                minWidth: 300,
-                flexDirection: "column",
-            }}>
-                <div style={{ flexDirection: "row", display: "flex", marginBottom: 10 }}>
-                    <a style={{ textAlign: "left", color: "white", width: 100 }}>
-                        Name
-                    </a>
-                    <input style={{ backgroundColor: menuGray, flex: 1 }} placeholder="Name Your Project..." value={name} onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        setName(e.target.value);
+            <Slide direction="down" in={open} mountOnEnter unmountOnExit style={{transform: 'translate(-50%, -50%)'}}>
+                <div
+                    style={{
+                        position: "absolute",
+                        top: '45%',
+                        left: 'calc(50vw - 200px)',
+                        // transform: 'translate(-50%, -50%)',
+                        backgroundColor: contextMenuGray,
+                        border: "solid",
+                        borderWidth: 3,
+                        borderColor: focusBlue,
+                        padding: 20,
+                        borderRadius: 30,
+                        width: 400,
+                        flexDirection: "column",
                     }}>
-                    </input>
-                </div>
-                <div style={{ flexDirection: "row", display: "flex", marginBottom: 10 }}>
-                    <a style={{ textAlign: "left", color: "white", width: 100 }}>
-                        Base Directory
-                    </a>
-                    <div style={{ position: "relative", flex: 1, flexDirection: "row", display: "flex", }} onClick={() => {
-                        handler().then((response) => {
-                            console.log(response)
-                            if (!(response instanceof Array<String>) && response) {
+                    <div style={{ flexDirection: "row", display: "flex", marginBottom: 10 }}>
+                        <a style={{ textAlign: "left", color: "white", width: 100 }}>
+                            Name
+                        </a>
+                        <input style={{ backgroundColor: menuGray, flex: 1 }} placeholder="Name Your Project..." value={name} onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            setName(e.target.value);
+                        }}>
+                        </input>
+                    </div>
+                    <div style={{ flexDirection: "row", display: "flex", marginBottom: 10 }}>
+                        <a style={{ textAlign: "left", color: "white", width: 100 }}>
+                            Base Directory
+                        </a>
+                        <div style={{ position: "relative", flex: 1, flexDirection: "row", display: "flex", }} onClick={() => {
+                            handler().then((response) => {
+                                console.log(response)
+                                if (!(response instanceof Array<String>) && response) {
 
-                                // let apiPath = tauri.convertFileSrc(response)
-                                // console.log('API Path', apiPath)
-                                setWorkDir(response)
-                            }
-                        })
-                    }}>
-                        <input style={{ backgroundColor: menuGray, flex: 1, paddingRight: 40 }} disabled={true} placeholder="Project's Directory..." value={workDir} />
-                        <div style={{ position: "absolute", right: 10, top: 5 }} >
-                            <SearchTwoToneIcon />
+                                    // let apiPath = tauri.convertFileSrc(response)
+                                    // console.log('API Path', apiPath)
+                                    setWorkDir(response)
+                                }
+                            })
+                        }}>
+                            <input style={{ backgroundColor: menuGray, flex: 1, paddingRight: 40 }} disabled={true} placeholder="Project's Directory..." value={workDir} />
+                            <div style={{ position: "absolute", right: 10, top: 5 }} >
+                                <SearchTwoToneIcon />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="msct-button" style={{ marginTop: 20, padding: 3, borderRadius: 10, color: menuGray }}
-                    onClick={() => {
-                        createDir(workDir + sep + name).then(() => {
-                            // let apiPath = tauri.convertFileSrc(workDir)
-                            // let apiPath = tauri.convertFileSrc(workDir + sep + name + ".msc")
-                            // console.log('API Path', apiPath)
-                            let notSoDummyMascot = DummyMascot
-                            notSoDummyMascot.workingDir = workDir + sep + name + sep
-                            notSoDummyMascot.projectName = name
-                            writeTextFile(workDir + sep + name + sep + "CONF_" + name + ".mascot", JSON.stringify(notSoDummyMascot), { dir: BaseDirectory.Document }).then(() => {
-                                addProject("CONF_" + name + ".mascot", workDir + sep + name, name)
-                                setOpen(false)
+                    <div className="msct-button" style={{ marginTop: 20, padding: 3, borderRadius: 10, color: menuGray }}
+                        onClick={() => {
+                            createDir(workDir + sep + name).then(() => {
+                                // let apiPath = tauri.convertFileSrc(workDir)
+                                // let apiPath = tauri.convertFileSrc(workDir + sep + name + ".msc")
+                                // console.log('API Path', apiPath)
+                                let notSoDummyMascot = DummyMascot
+                                notSoDummyMascot.workingDir = workDir + sep + name + sep
+                                notSoDummyMascot.projectName = name
+                                writeTextFile(workDir + sep + name + sep + "CONF_" + name + ".mascot", JSON.stringify(notSoDummyMascot), { dir: BaseDirectory.Document }).then(() => {
+                                    addProject("CONF_" + name + ".mascot", workDir + sep + name, name)
+                                    setOpen(false)
+                                }).catch(() => {
+                                    toast.error("Can't Create Config File For Project " + name)
+                                })
                             }).catch(() => {
-                                toast.error("Can't Create Config File For Project " + name)
+                                toast.error("Project With Same Name Already Exists")
                             })
-                        }).catch(() => {
-                            toast.error("Project With Same Name Already Exists")
-                        })
-                    }}>
-                    Add Project
+                        }}>
+                        Add Project
+                    </div>
                 </div>
-            </div>
+            </Slide>
         </Modal>
     );
 }

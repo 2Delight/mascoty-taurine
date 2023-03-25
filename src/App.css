@@ -163,3 +163,12 @@ a {
   transition: transform 0.1s;
 
 }
+
+.modal-visible{
+  transform: translateX(-100%), ;
+}
+
+.modal-invisible {
+  transform: translate(-50%, -50%);
+  transition: transform 2s;
+}
