@@ -9,5 +9,5 @@ export const DummyMascot: IMascot = {
     bgColor: "gray",
     selectedEmotion: 0,
     selectedPart: 0,
-    
+    zoom: 1,
   };

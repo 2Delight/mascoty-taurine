@@ -1,4 +1,4 @@
-import { contextButtonGray, contextMenuGray, interactActiveGray, interactActiveHoverGray, interactGray, interactHoverGray, menuGray } from "./utils/Colors";
+import { backgroundGray, contextButtonGray, contextMenuGray, interactActiveGray, interactActiveHoverGray, interactGray, interactHoverGray, menuGray } from "./utils/Colors";
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import { useEffect, useState, useContext } from "react";
 import { fontSize } from "@mui/system";
@@ -65,15 +65,13 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
             console.log(a)
             console.log("working with dir: " + dataPath)
         }).catch((e) => {
-            alert(e)
             writeTextFile(dataPath + "conf.json", JSON.stringify(projects)).then(() => {
                 console.log("created config")
-            }).catch((e) => alert(e))
+            }).catch((e) => toast.error(e))
         })
     }
 
     const addProject = (path: string, dir: string, name: string) => {
-        alert("ADD")
         let newProjects: IConf[] | null = projects
         if (!newProjects) {
             newProjects = []
@@ -93,11 +91,11 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
                 appWindow.setTitle(msct.projectName + " (~" + msct.workingDir + "~)")
                 mascot?.setMascot(msct)
                 exit(false)
-            } catch (e) {
-                alert(e)
+            } catch (e : any) {
+                toast.error(e)
             }
         }).catch(() => {
-            alert("Can't locate config file for " + proj.name)
+            toast.error("Can't locate config file for " + proj.name)
             if (projects)
                 setDeleteProj(projects.findIndex(item => item === proj))
             setOpenProceed(true)
@@ -166,7 +164,7 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
                 {/* <div style={{ flex: 1 }} /> */}
             </div>
 
-            <div style={{ height: "100vh", width: "100%", backgroundColor: menuGray }}>
+            <div style={{ height: "100vh", width: "100%", backgroundColor: backgroundGray }}>
                 <div style={{
                     marginInline: 20, marginTop: 10, borderBottom: "solid", borderWidth: 2, borderBottomColor: interactHoverGray, paddingBottom: 5,
                     alignItems: "center", alignContent: "center", justifyContent: "center", justifyItems: "center"
@@ -195,7 +193,7 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
                                 (event.target as HTMLImageElement).src = blankPreview
                             }}
                                 style={{
-                                    objectFit: 'fill',
+                                    objectFit: 'cover',
                                     margin: 3,
                                     marginRight: 20,
                                     fontSize: 30,

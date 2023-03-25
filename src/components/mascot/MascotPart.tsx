@@ -5,26 +5,37 @@ import diagArrows from "../../assets/resize.svg"
 import Draggable from "react-draggable";
 import { tauri } from "@tauri-apps/api";
 
-export default function MascotPart({ partIndex }: { partIndex: number }) {
+export default function MascotPart({ partIndex, useFocus }: { partIndex: number, useFocus: boolean }) {
     const mascot = useContext(MascotContext);
     const [currentPos, setCurrentPos] = useState({ x: -1, y: -1 })
     const [height, setHeight] = useState(100)
     const [width, setWidth] = useState(100)
     const [loading, setLoading] = useState(true)
+    const [zoom, setZoom] = useState(1)
 
     useEffect(() => {
         if (mascot) {
+            setZoom(mascot.mascot.zoom)
             setCurrentPos({
-                x: mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionX,
-                y: mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionY
+                x: mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionX * mascot.mascot.zoom,
+                y: mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionY * mascot.mascot.zoom
             })
-            setHeight(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].height)
-            setWidth(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].width)
+            setHeight(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].height * mascot.mascot.zoom)
+            setWidth(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].width * mascot.mascot.zoom)
             // setLoading(false)
         }
     }, [
-        mascot?.mascot.selectedPart
+        mascot?.mascot.selectedPart, mascot?.mascot.zoom
     ])
+
+
+    // useEffect(() => {
+    //     if (mascot) {
+    //         setZoom(mascot.mascot.zoom)
+    //     }
+    // }, [
+
+    // ])
 
     useEffect(() => {
         if (currentPos.x !== -1 && currentPos.y !== -1) {
@@ -118,10 +129,10 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
             document.body.removeEventListener("mousemove", onMouseMove);
             if (mascot) {
                 mascot.mascot = structuredClone(mascot.mascot)
-                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionX = shadowXY.x
-                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionY = shadowXY.y
-                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].height = shadowHW.h
-                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].width = shadowHW.w
+                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionX = shadowXY.x / zoom
+                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionY = shadowXY.y / zoom
+                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].height = shadowHW.h / zoom
+                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].width = shadowHW.w / zoom
                 console.log(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex])
                 mascot.setMascot(mascot.mascot)
             }
@@ -136,8 +147,8 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
         setCurrentPos({ x: dragElement.x, y: dragElement.y })
         if (mascot) {
             mascot.mascot = structuredClone(mascot.mascot)
-            mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionX = dragElement.x
-            mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionY = dragElement.y
+            mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionX = dragElement.x / zoom
+            mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionY = dragElement.y / zoom
             mascot.setMascot(mascot.mascot)
         }
     };
@@ -166,7 +177,7 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
                             userSelect: "none",
                             transformOrigin: "left top",
                             position: "absolute",
-                            outline: "2px dashed white",
+                            outline: useFocus ? "2px dashed white" : "0",
                             height: height,
                             padding: 0,
                             margin: 0,
@@ -188,22 +199,23 @@ export default function MascotPart({ partIndex }: { partIndex: number }) {
                                 }}
                                 draggable={false}
                             ></img>
-                            <div className="resizelt" draggable={false}
-                                style={{ cursor: "resize", right: -5, bottom: -5, height: 10, aspectRatio: 1, position: "absolute", background: interactGray, transform: "unset", outline: "2px solid white", borderRadius: 20, }}
-                                onMouseDown={(e) => { sizeHandler(e, "rb") }}
-                            />
-                            <div className="resizelt" draggable={false}
-                                style={{ left: -5, top: -5, height: 10, aspectRatio: 1, position: "absolute", background: interactGray, transform: "unset", outline: "2px solid white", borderRadius: 20 }}
-                                onMouseDown={(e) => { sizeHandler(e, "lt") }}
-                            />
-                            <div className="resizerb" draggable={false}
-                                style={{ left: -5, bottom: -5, height: 10, aspectRatio: 1, position: "absolute", background: interactGray, transform: "unset", outline: "2px solid white", borderRadius: 20 }}
-                                onMouseDown={(e) => { sizeHandler(e, "lb") }}
-                            />
-                            <div className="resizerb" draggable={false}
-                                style={{ right: -5, top: -5, height: 10, aspectRatio: 1, position: "absolute", background: interactGray, transform: "unset", outline: "2px solid white", borderRadius: 20 }}
-                                onMouseDown={(e) => { sizeHandler(e, "rt") }}
-                            />
+                            {useFocus && <div>
+                                <div className="resizelt" draggable={false}
+                                    style={{ cursor: "resize", right: -5, bottom: -5, height: 10, aspectRatio: 1, position: "absolute", background: interactGray, transform: "unset", outline: "2px solid white", borderRadius: 20, }}
+                                    onMouseDown={(e) => { sizeHandler(e, "rb") }}
+                                />
+                                <div className="resizelt" draggable={false}
+                                    style={{ left: -5, top: -5, height: 10, aspectRatio: 1, position: "absolute", background: interactGray, transform: "unset", outline: "2px solid white", borderRadius: 20 }}
+                                    onMouseDown={(e) => { sizeHandler(e, "lt") }}
+                                />
+                                <div className="resizerb" draggable={false}
+                                    style={{ left: -5, bottom: -5, height: 10, aspectRatio: 1, position: "absolute", background: interactGray, transform: "unset", outline: "2px solid white", borderRadius: 20 }}
+                                    onMouseDown={(e) => { sizeHandler(e, "lb") }}
+                                />
+                                <div className="resizerb" draggable={false}
+                                    style={{ right: -5, top: -5, height: 10, aspectRatio: 1, position: "absolute", background: interactGray, transform: "unset", outline: "2px solid white", borderRadius: 20 }}
+                                    onMouseDown={(e) => { sizeHandler(e, "rt") }}
+                                /></div>}
                         </div>}
                     </div>
                 </Draggable>

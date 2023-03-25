@@ -144,7 +144,8 @@ a {
 .context-menu {
   /* opacity: 0; */
   transform: translateX(-92%);
-  background-color: #454545;
+  opacity: 0;
+  /* background-color: #454545; */
   transition: transform 0.3s;
   /* transition-timing-function: ease-out; */
   z-index: 2;

@@ -2,6 +2,8 @@ import KeyboardVoiceTwoToneIcon from '@mui/icons-material/KeyboardVoiceTwoTone';
 import { SelectChangeEvent, Select, MenuItem } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { menuGray } from '../../utils/Colors';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // function useVolumeLevel() {
 
@@ -24,7 +26,7 @@ import { menuGray } from '../../utils/Colors';
 //         window.AudioContext = window.AudioContext || window.webkitAudioContext;
 //         window.audioContext = new AudioContext();
 //       } catch (e) {
-//         alert('Web Audio API not supported.');
+//         toast.error('Web Audio API not supported.');
 //       }
 
 //       navigator.mediaDevices

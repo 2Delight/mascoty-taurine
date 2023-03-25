@@ -3,7 +3,7 @@ import React, { ChangeEvent, useContext, useEffect, useRef, useState } from "rea
 import { BlockPicker, CirclePicker, SketchPicker } from "react-color";
 import { useDispatch } from "react-redux";
 import { MascotContext } from "../../App";
-import { interactGray, menuGray } from "../../utils/Colors";
+import { contextMenuGray, focusBlue, interactActiveHoverGray, interactGray, menuGray } from "../../utils/Colors";
 import { descriptPart } from "../../utils/EDescriptor";
 import { EEmotion } from "../logic/EEmotion";
 import { EPart } from "../logic/EPart";
@@ -15,6 +15,8 @@ import { tauri } from "@tauri-apps/api";
 import search from "../../assets/search.svg"
 import { copyFile, readTextFile, BaseDirectory, writeTextFile, removeDir, exists } from '@tauri-apps/api/fs';
 import { documentDir, sep } from "@tauri-apps/api/path";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const handler = async () => {
   let aboba = await open({
@@ -72,17 +74,21 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
       disableAutoFocus={true}
     >
       <div style={{
-        position: "absolute",
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        backgroundColor: interactGray,
-        borderRadius: 30,
-        width: "30%",
-        // height: "40%",
-        minWidth: 300,
-        padding: 40,
-        flexDirection: "column",
+       position: "absolute",
+       top: '50%',
+       left: '50%',
+       transform: 'translate(-50%, -50%)',
+       backgroundColor: contextMenuGray,
+       border: "solid",
+       borderWidth: 3,
+       borderColor: focusBlue,
+       padding: 20,
+       borderRadius: 30,
+       width: "30%",
+       maxWidth: 400,
+       minWidth: 300,
+       flexDirection: "column",
+       userSelect:"none",
       }}>
         <div style={{ flexDirection: "row", display: "flex", marginBottom: 10 }}>
           <a style={{ textAlign: "left", color: "white", width: 100 }}>
@@ -97,7 +103,7 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
           <a style={{ textAlign: "left", color: "white", width: 100 }}>
             Designation
           </a>
-          <div style={{ borderRadius: 4, borderWidth: 10, padding: 2, borderColor: "white", backgroundColor: menuGray, flex: 1 }}>
+          <div style={{ borderRadius: 4, borderWidth: 10, flex: 1 }}>
             <Select
               value={designation}
               onChange={handleChange}
@@ -170,22 +176,22 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
           <a style={{ textAlign: "left", color: "white", width: 100 }}>
             Image
           </a>
-          <div style={{ position: "relative", flex: 1, flexDirection: "row", display: "flex", }}>
+          <div style={{ position: "relative", flex: 1, flexDirection: "row", display: "flex", }} onClick={() => {
+            handler().then((response) => {
+              console.log(response)
+              if (!(response instanceof Array<String>) && response) {
+
+                // let apiPath = tauri.convertFileSrc(response)
+                // console.log('API Path', apiPath)
+                getSizes(tauri.convertFileSrc(response))
+                setPath(response)
+              }
+            })
+          }}>
             <input style={{ backgroundColor: menuGray, flex: 1, paddingRight: 40 }} disabled={true} placeholder="Press search icon   -->" value={path} >
 
             </input>
-            <div style={{ position: "absolute", right: 10, top: 5 }} onClick={() => {
-              handler().then((response) => {
-                console.log(response)
-                if (!(response instanceof Array<String>) && response) {
-
-                  // let apiPath = tauri.convertFileSrc(response)
-                  // console.log('API Path', apiPath)
-                  getSizes(tauri.convertFileSrc(response))
-                  setPath(response)
-                }
-              })
-            }}>
+            <div style={{ position: "absolute", right: 10, top: 5 }}>
               <SearchTwoToneIcon />
             </div>
           </div>
@@ -194,7 +200,8 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
         {path && <img src={
           tauri.convertFileSrc(path)
         } style={{ maxHeight: 100, flex: 1, objectFit: "scale-down" }} />}
-        <button style={{ flex: 1, width: "100%" }} onClick={() => {
+        <div className="msct-button" style={{ marginTop: 20, padding: 3, borderRadius: 10, color: menuGray }}
+          onClick={() => {
           if (designation !== "" && name !== "" && path !== "") {
             console.log(EPart[Number(designation)])
             if (mascot) {
@@ -215,9 +222,9 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
               } else {
                 exists(mascot.mascot.workingDir + sep + designation + "_" + name).then((resp) => {
                   if (resp) {
-                    alert("Part with same name and destination already exists")
+                    toast.warn("Part with same name and destination already exists")
                   } else {
-                    copyFile(path, mascot.mascot.workingDir + sep + designation + "_" + name, {}).then(() => { alert("SUCCESS") }).catch((e) => alert(e))
+                    copyFile(path, mascot.mascot.workingDir + sep + designation + "_" + name, {}).then(() => { }).catch((e) => toast.error(e))
                     // let newPath = tauri.convertFileSrc(docsPath + mascot.mascot.workingDir + sep + designation + "_" + name)
 
                     mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.push({
@@ -234,17 +241,25 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
                     mascot.setMascot(mascot.mascot)
                     handleClose()
                   }
-                }).catch((e) => { alert(e) })
+                }).catch((e) => { toast.error(e) })
 
               }
 
             }
           } else {
-            alert("Can't Add Part Due To Your Irresponsability")
+            if (name === "") {
+              toast.error("Name's empty")
+            }
+            if (designation === "") {
+              toast.error("Designation's not selected")
+            }
+            if (path === "") {
+              toast.error("No path given")
+            }
           }
         }}>
           {redact ? "Redact Part" : "Add Part"}
-        </button>
+        </div>
       </div>
     </Modal>
   );

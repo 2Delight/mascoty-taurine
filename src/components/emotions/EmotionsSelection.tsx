@@ -13,6 +13,7 @@ import Emotion from "./EmotionPart";
 import { interactGray, menuGray } from "../../utils/Colors";
 import { MascotContext } from "../../App";
 import EmotionAdd from "../modals/EmotionAdd";
+import { toast } from "react-toastify";
 
 
 export default function EmotionsSelection() {
@@ -78,12 +79,16 @@ export default function EmotionsSelection() {
                     mascot.mascot.selectedEmotion = mascot.mascot.emotions.length - 1
                     console.log("Selected Emotion after DELETE: " + mascot.mascot.selectedEmotion)
                     mascot.setMascot(mascot.mascot)
+                } else {
+                    toast.warn("Nothing to delete")
                 }
             }} />
             <CreateTwoToneIcon className="icon" onClick={() => {
                 if (mascot && mascot.mascot.emotions.length > 0) {
                     setUseRedact(true)
                     setOpenAdd(true)
+                } else {
+                    toast.warn("Nothing to redact")
                 }
             }} />
             <AddCircleOutlineTwoToneIcon className="icon" onClick={() => {

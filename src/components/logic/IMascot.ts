@@ -8,4 +8,5 @@ export default interface IMascot {
     selectedPart: number,
     workingDir:string,
     projectName:string,
+    zoom: number,
 }

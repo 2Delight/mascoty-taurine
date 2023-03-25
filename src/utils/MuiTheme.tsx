@@ -38,14 +38,18 @@ export const theme = createTheme({
     },
     MuiSelect: {
       styleOverrides: {
+
         select: {
           // backgroundColor: "black",
-          borderColor: "black",
+          borderColor: "transparent",
+          borderWidth:0,
           filter: "",
           padding: 5,
         },
         outlined: {
-          borderColor: "black",
+          borderColor: "transparent",
+          filter: "",
+          borderWidth:0,
         }
 
       }

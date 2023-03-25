@@ -1,4 +1,4 @@
-import { createContext, useMemo, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 
@@ -24,11 +24,12 @@ import { BaseDirectory, sep } from "@tauri-apps/api/path";
 import saveMascot from "./utils/Save";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { contextMenuGray, interactActiveGray, interactActiveHoverGray, interactGray, menuGray } from "./utils/Colors";
+import { backgroundGray, contextMenuGray, interactActiveGray, interactActiveHoverGray, interactGray, menuGray } from "./utils/Colors";
 import logo from "./assets/mascoty_logo_inline.png"
 import { BorderColor } from "@mui/icons-material";
 import { transform } from "html2canvas/dist/types/css/property-descriptors/transform";
 import up from "./assets/parts-icons/up.svg"
+import { isRegistered, register, registerAll } from '@tauri-apps/api/globalShortcut';
 
 
 export const MascotContext = createContext<{
@@ -52,6 +53,33 @@ export default function App() {
     [mascot]
   );
 
+  useEffect(() => {
+    loadShortcuts()
+  }, [])
+
+
+  const zoomIn = () => {
+    let a = structuredClone(mascot)
+    a.zoom = (Math.floor(a.zoom * 100) + 5) / 100
+    setMascot(a)
+    console.log("ZOOM: " + a.zoom)
+  }
+
+  const zoomOut = () => {
+    let a = structuredClone(mascot)
+    a.zoom = (Math.floor(a.zoom * 100) - 5) / 100
+    setMascot(a)
+    console.log("ZOOM: " + a.zoom)
+  }
+
+  const loadShortcuts = async () => {
+    if (!(await isRegistered("CommandOrControl+Plus")) && !(await isRegistered("CommandOrControl+-"))) {
+      register('CommandOrControl+Plus', zoomIn)
+      register('CommandOrControl+-', zoomOut)
+      console.log("added shortcuts")
+    }
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <MascotContext.Provider value={value}>
@@ -71,7 +99,7 @@ export default function App() {
             margin: 0
           }}>
 
-            <img className="selector" src={up} style={{position: "absolute", height:20, aspectRatio:1, left:-10, top:"calc(50vh-30)", alignSelf: "center", margin: 10,  }} />
+            <img className="selector" src={up} style={{ position: "absolute", height: 20, aspectRatio: 1, left: -10, top: "calc(50vh-30)", alignSelf: "center", margin: 10, }} />
 
             <div className="context-menu" style={{
               position: "absolute", height: "100vh", width: 230, left: 0
@@ -99,7 +127,8 @@ export default function App() {
 
 
             <div className="main" style={{
-              height: "100vh"
+              height: "100vh",
+              backgroundColor: contextMenuGray
             }}>
               <div className="emotionsNparts" style={{
                 justifyContent: "center",
@@ -108,6 +137,8 @@ export default function App() {
                 flexDirection: "column",
                 flex: 1,
                 paddingLeft: 10,
+                maxWidth:230,
+                minWidth:230,
               }}>
                 <EmotionsSelection />
                 <PartsSelection />
@@ -135,6 +166,18 @@ export default function App() {
 
                 <div style={{ display: "flex", flexDirection: "row" }}>
                   <MicMinMaxDisplay />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <button onClick={zoomIn}>
+                    +
+                  </button>
+                  <a style={{ color: "white", flex: 1, textAlign: "center" }}>
+                    {"ZOOM: " + mascot.zoom}
+                  </a>
+                  <button onClick={zoomOut}>
+                    -
+                  </button>
                 </div>
 
 

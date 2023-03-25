@@ -3,7 +3,7 @@ import React, { ChangeEvent, useContext, useEffect, useRef, useState } from "rea
 import { BlockPicker, CirclePicker, SketchPicker } from "react-color";
 import { useDispatch } from "react-redux";
 import { MascotContext } from "../../App";
-import { interactGray, menuGray } from "../../utils/Colors";
+import { contextMenuGray, focusBlue, interactGray, menuGray } from "../../utils/Colors";
 import { descriptEmotion, descriptPart } from "../../utils/EDescriptor";
 import { EEmotion } from "../logic/EEmotion";
 import { EPart } from "../logic/EPart";
@@ -23,7 +23,7 @@ const handler = async () => {
   return aboba
 }
 
-export default function Proceed({ open, setOpen,question, proceed}: { open: boolean, question:string, setOpen: React.Dispatch<React.SetStateAction<boolean>>, proceed: () => void}) {
+export default function Proceed({ open, setOpen, question, proceed }: { open: boolean, question: string, setOpen: React.Dispatch<React.SetStateAction<boolean>>, proceed: () => void }) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -40,26 +40,33 @@ export default function Proceed({ open, setOpen,question, proceed}: { open: bool
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        backgroundColor: interactGray,
+        backgroundColor: contextMenuGray,
+        border: "solid",
+        borderWidth: 3,
+        borderColor: focusBlue,
+        padding: 20,
         borderRadius: 30,
         width: "30%",
-        // height: "40%",
+        maxWidth: 400,
         minWidth: 300,
-        padding: 40,
         flexDirection: "column",
+        userSelect: "none",
       }}>
-        <div style={{ flexDirection: "row", display: "flex", marginBottom: 10 }}>
-          <a style={{ textAlign: "left", color: "white", fontSize:18}}>
+        {/* <div style={{ flexDirection: "row", display: "flex", }}> */}
+          <a style={{ textAlign: "center", color: menuGray, fontSize: 18,marginBottom: 10  }}>
             {question}
           </a>
+        {/* </div> */}
+
+        <div className="msct-button" style={{ marginTop: 20, padding: 3, borderRadius: 10, color: menuGray }}
+          onClick={() => {
+            proceed()
+            setOpen(false)
+          }}>
+          <a style={{ textAlign: "center", color: menuGray}}>
+            Yes
+          </a>
         </div>
-        
-        <button style={{ flex: 1, width: "100%" }} onClick={() => {
-          proceed()
-          setOpen(false)
-        }}>
-          Yes
-        </button>
       </div>
     </Modal>
   );

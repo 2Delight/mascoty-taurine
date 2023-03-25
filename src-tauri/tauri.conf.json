@@ -42,6 +42,9 @@
       },
       "window": {
         "setTitle": true
+      },
+      "globalShortcut": {
+        "all": true
       }
     },
     "bundle": {

@@ -3,7 +3,7 @@ import React, { ChangeEvent, useContext, useEffect, useRef, useState } from "rea
 import { BlockPicker, CirclePicker, SketchPicker } from "react-color";
 import { useDispatch } from "react-redux";
 import { MascotContext } from "../../App";
-import { interactActiveGray, interactActiveHoverGray, interactGray, menuGray } from "../../utils/Colors";
+import { contextButtonGray, contextMenuGray, focusBlue, interactActiveGray, interactActiveHoverGray, interactGray, menuGray } from "../../utils/Colors";
 import { descriptEmotion, descriptPart } from "../../utils/EDescriptor";
 import { EEmotion } from "../logic/EEmotion";
 import { EPart } from "../logic/EPart";
@@ -14,6 +14,8 @@ import { appWindow } from '@tauri-apps/api/window';
 import { readTextFile, BaseDirectory, writeTextFile, createDir } from '@tauri-apps/api/fs';
 import { sep } from '@tauri-apps/api/path'
 import { DummyMascot } from "../../utils/DummyMascot";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // import { changeColor } from "../../utils/redux_state/BackgroundSlice";
 
@@ -52,16 +54,15 @@ export default function ProjectAdd({ open, setOpen, addProject }: { open: boolea
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
-                backgroundColor: interactActiveGray,
+                backgroundColor: contextMenuGray,
                 border: "solid",
                 borderWidth: 3,
-                borderColor: interactActiveHoverGray,
+                borderColor: focusBlue,
                 padding: 20,
                 borderRadius: 30,
                 width: "30%",
                 maxWidth: 400,
                 minWidth: 300,
-
                 flexDirection: "column",
             }}>
                 <div style={{ flexDirection: "row", display: "flex", marginBottom: 10 }}>
@@ -94,24 +95,25 @@ export default function ProjectAdd({ open, setOpen, addProject }: { open: boolea
                         </div>
                     </div>
                 </div>
-                <div className="msct-button" style={{padding: 7, borderRadius: 10, backgroundColor: menuGray, color:  interactActiveHoverGray , flex: 1}} onClick={() => {
-                    createDir(workDir + sep + name).then(() => {
-                        // let apiPath = tauri.convertFileSrc(workDir)
-                        // let apiPath = tauri.convertFileSrc(workDir + sep + name + ".msc")
-                        // console.log('API Path', apiPath)
-                        let notSoDummyMascot = DummyMascot
-                        notSoDummyMascot.workingDir = workDir + sep + name + sep
-                        notSoDummyMascot.projectName = name
-                        writeTextFile(workDir + sep + name + sep + "CONF_" + name + ".mascot", JSON.stringify(notSoDummyMascot), { dir: BaseDirectory.Document }).then(() => {
-                            addProject("CONF_" + name + ".mascot", workDir + sep + name, name)
-                            setOpen(false)
+                <div className="msct-button" style={{ marginTop: 20, padding: 3, borderRadius: 10, color: menuGray }}
+                    onClick={() => {
+                        createDir(workDir + sep + name).then(() => {
+                            // let apiPath = tauri.convertFileSrc(workDir)
+                            // let apiPath = tauri.convertFileSrc(workDir + sep + name + ".msc")
+                            // console.log('API Path', apiPath)
+                            let notSoDummyMascot = DummyMascot
+                            notSoDummyMascot.workingDir = workDir + sep + name + sep
+                            notSoDummyMascot.projectName = name
+                            writeTextFile(workDir + sep + name + sep + "CONF_" + name + ".mascot", JSON.stringify(notSoDummyMascot), { dir: BaseDirectory.Document }).then(() => {
+                                addProject("CONF_" + name + ".mascot", workDir + sep + name, name)
+                                setOpen(false)
+                            }).catch(() => {
+                                toast.error("Can't Create Config File For Project " + name)
+                            })
                         }).catch(() => {
-                            alert("Can't Create Config File For Project " + name)
+                            toast.error("Project With Same Name Already Exists")
                         })
-                    }).catch(() => {
-                        alert("Project With Same Name Already Exists")
-                    })
-                }}>
+                    }}>
                     Add Project
                 </div>
             </div>

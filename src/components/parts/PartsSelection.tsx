@@ -14,6 +14,8 @@ import { interactGray, menuGray } from "../../utils/Colors";
 import { MascotContext } from "../../App";
 import PartAdd from "../modals/PartAdd";
 import { removeFile } from "@tauri-apps/api/fs";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export default function PartsSelection() {
@@ -68,20 +70,27 @@ export default function PartsSelection() {
                 if (mascot && mascot.mascot.emotions.length > 0 && mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.length > 0) {
                     mascot.mascot = structuredClone(mascot.mascot)
                     let forDeletion = mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.splice(mascot.mascot.selectedPart, 1)
-                    removeFile(forDeletion[0].sourcePath).catch((e) => alert(e))
+                    // removeFile(forDeletion[0].sourcePath).catch((e) => toast.error(e))
                     mascot.setMascot(mascot.mascot)
+                } else {
+                    toast.warn("Nothing is selected")
                 }
             }} />
             <CreateTwoToneIcon className="icon" onClick={() => {
                 if (mascot && mascot.mascot.emotions.length > 0 && mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.length > 0) {
                     setUseRedact(true)
                     setOpenAdd(true)
+                } else {
+                    toast.warn("Nothing is selected")
                 }
             }} />
             <AddCircleOutlineTwoToneIcon className="icon" onClick={() => {
-                if (mascot && mascot.mascot.emotions.length > 0)
+                if (mascot && mascot.mascot.emotions.length > 0) {
                     setUseRedact(false)
-                setOpenAdd(true)
+                    setOpenAdd(true)
+                } else {
+                    toast.warn("You can create parts after you add at least one emotion")
+                }
             }} />
             <div style={{
                 flex: 0
@@ -100,7 +109,7 @@ export default function PartsSelection() {
                 <ListItemButton selected={selectedIndex === i}
                     key={i}
                     onClick={(event) => handleListItemClick(event, i)}>
-                    <PartPart partIndex={i} setSelect = {setSelectedIndex}/>
+                    <PartPart partIndex={i} setSelect={setSelectedIndex} />
                 </ListItemButton >
             )}
             {/* <ListItemButton selected={selectedIndex === 0}

@@ -3,12 +3,14 @@ import React, { ChangeEvent, useContext, useEffect, useRef, useState } from "rea
 import { BlockPicker, CirclePicker, SketchPicker } from "react-color";
 import { useDispatch } from "react-redux";
 import { MascotContext } from "../../App";
-import { interactGray, menuGray } from "../../utils/Colors";
+import { contextMenuGray, focusBlue, interactGray, menuGray } from "../../utils/Colors";
 import { descriptEmotion, descriptPart } from "../../utils/EDescriptor";
 import { EEmotion } from "../logic/EEmotion";
 import { EPart } from "../logic/EPart";
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import { open } from "@tauri-apps/api/dialog"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // import { changeColor } from "../../utils/redux_state/BackgroundSlice";
 
 
@@ -59,13 +61,17 @@ export default function EmotionAdd({ open, setOpen, redact }: { open: boolean, s
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        backgroundColor: interactGray,
+        backgroundColor: contextMenuGray,
+        border: "solid",
+        borderWidth: 3,
+        borderColor: focusBlue,
+        padding: 20,
         borderRadius: 30,
         width: "30%",
-        // height: "40%",
+        maxWidth: 400,
         minWidth: 300,
-        padding: 40,
         flexDirection: "column",
+        userSelect: "none",
       }}>
         <div style={{ flexDirection: "row", display: "flex", marginBottom: 10 }}>
           <a style={{ textAlign: "left", color: "white", width: 100 }}>
@@ -80,7 +86,7 @@ export default function EmotionAdd({ open, setOpen, redact }: { open: boolean, s
           <a style={{ textAlign: "left", color: "white", width: 100 }}>
             Designation
           </a>
-          <div style={{ borderRadius: 4, borderWidth: 10, padding: 2, borderColor: "white", backgroundColor: menuGray, flex: 1 }}>
+          <div style={{ borderRadius: 4, borderWidth: 10, flex: 1 }}>
             <Select
               value={designation}
               onChange={handleChange}
@@ -159,37 +165,44 @@ export default function EmotionAdd({ open, setOpen, redact }: { open: boolean, s
             </Select>
           </div>
         </div>
-        <button style={{ flex: 1, width: "100%" }} onClick={() => {
-          if (designation !== "" && name !== "") {
-            console.log(EPart[Number(designation)])
-            if (mascot) {
-              mascot.mascot = structuredClone(mascot.mascot)
-              if (redact) {
-                mascot.mascot.emotions[mascot.mascot.selectedEmotion] = {
-                  name: name,
-                  visibility: true,
-                  parts: mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts,
-                  emotion: Number(designation),
+
+        <div className="msct-button" style={{ marginTop: 20, padding: 3, borderRadius: 10, color: menuGray }}
+          onClick={() => {
+            if (designation !== "" && name !== "") {
+              console.log(EPart[Number(designation)])
+              if (mascot) {
+                mascot.mascot = structuredClone(mascot.mascot)
+                if (redact) {
+                  mascot.mascot.emotions[mascot.mascot.selectedEmotion] = {
+                    name: name,
+                    visibility: true,
+                    parts: mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts,
+                    emotion: Number(designation),
+                  }
+                } else {
+                  mascot.mascot.emotions.push({
+                    name: name,
+                    visibility: true,
+                    parts: [],
+                    emotion: Number(designation),
+                  })
+                  mascot.mascot.selectedEmotion = mascot.mascot.emotions.length - 1
+                  console.log("Selected Emotion after ADDITION: " + mascot.mascot.selectedEmotion)
                 }
-              } else {
-                mascot.mascot.emotions.push({
-                  name: name,
-                  visibility: true,
-                  parts: [],
-                  emotion: Number(designation),
-                })
-                mascot.mascot.selectedEmotion = mascot.mascot.emotions.length-1
-                console.log("Selected Emotion after ADDITION: " + mascot.mascot.selectedEmotion )
+                mascot.setMascot(mascot.mascot)
+                handleClose()
               }
-              mascot.setMascot(mascot.mascot)
-              handleClose()
+            } else {
+              if (name === "") {
+                toast.error("Name's empty")
+              }
+              if (designation === "") {
+                toast.error("Designation's not selected")
+              }
             }
-          } else {
-            alert("Can't Add Emotion Due To Your Irresponsability")
-          }
-        }}>
+          }}>
           Add Part
-        </button>
+        </div>
       </div>
     </Modal>
   );
