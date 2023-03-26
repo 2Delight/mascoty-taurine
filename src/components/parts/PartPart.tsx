@@ -12,8 +12,9 @@ import IPart from "../logic/IPart";
 import { descriptPart } from "../../utils/EDescriptor";
 import up from "../../assets/parts-icons/up.svg"
 import down from "../../assets/parts-icons/down.svg"
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
-export default function PartPart({ partIndex, setSelect }: { partIndex: number, setSelect: React.Dispatch<React.SetStateAction<number>>}) {
+export default function PartPart({ partIndex, setSelect }: { partIndex: number, setSelect: React.Dispatch<React.SetStateAction<number>> }) {
     const mascot = useContext(MascotContext)
     const [visible, setVisible] = useState(true)
 
@@ -35,7 +36,7 @@ export default function PartPart({ partIndex, setSelect }: { partIndex: number, 
         <div style={{
             flex: 4
         }}></div>
-        <div style={{ justifyContent: "center", alignItems: "center", display: "flex" }}
+        <div style={{ justifyContent: "center", alignItems: "center", display: "flex", }}
             onClick={() => {
                 if (mascot && partIndex > 0) {
                     mascot.mascot = structuredClone(mascot.mascot)
@@ -48,7 +49,7 @@ export default function PartPart({ partIndex, setSelect }: { partIndex: number, 
                     // setSelect(partIndex+1)
                 }
             }}>
-            {mascot && <img src={up} style={{ height: 15, aspectRatio: 1, marginInline: 3 }} />}
+            {mascot && <KeyboardArrowUpIcon className="eye" style={{ width: 20, marginInline: 2, transform:"scale(1.5)" }} />}
         </div>
         <div style={{ justifyContent: "center", alignItems: "center", display: "flex" }}
             onClick={() => {
@@ -62,9 +63,9 @@ export default function PartPart({ partIndex, setSelect }: { partIndex: number, 
                     // setSelect(partIndex+1)
                 }
             }}>
-            {mascot && <img src={down} style={{ height: 15, aspectRatio: 1, marginInline: 3 }} />}
+            {mascot && <KeyboardArrowUpIcon className="eye"  style={{  width: 20, marginInline: 7, transform:"scale(1.5) rotate(180deg)"  }} />}
         </div>
-        <div style={{ justifyContent: "center", alignItems: "center", display: "flex" }}
+        <div style={{ justifyContent: "center", alignItems: "center", display: "flex", marginInline:3, }}
             onClick={() => {
                 if (mascot) {
                     mascot.mascot = structuredClone(mascot.mascot)

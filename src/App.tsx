@@ -9,25 +9,17 @@ import MicMinMaxDisplay from "./components/settings/MicMinMaxDisplay";
 import ShakeSettings from "./components/settings/ShakeSettings";
 import MicSelection from "./components/settings/MicSelection";
 import CamSelection from "./components/settings/CamSelection";
-import FPSSElection from "./components/settings/FPSSelection";
 import MascotCanvas from "./components/mascot/MascotCanvas";
 import { theme } from "./utils/MuiTheme";
 import PartsSelection from "./components/parts/PartsSelection";
 import IMascot from "./components/logic/IMascot";
-import { EEmotion } from "./components/logic/EEmotion";
-import { ThemeContext } from "@emotion/react";
-import { EPart } from "./components/logic/EPart";
 import Projects from "./Projects";
 import { DummyMascot } from "./utils/DummyMascot";
-import { readTextFile, writeTextFile } from "@tauri-apps/api/fs";
-import { BaseDirectory, sep } from "@tauri-apps/api/path";
 import saveMascot from "./utils/Save";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { backgroundGray, contextMenuGray, interactActiveGray, interactActiveHoverGray, interactGray, menuGray } from "./utils/Colors";
 import logo from "./assets/mascoty_logo_inline.png"
-import { BorderColor } from "@mui/icons-material";
-import { transform } from "html2canvas/dist/types/css/property-descriptors/transform";
 import up from "./assets/parts-icons/up.svg"
 import { isRegistered, register, registerAll } from '@tauri-apps/api/globalShortcut';
 
@@ -53,32 +45,33 @@ export default function App() {
     [mascot]
   );
 
-  useEffect(() => {
-    loadShortcuts()
-  }, [])
+  // useEffect(() => {
+  //   loadShortcuts()
+  // }, [])
 
+  // const zoomIn = () => {
+  //   console.log(value.mascot)
+  //   let a = structuredClone(value.mascot)
+  //   a.zoom = (Math.floor(a.zoom * 100) + 5) / 100
+  //   setMascot(a)
+  //   console.log("ZOOM: " + a.zoom)
+  // }
 
-  const zoomIn = () => {
-    let a = structuredClone(mascot)
-    a.zoom = (Math.floor(a.zoom * 100) + 5) / 100
-    setMascot(a)
-    console.log("ZOOM: " + a.zoom)
-  }
+  // const zoomOut = () => {
+  //   console.log(value.mascot)
+  //   let a = structuredClone(value.mascot)
+  //   a.zoom = (Math.floor(a.zoom * 100) - 5) / 100
+  //   setMascot(a)
+  //   console.log("ZOOM: " + a.zoom)
+  // }
 
-  const zoomOut = () => {
-    let a = structuredClone(mascot)
-    a.zoom = (Math.floor(a.zoom * 100) - 5) / 100
-    setMascot(a)
-    console.log("ZOOM: " + a.zoom)
-  }
-
-  const loadShortcuts = async () => {
-    if (!(await isRegistered("CommandOrControl+Plus")) && !(await isRegistered("CommandOrControl+-"))) {
-      register('CommandOrControl+Plus', zoomIn)
-      register('CommandOrControl+-', zoomOut)
-      console.log("added shortcuts")
-    }
-  }
+  // const loadShortcuts = async () => {
+  //   if (!(await isRegistered("CommandOrControl+Plus")) && !(await isRegistered("CommandOrControl+-"))) {
+  //     register('CommandOrControl+Plus', zoomIn)
+  //     register('CommandOrControl+-', zoomOut)
+  //     console.log("added shortcuts")
+  //   }
+  // }
 
   return (
     <ThemeProvider theme={theme}>
@@ -137,8 +130,8 @@ export default function App() {
                 flexDirection: "column",
                 flex: 1,
                 paddingLeft: 10,
-                maxWidth:230,
-                minWidth:230,
+                maxWidth: 230,
+                minWidth: 230,
               }}>
                 <EmotionsSelection />
                 <PartsSelection />
@@ -168,7 +161,7 @@ export default function App() {
                   <MicMinMaxDisplay />
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "row" }}>
+                {/* <div style={{ display: "flex", flexDirection: "row" }}>
                   <button onClick={zoomIn}>
                     +
                   </button>
@@ -178,7 +171,7 @@ export default function App() {
                   <button onClick={zoomOut}>
                     -
                   </button>
-                </div>
+                </div> */}
 
 
                 <div style={{ display: "flex", flexDirection: "row" }}>
