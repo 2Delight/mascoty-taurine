@@ -1,9 +1,10 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { MascotContext } from "../../App";
-import { interactGray, menuGray } from "../../utils/Colors";
+import { contextMenuGray, interactGray, menuGray } from "../../utils/Colors";
 import diagArrows from "../../assets/resize.svg"
 import Draggable from "react-draggable";
 import { tauri } from "@tauri-apps/api";
+import { getImageSize } from "react-image-size";
 
 export default function MascotPart({ partIndex, useFocus }: { partIndex: number, useFocus: boolean }) {
     const mascot = useContext(MascotContext);
@@ -12,6 +13,9 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
     const [width, setWidth] = useState(100)
     const [loading, setLoading] = useState(true)
     const [zoom, setZoom] = useState(1)
+    const [resizing, setResizing] = useState(false)
+    const [infoPos, setinfoPos] = useState({ x: -1, y: -1 })
+    const [defaultHW, setDefaultHW] = useState({ h: 100, w: 100 })
 
     useEffect(() => {
         if (mascot) {
@@ -23,7 +27,14 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
             setHeight(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].height * mascot.mascot.zoom)
             setWidth(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].width * mascot.mascot.zoom)
             // setLoading(false)
+            getImageSize(tauri.convertFileSrc(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath)).then((dimens) => {
+                if (dimens) {
+                    setDefaultHW({ h: dimens.height * mascot.mascot.zoom, w: dimens.width * mascot.mascot.zoom })
+                }
+            })
+            setLoading(false)
         }
+
     }, [
         mascot?.mascot.selectedPart, mascot?.mascot.zoom
     ])
@@ -53,12 +64,16 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
         let lt = { x: mouseDownEvent.pageX + width, y: mouseDownEvent.pageY + height };
         let shadowHW = { h: height, w: width }
         let shadowXY = { x: currentPos.x, y: currentPos.y };
+        // let absWorld = {x = }
         // console.log("start position: " + rb.x + " " + rb.y)
 
         function onMouseMove(mouseMoveEvent: { pageX: number; pageY: number; }) {
             console.log("mouse position: " + mouseMoveEvent.pageX + " " + mouseMoveEvent.pageY)
+
             switch (dir) {
                 case "rb": {
+                    setinfoPos({ x: mouseMoveEvent.pageX - mouseDownEvent.pageX + relRb.x + startHW.w, y: mouseMoveEvent.pageY - mouseDownEvent.pageY + relRb.y + startHW.h })
+                    console.log()
                     if (mouseMoveEvent.pageX - rb.x > 10) {
                         setWidth(mouseMoveEvent.pageX - rb.x)
                         shadowHW.w = mouseMoveEvent.pageX - rb.x
@@ -70,6 +85,7 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
                     break
                 }
                 case "lt": {
+                    setinfoPos({ x: mouseMoveEvent.pageX - mouseDownEvent.pageX + relRb.x, y: mouseMoveEvent.pageY - mouseDownEvent.pageY + relRb.y })
                     let newx = mouseMoveEvent.pageX + relRb.x - lt.x + startHW.w
                     let newy = mouseMoveEvent.pageY + relRb.y - lt.y + startHW.h
                     if (mouseMoveEvent.pageX + 15 > lt.x) {
@@ -91,6 +107,8 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
                     break
                 }
                 case "lb": {
+                    setinfoPos({ x: mouseMoveEvent.pageX - mouseDownEvent.pageX + relRb.x, y: mouseMoveEvent.pageY - mouseDownEvent.pageY + relRb.y + startHW.h })
+
                     if (mouseMoveEvent.pageX + 15 < lt.x) {
                         setCurrentPos({ x: mouseMoveEvent.pageX + relRb.x - lt.x + startHW.w, y: currentPos.y })
                         shadowXY = { x: mouseMoveEvent.pageX + relRb.x - lt.x + startHW.w, y: currentPos.y }
@@ -106,6 +124,8 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
                     break
                 }
                 case "rt": {
+                    setinfoPos({ x: mouseMoveEvent.pageX - mouseDownEvent.pageX + relRb.x + startHW.w, y: mouseMoveEvent.pageY - mouseDownEvent.pageY + relRb.y })
+
                     if (mouseMoveEvent.pageY + 15 < lt.y) {
                         setCurrentPos({ x: currentPos.x, y: mouseMoveEvent.pageY + relRb.y - lt.y + startHW.h })
                         shadowXY = { x: currentPos.x, y: mouseMoveEvent.pageY + relRb.y - lt.y + startHW.h }
@@ -122,9 +142,10 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
                     break
                 }
             }
-
+            setResizing(true)
         }
         function onMouseUp() {
+            setResizing(false)
             console.log("scaling mouseUp")
             document.body.removeEventListener("mousemove", onMouseMove);
             if (mascot) {
@@ -154,7 +175,7 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
     };
 
     const dragref = useRef(null)
-    return (
+    return (!loading ?
         partIndex == mascot?.mascot.selectedPart ?
             <div style={{
                 zIndex: 100,
@@ -219,6 +240,21 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
                         </div>}
                     </div>
                 </Draggable>
+                {resizing && <div style={{ position: "absolute", top: infoPos.y, left: infoPos.x, transform: "translateX(-50%)", opacity:0.7 }}>
+                    <div style={{ position: "absolute", left: "calc(50% - 15px)", top: 10, backgroundColor: contextMenuGray, height: 30, aspectRatio: 1, transform: "rotate(45deg)", borderRadius: 5, }}>
+                    </div>
+                    <div style={{ position: "absolute", top: 10,width:50, zIndex: 40, backgroundColor: contextMenuGray, borderRadius: 10, padding: 10, color: "white", transform: "translateX(-50%)" }}>
+                        <div>
+                            {"H: " + Math.floor(height / defaultHW.h * 100) + "%"}
+                        </div>
+                        <div>
+                            {"W: " + Math.floor(width / defaultHW.w * 100) + "%"}
+                        </div>
+                        <div>
+                            {"R: " + Math.floor(height * 100 / width) / 100}
+                        </div>
+                    </div>
+                </div>}
             </div>
             :
             <div style={{
@@ -247,7 +283,5 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
                     />
                 </div>
             </div>
-
-
-    )
+        : <div />)
 }

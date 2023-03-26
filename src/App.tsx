@@ -18,7 +18,7 @@ import { DummyMascot } from "./utils/DummyMascot";
 import saveMascot from "./utils/Save";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { backgroundGray, contextMenuGray, interactActiveGray, interactActiveHoverGray, interactGray, menuGray } from "./utils/Colors";
+import { backgroundGray, contextMenuGray, focusBlue, interactActiveGray, interactActiveHoverGray, interactGray, menuGray } from "./utils/Colors";
 import logo from "./assets/mascoty_logo_inline.png"
 import up from "./assets/parts-icons/up.svg"
 import { isRegistered, register, registerAll } from '@tauri-apps/api/globalShortcut';
@@ -92,10 +92,13 @@ export default function App() {
             margin: 0
           }}>
 
-            <img className="selector" src={up} style={{ position: "absolute", height: 20, aspectRatio: 1, left: -10, top: "calc(50vh-30)", alignSelf: "center", margin: 10, }} />
+            <img className="selector" src={up} style={{ position: "absolute", height: 20, aspectRatio: 1, left: -10, top: "calc(50vh-30)", alignSelf: "center", paddingInline: 10,paddingTop:5, backgroundColor: interactGray, borderTopLeftRadius: 40, borderTopRightRadius:40,  }} />
 
             <div className="context-menu" style={{
-              position: "absolute", height: "100vh", width: 230, left: 0
+              position: "absolute", height: "100vh", width: 230, left: 0,
+              // borderRightColor: focusBlue,
+              // borderRightWidth: 5,
+              // borderRight: "solid"
               // backgroundColor: contextMenuGray,
               // borderRight: "solid",
               // borderRightWidth: 3, borderColor: interactActiveHoverGray,
