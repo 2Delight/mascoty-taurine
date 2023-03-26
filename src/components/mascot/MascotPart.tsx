@@ -240,10 +240,10 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
                         </div>}
                     </div>
                 </Draggable>
-                {resizing && <div style={{ position: "absolute", top: infoPos.y, left: infoPos.x, transform: "translateX(-50%)", opacity:0.7 }}>
+                {resizing && <div style={{zIndex:999, position: "absolute", top: infoPos.y, left: infoPos.x, transform: "translateX(-50%)", opacity: 0.7 }}>
                     <div style={{ position: "absolute", left: "calc(50% - 15px)", top: 10, backgroundColor: contextMenuGray, height: 30, aspectRatio: 1, transform: "rotate(45deg)", borderRadius: 5, }}>
                     </div>
-                    <div style={{ position: "absolute", top: 10,width:50, zIndex: 40, backgroundColor: contextMenuGray, borderRadius: 10, padding: 10, color: "white", transform: "translateX(-50%)" }}>
+                    <div style={{ position: "absolute", top: 10, width: 50, zIndex: 40, backgroundColor: contextMenuGray, borderRadius: 10, padding: 10, color: "white", transform: "translateX(-50%)" }}>
                         <div>
                             {"H: " + Math.floor(height / defaultHW.h * 100) + "%"}
                         </div>

@@ -48,13 +48,14 @@
 }
 
 .icon:hover {
-  /* color:  #00bccf; */
+  color:  #00bccf;
   border-radius: 50%;
   /* border-width: 1px;
   border-color: #00bccf;
   border-style: solid; */
-  outline: 2px solid #00bccf;
-  outline-offset: 2px;
+  /* outline: 2px solid #00bccf; */
+  /* background-color: #00bccf; */
+  /* outline-offset: 2px; */
 }
 
 .dumbIcon {
@@ -146,7 +147,7 @@ a {
   background-color: #2b2b2b;
   z-index: 4;
   transition: transform 0.5s;
-  border-color: #00bccf;
+  /* border-color: #00bccf; */
 }
 
 .context-menu {
