@@ -50,6 +50,10 @@
 .icon:hover {
   color:  #00bccf;
   border-radius: 50%;
+  background-color: #2b2b2b;
+  outline: 4px solid #2b2b2b;
+  outline-offset: -1px;
+  transition: background-color 0.2s, outline 0.3s;
   /* border-width: 1px;
   border-color: #00bccf;
   border-style: solid; */

@@ -5,6 +5,7 @@ import diagArrows from "../../assets/resize.svg"
 import Draggable from "react-draggable";
 import { tauri } from "@tauri-apps/api";
 import { getImageSize } from "react-image-size";
+import { Collapse, Fade, Grow, Slide, Zoom } from "@mui/material";
 
 export default function MascotPart({ partIndex, useFocus }: { partIndex: number, useFocus: boolean }) {
     const mascot = useContext(MascotContext);
@@ -240,21 +241,24 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
                         </div>}
                     </div>
                 </Draggable>
-                {resizing && <div style={{zIndex:999, position: "absolute", top: infoPos.y, left: infoPos.x, transform: "translateX(-50%)", opacity: 0.7 }}>
-                    <div style={{ position: "absolute", left: "calc(50% - 15px)", top: 10, backgroundColor: contextMenuGray, height: 30, aspectRatio: 1, transform: "rotate(45deg)", borderRadius: 5, }}>
+                <Zoom in={resizing} mountOnEnter unmountOnExit>
+                    <div style={{ zIndex: 999, position: "absolute", top: infoPos.y + 4, left: infoPos.x, opacity: 0.7 }}>
+                        <div style={{ position: "absolute", left: "calc(50% - 15px)", top: 10, backgroundColor: contextMenuGray, height: 30, aspectRatio: 1, transform: "rotate(45deg)", borderRadius: 5, }}>
+                        </div>
+                        <div style={{ textAlign: "left", position: "absolute", top: 10, width: 50, zIndex: 40, backgroundColor: contextMenuGray, borderRadius: 10, padding: 10, color: "white", transform: "translateX(-50%)" }}>
+                            <div>
+                                {"H: " + Math.floor(height / defaultHW.h * 100) + "%"}
+                            </div>
+                            <div>
+                                {"W: " + Math.floor(width / defaultHW.w * 100) + "%"}
+                            </div>
+                            <div>
+                                {"R: " + Math.floor(height / defaultHW.h / width * defaultHW.w * 100) / 100}
+                            </div>
+                        </div>
                     </div>
-                    <div style={{ position: "absolute", top: 10, width: 50, zIndex: 40, backgroundColor: contextMenuGray, borderRadius: 10, padding: 10, color: "white", transform: "translateX(-50%)" }}>
-                        <div>
-                            {"H: " + Math.floor(height / defaultHW.h * 100) + "%"}
-                        </div>
-                        <div>
-                            {"W: " + Math.floor(width / defaultHW.w * 100) + "%"}
-                        </div>
-                        <div>
-                            {"R: " + Math.floor(height * 100 / width) / 100}
-                        </div>
-                    </div>
-                </div>}
+                </Zoom>
+                {/* {resizing && } */}
             </div>
             :
             <div style={{
