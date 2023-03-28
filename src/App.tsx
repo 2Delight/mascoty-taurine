@@ -2,7 +2,7 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 
-import { ThemeProvider } from "@mui/material";
+import { Slide, ThemeProvider } from "@mui/material";
 import EmotionsSelection from "./components/emotions/EmotionsSelection";
 import MaskotBackgroundColorPicker from "./components/settings/BackgroundColorPicker";
 import MicMinMaxDisplay from "./components/settings/MicMinMaxDisplay";
@@ -38,7 +38,7 @@ export const ProjectContext = createContext<{
 export default function App() {
   const [selecting, setSelecting] = useState(true)
   const [mascot, setMascot] = useState<IMascot>(DummyMascot);
-  const [contextVisible, setContextVisible] = useState(true)
+  const [contextVisible, setContextVisible] = useState(false)
 
   const value = useMemo(
     () => ({ mascot, setMascot }),
@@ -92,34 +92,40 @@ export default function App() {
             margin: 0
           }}>
 
-            <img className="selector" src={up} style={{ position: "absolute", height: 20, aspectRatio: 1, left: -10, top: "calc(50vh-30)", alignSelf: "center", paddingInline: 10,paddingTop:5, backgroundColor: interactGray, borderTopLeftRadius: 40, borderTopRightRadius:40,  }} />
+            <img className="selector" src={up} style={{ position: "absolute", height: 20, aspectRatio: 1, left: -10, top: "calc(50vh-30)", alignSelf: "center", paddingInline: 10, paddingTop: 5, backgroundColor: interactGray, borderTopLeftRadius: 40, borderTopRightRadius: 40, }}
+              onMouseEnter={() => setContextVisible(true)} />
 
-            <div className="context-menu" style={{
-              position: "absolute", height: "100vh", width: 230, left: 0,
-              // borderRightColor: focusBlue,
-              // borderRightWidth: 5,
-              // borderRight: "solid"
-              // backgroundColor: contextMenuGray,
-              // borderRight: "solid",
-              // borderRightWidth: 3, borderColor: interactActiveHoverGray,
-            }}
-            >
-              <img src={logo} style={{ width: 200, alignSelf: "center", margin: 10, }} />
-              <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
-                onClick={() => {
-                  saveMascot(mascot).then(() => toast.success("Project saved")).catch((e) => toast.warn("Project can not be saved due to: " + e))
-                }}>
-                Save
+            <Slide in={contextVisible} direction="right" unmountOnExit>
+              <div
+                // className="context-menu" 
+                style={{
+                  position: "absolute", height: "100vh", width: 230, left: 0,
+                  zIndex: 10,
+                  // borderRightColor: focusBlue,
+                  // borderRightWidth: 5,
+                  borderRight: "2px solid " + focusBlue,
+                  backgroundColor: contextMenuGray,
+                  // borderRight: "solid",
+                  // borderRightWidth: 3, borderColor: interactActiveHoverGray,
+                }}
+                onMouseLeave={() => setContextVisible(false)}
+              >
+                <img src={logo} style={{ width: 200, alignSelf: "center", margin: 10, }} />
+                <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
+                  onClick={() => {
+                    saveMascot(mascot).then(() => toast.success("Project saved")).catch((e) => toast.warn("Project can not be saved due to: " + e))
+                  }}>
+                  Save
+                </div>
+                <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
+                  onClick={() => {
+                    setSelecting(true)
+                    setContextVisible(false)
+                  }}>
+                  Go To Projects
+                </div>
               </div>
-              <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
-                onClick={() => {
-                  setSelecting(true)
-                  setContextVisible(false)
-                }}>
-                Go To Projects
-              </div>
-            </div>
-
+            </Slide>
 
 
             <div className="main" style={{
@@ -144,7 +150,10 @@ export default function App() {
                 justifyContent: "center",
                 minWidth: 200,
                 marginTop: 8,
+                marginBottom: 10,
                 flex: 0,
+                display: "flex",
+                flexDirection: "column"
               }}>
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <div style={{ display: "flex", flexDirection: "row" }}>
@@ -164,6 +173,7 @@ export default function App() {
                   <MicMinMaxDisplay />
                 </div>
 
+
                 {/* <div style={{ display: "flex", flexDirection: "row" }}>
                   <button onClick={zoomIn}>
                     +
@@ -181,8 +191,15 @@ export default function App() {
                   <MaskotBackgroundColorPicker />
                   {/* <div style={{ flex: 1 }}></div> */}
                 </div>
-              </div>
 
+
+                <div style={{ flex: 10}} />
+
+                <div className="msct-button" style={{ margin: 4, padding: 7, borderRadius: 10, color: menuGray }}>
+                  Start Broadcast
+                </div>
+
+              </div>
               <MascotCanvas />
             </div>
           </div>

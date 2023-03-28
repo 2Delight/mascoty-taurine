@@ -1,4 +1,4 @@
-import { backgroundGray, contextButtonGray, contextMenuGray, interactActiveGray, interactActiveHoverGray, interactGray, interactHoverGray, menuGray } from "./utils/Colors";
+import { backgroundGray, contextButtonGray, contextMenuGray, focusBlue, interactActiveGray, interactActiveHoverGray, interactGray, interactHoverGray, menuGray } from "./utils/Colors";
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import { useEffect, useState, useContext } from "react";
 import { fontSize } from "@mui/system";
@@ -123,7 +123,7 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
         <ProjectAdd open={openDialog} setOpen={setOpenDialog} addProject={addProject} />
         <Proceed open={openProceed} setOpen={setOpenProceed} question={(projects && deleteProj > -1 && deleteProj < projects.length) ? "Do you want to delete " + projects[deleteProj].name + "?" : ""} proceed={deleteProject} />
         <div style={{ flexDirection: "row", display: "flex" }}>
-            <div style={{ height: "100vh", minWidth: 230, width: 230, backgroundColor: contextMenuGray, alignItems: "center", alignContent: "center",}}>
+            <div style={{ height: "100vh", minWidth: 230, width: 230, backgroundColor: contextMenuGray, alignItems: "center", alignContent: "center",borderRight: "3px solid " + focusBlue,}}>
                 <img src={logo} style={{ width: 200, alignSelf: "center", marginInline: 15, marginTop: 10, marginBottom: 10, }} />
                 <div style={{ flex: 0, marginBottom: 20, flexDirection: "column" }}>
                     <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
@@ -224,7 +224,7 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
                                 setDeleteProj(i)
                                 setOpenProceed(true)
                             }}>
-                                <DeleteOutlineTwoToneIcon style={{ height: 25, width: 25 }} />
+                                <DeleteOutlineTwoToneIcon className="icon" style={{ height: 25, width: 25 }} />
                             </div>
                         </div>
                     })}
