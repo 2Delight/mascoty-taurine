@@ -1,48 +1,89 @@
-
 name: Build
 
 on:
   push:
-    branches: [
-      "master",
-      "ci",
-    ]
+    branches: ["master", "ci"]
   pull_request:
-    branches: [
-      "master",
-      "ci",
-    ]
+    branches: ["master", "ci"]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Tauri Deps
+        run: |
+          sudo apt update
+
+          sudo apt-get install curl
+          sudo apt-get install wget
+          sudo apt-get install build-essential
+
+          sudo apt-get install libwebkit2gtk-4.0-dev
+          sudo apt-get install libssl-dev
+          sudo apt-get install libgtk-3-dev
+          sudo apt-get install libayatana-appindicator3-dev
+          sudo apt-get install librsvg2-dev
+      
+      - name: Install LibTorch
+        run: |
+          wget https://download.pytorch.org/libtorch/nightly/cpu/libtorch-shared-with-deps-latest.zip
+          unzip libtorch-shared-with-deps-latest.zip
+
+          pip3 install -U torch==1.8.1
+          pip3 install torchvision
+          pip3 install torchaudio
+      
+      - name: Install PortAudio
+        run: |
+          sudo apt-get install portaudio19-dev
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+
+      - name: Update Node.js
+        run: npm install
+
+      - name: Tauri Build
+        run: npx tauri build --verbose
+
   macos:
     runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install PortAudio
+        run: brew install portaudio
+
       - name: Use Node.js
         uses: actions/setup-node@v3
-      
+
       - name: Update Node.js
         run: npm install
-      
+
       - name: Tauri Build
-        run: npx tauri build
-  
+        run: npx tauri build --verbose
+
   windows:
     runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install PortAudio
+        run: pip install pyaudio
+
       - name: Use Node.js
         uses: actions/setup-node@v3
-      
+
       - name: Update Node.js
         run: npm install
-      
+
       - name: Tauri Build
-        run: npx tauri build
+        run: npx tauri build --verbose

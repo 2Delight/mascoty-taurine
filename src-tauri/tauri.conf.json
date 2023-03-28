@@ -16,6 +16,22 @@
       "shell": {
         "all": false,
         "open": true
+      },
+      "dialog": {
+        "all": true,
+        "open": true,
+        "save": true
+      },
+      "fs": {
+        "scope": ["**"],
+        "createDir": true,
+        "readDir": true,
+        "readFile": true,
+        "writeFile": true
+      },
+      "protocol": {
+        "asset": true,
+        "assetScope": ["**"]
       }
     },
     "bundle": {

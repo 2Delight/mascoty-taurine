@@ -26,7 +26,6 @@ export default function CamSelection() {
     return <div style={{ display: "flex", flexDirection: "row", borderRadius: 10, backgroundColor: menuGray, justifyContent: "center", alignItems: "center", flex: 1, margin: 4 }}>
         <CameraAltTwoToneIcon className="dumbIcon" />
         <div style={{ flex: 4 }}>
-
             <Select
                 value={camera}
                 onChange={handleChange}
