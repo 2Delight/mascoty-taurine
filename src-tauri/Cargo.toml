@@ -2,7 +2,7 @@
 name = "mascoty-taurine"
 version = "0.1.0"
 description = "Backend of Mascoty Taurine app"
-authors = [ "offluck" ]
+authors = ["offluck"]
 license = ""
 repository = ""
 edition = "2021"
@@ -14,7 +14,7 @@ rust-version = "1.57"
 tauri-build = { version = "1.2", features = [] }
 
 [dependencies]
-serde = { version = "1.0.152", features = [ "derive" ] }
+serde = { version = "1.0.152", features = ["derive"] }
 serde_json = "1.0.91"
 serde_yaml = "0.9.17"
 
@@ -25,7 +25,6 @@ tauri = { version = "1.2", features = ["dialog-all", "fs-create-dir", "fs-read-d
 rand = "0.8.4"
 
 tch = "0.10.3"
-image = "0.24.5"
 portaudio = "0.7.0"
 
 [dependencies.nokhwa]
@@ -33,6 +32,13 @@ version = "0.10.3"
 features = [
     "input-native",
     "output-wgpu",
+]
+
+[dependencies.image]
+version = "0.24.5"
+default-features = true
+features = [
+    "png",
 ]
 
 [features]

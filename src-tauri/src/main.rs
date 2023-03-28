@@ -14,7 +14,6 @@ extern crate simple_logger;
 mod commands;
 mod config;
 mod devices;
-mod input;
 mod mascot;
 mod utils;
 

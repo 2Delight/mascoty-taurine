@@ -6,9 +6,12 @@ use log::{debug, error, info, warn};
 use portaudio::PortAudio;
 
 #[tauri::command]
-pub fn get_mascot(state: tauri::State<Devices>) -> mascot::Mascot {
+pub fn get_mascot(state: tauri::State<Devices>) -> Result<mascot::Mascot, String> {
     debug!("Handler get_mascot has been invoken");
-    mascot::get_mascot(&state)
+    match mascot::get_mascot(&state) {
+        Ok(mascot) => Ok(mascot),
+        Err(err) => Err(format!("failed to get mascot: {}", err.to_string()))
+    }
 }
 
 #[tauri::command]
