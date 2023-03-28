@@ -191,7 +191,7 @@ pub fn set_cam(index: CameraIndex, config: &CameraConfig) -> Result<Camera, Nokh
     info!("Camera info: {}", camera.info());
 
     debug!("Openning stream");
-    camera.open_stream().unwrap();
+    camera.open_stream()?;
 
     Ok(camera)
 }

@@ -2,9 +2,10 @@ use crate::devices::Devices;
 use crate::panic_error;
 
 use log::{debug, error, info, warn};
-use nokhwa::NokhwaError;
+use nokhwa::{pixel_format::*, NokhwaError};
 use rand::Rng;
 use serde::{Deserialize, Serialize};
+use tch::Tensor;
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Mascot {
@@ -23,7 +24,7 @@ pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     debug!("Getting frame");
     let buffer = camera.frame()?;
 
-    // buffer.decode_image::<RgbFormat>()?.save("img.png").unwrap();
+    buffer.decode_image::<RgbFormat>()?.save("img.jpg").unwrap();
 
     // image::save_buffer("img.png", buffer.buffer(), camera.resolution().width_x, camera.resolution().height_y, image::ColorType::Rgb8).unwrap();
 
@@ -60,7 +61,7 @@ pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     //     .unsqueeze(0)
     //     .apply(model);
 
-    let output = tch::vision::imagenet::load_image_and_resize224("img.png")
+    let output = tch::vision::imagenet::load_image_and_resize224("img.jpg")
         .unwrap()
         .unsqueeze(0)
         .apply(model);
