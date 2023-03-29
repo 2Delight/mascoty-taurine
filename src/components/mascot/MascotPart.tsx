@@ -13,7 +13,7 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
     const [height, setHeight] = useState(100)
     const [width, setWidth] = useState(100)
     const [loading, setLoading] = useState(true)
-    const [zoom, setZoom] = useState(1)
+    const [zoom, setZoom] = useState(100)
     const [resizing, setResizing] = useState(false)
     const [infoPos, setinfoPos] = useState({ x: -1, y: -1 })
     const [defaultHW, setDefaultHW] = useState({ h: 100, w: 100 })
@@ -22,15 +22,15 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
         if (mascot) {
             setZoom(mascot.mascot.zoom)
             setCurrentPos({
-                x: mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionX * mascot.mascot.zoom,
-                y: mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionY * mascot.mascot.zoom
+                x: mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionX * mascot.mascot.zoom / 100,
+                y: mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionY * mascot.mascot.zoom / 100
             })
-            setHeight(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].height * mascot.mascot.zoom)
-            setWidth(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].width * mascot.mascot.zoom)
+            setHeight(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].height * mascot.mascot.zoom / 100)
+            setWidth(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].width * mascot.mascot.zoom / 100)
             // setLoading(false)
             getImageSize(tauri.convertFileSrc(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath)).then((dimens) => {
                 if (dimens) {
-                    setDefaultHW({ h: dimens.height * mascot.mascot.zoom, w: dimens.width * mascot.mascot.zoom })
+                    setDefaultHW({ h: dimens.height * mascot.mascot.zoom / 100, w: dimens.width * mascot.mascot.zoom / 100})
                 }
             })
             setLoading(false)

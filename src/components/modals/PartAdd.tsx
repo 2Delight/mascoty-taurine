@@ -72,7 +72,7 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
         <div
           style={{
             position: "absolute",
-            top: '45%',
+            top: '35%',
             left: 'calc(50vw - 200px)',
 
             transform: 'translate(-50%, -50%)',
@@ -87,6 +87,7 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
             minWidth: 300,
             flexDirection: "column",
             userSelect: "none",
+            display: "flex",
           }}>
           <div style={{ flexDirection: "row", display: "flex", marginBottom: 10 }}>
             <a style={{ textAlign: "left", color: "white", width: 100 }}>
@@ -197,7 +198,7 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
           </div>}
           {path && <img src={
             tauri.convertFileSrc(path)
-          } style={{ maxHeight: 100, flex: 1, objectFit: "scale-down" }} />}
+          } style={{ maxHeight: 100, objectFit: "scale-down", alignSelf: "center", justifySelf: "center" }} />}
           <div className="msct-button" style={{ marginTop: 20, padding: 3, borderRadius: 10, color: menuGray }}
             onClick={() => {
               if (designation !== "" && name !== "" && path !== "") {

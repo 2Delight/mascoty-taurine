@@ -60,7 +60,7 @@ export default function EmotionAdd({ open, setOpen, redact }: { open: boolean, s
         <div
           style={{
             position: "absolute",
-            top: '45%',
+            top: '35%',
             left: 'calc(50vw - 200px)',
 
             backgroundColor: contextMenuGray,

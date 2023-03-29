@@ -19,7 +19,7 @@ export default function MascotCanvas() {
   const zoomIn = () => {
     if (mascot) {
       let a = structuredClone(mascot.mascot)
-      a.zoom = (Math.floor(a.zoom * 100) + 5) / 100
+      a.zoom += 5
       mascot.setMascot(a)
       console.log("ZOOM: " + a.zoom)
     }
@@ -29,7 +29,7 @@ export default function MascotCanvas() {
     if (mascot) {
       console.log(mascot.mascot)
       let a = structuredClone(mascot.mascot)
-      a.zoom = (Math.floor(a.zoom * 100) - 5) / 100
+      a.zoom -= 5
       mascot.setMascot(a)
       console.log("ZOOM: " + a.zoom)
     }
@@ -39,8 +39,8 @@ export default function MascotCanvas() {
     flex: 10,
     // overflow: "auto",
     // margin: 10,
-    paddingTop:10,
-    paddingLeft:10,
+    paddingTop: 10,
+    paddingLeft: 10,
     position: "relative"
   }} onMouseEnter={() => setInFocus(true)}
     onMouseLeave={() => setInFocus(false)}>
@@ -75,7 +75,7 @@ export default function MascotCanvas() {
           +
         </div>
         <div style={{ marginRight: 5, fontSize: 16, padding: 10, minWidth: 100, borderRadius: 30, backgroundColor: contextMenuGray, color: menuGray }}>
-          Zoom: {(mascot && mascot.mascot) ? Math.floor(mascot.mascot.zoom * 100) : ""}%
+          Zoom: {(mascot && mascot.mascot) ? Math.floor(mascot.mascot.zoom) : ""}%
         </div>
         <div style={{ marginRight: 5, cursor: "pointer", fontSize: 16, padding: 10, width: 24, borderRadius: 30, backgroundColor: contextMenuGray, color: menuGray }}
           onClick={() => {

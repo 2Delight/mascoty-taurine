@@ -54,7 +54,7 @@ export default function ProjectAdd({ open, setOpen, addProject }: { open: boolea
                 <div
                     style={{
                         position: "absolute",
-                        top: '45%',
+                        top: '40%',
                         left: 'calc(50vw - 200px)',
                         // transform: 'translate(-50%, -50%)',
                         backgroundColor: contextMenuGray,
