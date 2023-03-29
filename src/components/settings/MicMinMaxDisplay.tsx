@@ -1,10 +1,7 @@
-import { Stack, Slider } from "@mui/material";
+import { Stack } from "@mui/material";
 import React from "react";
 import { menuGray } from "../../utils/Colors";
-
-function valuetext(value: number) {
-    return `${value}%`;
-}
+import TwoSlider from "./TwoSlider";
 
 export default function MicMinMaxDisplay() {
     const [value, setValue] = React.useState<number[]>([0, 100]);
@@ -30,27 +27,11 @@ export default function MicMinMaxDisplay() {
         }}>
             Mic Output
         </a>
-        <Stack spacing={2} direction="row" sx={{
-            // backgroundColor: "#808080",
-            borderRadius: 2, fles: 2
-        }} alignItems="center">
-            {/* <VolumeDown className="dumbIcon" /> */}
-            <Slider
-                getAriaLabel={() => 'Temperature range'}
-                value={value}
-                onChange={handleChange}
-                valueLabelDisplay="auto"
-                getAriaValueText={valuetext}
-                disableSwap
-                sx={{
-                    marginRight: 2,
-                    marginLeft: 2,
-                    // padding: 2,
 
-                }}
-            />
+        {/* <VolumeDown className="dumbIcon" /> */}
+        <TwoSlider
+        />
 
-            {/* <VolumeUp className="dumbIcon" /> */}
-        </Stack>
+        {/* <VolumeUp className="dumbIcon" /> */}
     </div>
 }

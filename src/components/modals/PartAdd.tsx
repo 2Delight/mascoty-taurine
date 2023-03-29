@@ -1,20 +1,15 @@
 import { MenuItem, Modal, Select, SelectChangeEvent, Slide } from "@mui/material";
-import React, { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
-import { BlockPicker, CirclePicker, SketchPicker } from "react-color";
-import { useDispatch } from "react-redux";
+import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import { MascotContext } from "../../App";
-import { contextMenuGray, focusBlue, interactActiveHoverGray, interactGray, menuGray } from "../../utils/Colors";
+import { contextMenuGray, focusBlue, menuGray } from "../../utils/Colors";
 import { descriptPart } from "../../utils/EDescriptor";
-import { EEmotion } from "../logic/EEmotion";
 import { EPart } from "../logic/EPart";
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import { open } from "@tauri-apps/api/dialog"
 import { getImageSize } from "react-image-size/lib/lib/getImageSize";
-// import { changeColor } from "../../utils/redux_state/BackgroundSlice";
 import { tauri } from "@tauri-apps/api";
-import search from "../../assets/search.svg"
-import { copyFile, readTextFile, BaseDirectory, writeTextFile, removeDir, exists } from '@tauri-apps/api/fs';
-import { documentDir, sep } from "@tauri-apps/api/path";
+import { copyFile, exists } from '@tauri-apps/api/fs';
+import { sep } from "@tauri-apps/api/path";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 

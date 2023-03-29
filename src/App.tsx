@@ -22,6 +22,7 @@ import { backgroundGray, contextMenuGray, focusBlue, interactActiveGray, interac
 import logo from "./assets/mascoty_logo_inline.png"
 import up from "./assets/parts-icons/up.svg"
 import { isRegistered, register, registerAll } from '@tauri-apps/api/globalShortcut';
+import Slider from "./components/settings/Slider";
 
 
 export const MascotContext = createContext<{
@@ -192,8 +193,7 @@ export default function App() {
                   {/* <div style={{ flex: 1 }}></div> */}
                 </div>
 
-
-                <div style={{ flex: 10}} />
+                <div style={{ flex: 10 }} />
 
                 <div className="msct-button" style={{ margin: 4, padding: 7, borderRadius: 10, color: menuGray }}>
                   Start Broadcast

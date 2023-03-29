@@ -9,4 +9,7 @@ export default interface IMascot {
     workingDir:string,
     projectName:string,
     zoom: number,
+    shake: number,
+    maxMic: number,
+    minMic: number,
 }
