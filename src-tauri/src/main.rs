@@ -3,23 +3,10 @@
     windows_subsystem = "windows"
 )]
 
-extern crate log;
-extern crate nokhwa;
-extern crate rand;
-extern crate serde;
-extern crate serde_json;
-extern crate serde_yaml;
-extern crate simple_logger;
-
-mod commands;
-mod config;
-mod devices;
-mod mascot;
-mod utils;
-
-use crate::commands::*;
-use crate::config::import_config;
-use crate::devices::{get_cams, get_devices, set_cam, set_mike};
+use mascoty_taurine::commands::*;
+use mascoty_taurine::config::import_config;
+use mascoty_taurine::devices::{get_cams, get_devices, set_cam, set_mike};
+use mascoty_taurine::panic_error;
 
 use log::{debug, error, info, warn};
 use simple_logger::SimpleLogger;
@@ -59,7 +46,7 @@ fn main() {
     let devices = get_devices(conf, cam, mike);
 
     // Test mascot getting.
-    panic_error!(mascot::get_mascot(&devices), "getting mascot");
+    panic_error!(mascoty_taurine::mascot::get_mascot(&devices), "getting mascot");
 
     // Starting app.
     debug!("Building the app");
