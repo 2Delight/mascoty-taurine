@@ -48,7 +48,7 @@
 }
 
 .icon:hover {
-  color:  #00bccf;
+  color: #00bccf;
   border-radius: 50%;
   background-color: #2b2b2b;
   outline: 4px solid #2b2b2b;
@@ -111,10 +111,12 @@ a {
 .project:hover {
   cursor: pointer;
   background-color: #d4d4d4;
+  transition: background-color 0.3s
 }
 
 .selected-project {
   background-color: #bdbdbd;
+  transition: background-color 0.3s
 }
 
 .selected-project:hover {
@@ -165,17 +167,38 @@ a {
   border-right: 1px solid transparent;
 }
 
-
-.selector:hover {
-  z-index: 1;
-  transform: translateX(-100%) rotate(90deg);
-}
-
 .selector {
+  position: absolute;
+  min-height: 25px;
+  min-width: 25px;
+  /* aspect-ratio: 1; */
+  left: -7px;
+  top: calc(50vh - 13px);
+  align-self: center;
+  padding-inline: 3px;
+  padding-top: 1px;
+  border-top-left-radius: 60%;
+  border-top-right-radius: 60%;
   z-index: 3;
   transform: translateX(0) rotate(90deg);
-  transition: transform 0.4s;
 
+  background-color: #666565;
+  color: #CECCCC;
+  outline: 2px solid;
+  outline-color: transparent;
+  outline-offset: -15px;
+}
+
+.selector:hover {
+  /* z-index: 1; */
+  /* transform: translateX(-100%) rotate(90deg); */
+  background-color: #2b2b2b;
+  color: #00bccf;
+  outline: 2px solid;
+  outline-color: #00bccf;
+  outline-offset: 0px;
+
+  transition: background-color 0.2s, outline-color 0.3s, outline-offset 0.2s;
 }
 
 .modal-visible {

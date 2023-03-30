@@ -23,6 +23,7 @@ import logo from "./assets/mascoty_logo_inline.png"
 import up from "./assets/parts-icons/up.svg"
 import { isRegistered, register, registerAll } from '@tauri-apps/api/globalShortcut';
 import Slider from "./components/settings/Slider";
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 
 export const MascotContext = createContext<{
@@ -93,9 +94,11 @@ export default function App() {
             margin: 0
           }}>
 
-            <img className="selector" src={up} style={{ position: "absolute", height: 20, aspectRatio: 1, left: -10, top: "calc(50vh-30)", alignSelf: "center", paddingInline: 10, paddingTop: 5, backgroundColor: interactGray, borderTopLeftRadius: 40, borderTopRightRadius: 40, }}
-              onMouseEnter={() => setContextVisible(true)} />
+            <KeyboardArrowUpIcon className="selector"
+              onClick={() => setContextVisible(true)}
+            />
 
+            {/* <img className="selector" src={up} */}
             <Slide in={contextVisible} direction="right" unmountOnExit>
               <div
                 // className="context-menu" 
