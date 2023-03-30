@@ -1,3 +1,7 @@
+/// Macro wich checks if there's an error, logs info and returns result if successful
+/// ```
+/// let ans = check_error!(ans_res, "message you want to pass");
+/// ```
 #[macro_export]
 macro_rules! check_error {
     ($e:expr, $s:expr $(,)?) => {
@@ -14,6 +18,10 @@ macro_rules! check_error {
     };
 }
 
+/// Macro wich panics if there's an error, logs info and returns result if successful
+/// ```
+/// let ans = panic_error!(ans_res, "message you want to pass");
+/// ```
 #[macro_export]
 macro_rules! panic_error {
     ($e:expr, $s:expr $(,)?) => {
@@ -30,6 +38,12 @@ macro_rules! panic_error {
     };
 }
 
+/// HashMap initialization macro.
+/// ```
+/// let d = init_dict!{
+///     "test".to_string() => "Test",
+/// }
+/// ```
 #[macro_export]
 macro_rules! init_dict {
     ($( $key:expr => $val:expr ), * $(,)?) => {{

@@ -59,7 +59,7 @@ fn main() {
     let devices = get_devices(conf, cam, mike);
 
     // Test mascot getting.
-    mascot::get_mascot(&devices);
+    panic_error!(mascot::get_mascot(&devices), "getting mascot");
 
     // Starting app.
     debug!("Building the app");
