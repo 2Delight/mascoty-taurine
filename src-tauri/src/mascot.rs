@@ -1,5 +1,6 @@
 use crate::devices::Devices;
 use crate::panic_error;
+use crate::emotions::Emotion;
 
 use log::{debug, error, info, warn};
 use nokhwa::{pixel_format::*, NokhwaError};
@@ -9,10 +10,29 @@ use tch::Tensor;
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Mascot {
-    pub emotion: String,
+    pub emotion: Emotion,
     pub blink: bool,
     pub lips: bool,
     pub voice: u8,
+}
+
+fn to_wb(tensor: Tensor) -> Tensor {
+    (tensor.index(&[Some(Tensor::of_slice(&[0i64])), None, None])
+        + tensor.index(&[Some(Tensor::of_slice(&[1i64])), None, None])
+        + tensor.index(&[Some(Tensor::of_slice(&[2i64])), None, None]))
+        / 3f64
+}
+
+fn argmax(tensor: &Vec<f64>) -> u8 {
+    let mut index = 0u8;
+
+    for i in 0..tensor.len() {
+        if tensor[i] > tensor[index as usize] {
+            index = i as u8;
+        }
+    }
+
+    index
 }
 
 pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
@@ -24,7 +44,7 @@ pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     debug!("Getting frame");
     let buffer = camera.frame()?;
 
-    buffer.decode_image::<RgbFormat>()?.save("img.jpg").unwrap();
+    // buffer.decode_image::<RgbFormat>()?.save("img.jpg").unwrap();
 
     // image::save_buffer("img.png", buffer.buffer(), camera.resolution().width_x, camera.resolution().height_y, image::ColorType::Rgb8).unwrap();
 
@@ -61,23 +81,22 @@ pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     //     .unsqueeze(0)
     //     .apply(model);
 
-    let output = tch::vision::imagenet::load_image_and_resize224("img.jpg")
-        .unwrap()
+    let output = to_wb(tch::vision::imagenet::load_image_and_resize224("img.jpg").unwrap())
         .unsqueeze(0)
-        .apply(model);
+        .apply(model)
+        .squeeze();
 
-    info!("{}", tch::vision::imagenet::top(&output, 1)[0].1);
+    info!(
+        "{:?}",
+        output
+    );
 
-    // rgb.get_pixel(10, 10);
-    // info!(
-    //     "Frame resolution: {}; Pixel: {:?}",
-    //     frame.resolution(),
-    //     rgb.get_pixel(10, 10),
-    // );
+    let emotion = Emotion::from_num(argmax(&output.iter::<f64>().unwrap().collect::<Vec<f64>>()));
+    info!("{}", emotion);
 
     debug!("Sending info");
     Ok(Mascot {
-        emotion: "".to_string(),
+        emotion: emotion,
         blink: false,
         lips: false,
         voice: devices.get_volume(),
