@@ -11,3 +11,4 @@ pub mod config;
 pub mod devices;
 pub mod mascot;
 pub mod utils;
+pub mod emotions;

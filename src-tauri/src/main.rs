@@ -11,6 +11,8 @@ use mascoty_taurine::panic_error;
 use log::{debug, error, info, warn};
 use simple_logger::SimpleLogger;
 
+const DEFAULT_DEVICE_INDEX: usize = 0;
+
 fn main() {
     // Setting up the logger.
     match SimpleLogger::new()
@@ -29,7 +31,7 @@ fn main() {
     // Setting up default camera.
     debug!("Getting default camera index");
     let cam = panic_error!(
-        set_cam(get_cams().unwrap()[0].index().clone(), &conf.camera,),
+        set_cam(get_cams().unwrap()[DEFAULT_DEVICE_INDEX].index().clone(), &conf.camera,),
         "setting up camera",
     );
 
@@ -39,7 +41,7 @@ fn main() {
 
     // Setting up default microphone.
     debug!("Getting default micro");
-    let mike = panic_error!(set_mike(0, &pa), "setting up microphone");
+    let mike = panic_error!(set_mike(DEFAULT_DEVICE_INDEX, &pa), "setting up microphone");
 
     // Creating devices.
     debug!("Getting devices");

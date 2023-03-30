@@ -15,14 +15,19 @@ use nokhwa::{
 };
 use nokhwa::{query, Camera, NokhwaError};
 
-use portaudio::{DeviceIndex, DeviceInfo, Error, PortAudio};
+use portaudio::{stream::Input, DeviceIndex, DeviceInfo, Error, NonBlocking, PortAudio, Stream};
 
 use log::{debug, error, info, warn};
+
+pub struct Microphone {
+    receiver: Receiver<Vec<f32>>,
+    stream_: Stream<NonBlocking, Input<f32>>,
+}
 
 pub struct Devices {
     pub camera: Mutex<Camera>,
     pub config: Mutex<Config>,
-    pub microphone: Mutex<Receiver<Vec<f32>>>,
+    pub microphone: Mutex<Microphone>,
 }
 
 unsafe impl Sync for Devices {}
@@ -56,7 +61,7 @@ impl Devices {
         Ok(())
     }
 
-    pub fn set_up_microphone(&self, microphone: Receiver<Vec<f32>>) -> Result<(), String> {
+    pub fn set_up_microphone(&self, microphone: Microphone) -> Result<(), String> {
         info!("Setting the microphone");
 
         let mut mike_guard = match self.microphone.lock() {
@@ -93,8 +98,17 @@ impl Devices {
 
     pub fn get_volume(&self) -> u8 {
         const MAXIMUM_VOLUME: f32 = 25000f32;
-        
-        let volume: f32 = self.microphone.lock().unwrap().recv().unwrap().iter().map(|vol| vol.abs()).sum();
+
+        let volume: f32 = self
+            .microphone
+            .lock()
+            .unwrap()
+            .receiver
+            .recv()
+            .unwrap()
+            .iter()
+            .map(|vol| vol.abs())
+            .sum();
         if volume < MAXIMUM_VOLUME {
             return (volume * 100f32 / MAXIMUM_VOLUME) as u8;
         }
@@ -118,10 +132,7 @@ pub fn get_mikes(pa: &PortAudio) -> Result<Vec<(DeviceIndex, DeviceInfo)>, Error
     Ok(devices)
 }
 
-pub fn set_mike(
-    index: usize,
-    pa: &PortAudio,
-) -> Result<std::sync::mpsc::Receiver<Vec<f32>>, Error> {
+pub fn set_mike(index: usize, pa: &PortAudio) -> Result<Microphone, Error> {
     const CHANNELS_NUMBER: i32 = 1;
     const FRAMES_NUMBER_PER_BUFFER: u32 = 256;
     const CHOSEN: usize = 0;
@@ -144,23 +155,23 @@ pub fn set_mike(
     let callback = move |portaudio::InputStreamCallbackArgs { buffer, .. }| match sender
         .send(buffer.to_vec())
     {
-        Ok(_) => portaudio::Continue,
-        Err(_) => portaudio::Complete,
+        Ok(()) => portaudio::Continue,
+        Err(err) => {
+            error!("{:?}", err);
+            portaudio::Complete
+        }
     };
 
     let mut stream = pa.open_non_blocking_stream(input_settings, callback)?;
 
     stream.start()?;
-    println!("{}", stream.is_active()?);
-    println!("{}", stream.is_stopped()?);
+    info!("Is stream active: {}", stream.is_active()?);
+    info!("Is stream stopped: {}", stream.is_stopped()?);
 
-    // loop {
-    //     let buffer = receiver.recv().unwrap();
-    //     println!("{}", sum(buffer));
-    //     std::thread::sleep(std::time::Duration::from_millis(500))
-    // }
-
-    Ok(receiver)
+    Ok(Microphone {
+        receiver: receiver,
+        stream_: stream,
+    })
 }
 
 pub fn get_cams() -> Result<Vec<CameraInfo>, NokhwaError> {
@@ -196,7 +207,7 @@ pub fn set_cam(index: CameraIndex, config: &CameraConfig) -> Result<Camera, Nokh
     Ok(camera)
 }
 
-pub fn get_devices(config: Config, camera: Camera, microphone: Receiver<Vec<f32>>) -> Devices {
+pub fn get_devices(config: Config, camera: Camera, microphone: Microphone) -> Devices {
     debug!("Initializing devices");
 
     Devices {
