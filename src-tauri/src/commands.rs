@@ -5,12 +5,16 @@ use crate::mascot;
 use log::{debug, error, info, warn};
 use portaudio::PortAudio;
 
+/// Handler for getting Mascot.
 #[tauri::command]
 pub fn get_mascot(state: tauri::State<Devices>) -> mascot::Mascot {
     debug!("Handler get_mascot has been invoken");
     mascot::get_mascot(&state)
 }
 
+/// Handler for getting list of available cameras.<br/>
+/// If ok => returns vector of camera names.<br/>
+/// If err => returns string error.<br/>
 #[tauri::command]
 pub fn get_cameras() -> Result<Vec<String>, String> {
     debug!("Handler get_cameras has been invoken");
@@ -24,6 +28,9 @@ pub fn get_cameras() -> Result<Vec<String>, String> {
     }
 }
 
+/// Handler which receives index of camera and sets it as chosen.<br/>
+/// If ok => returns nothing.<br/>
+/// If err => returns string error.<br/>
 #[tauri::command]
 pub fn select_camera(
     index: usize,
@@ -45,10 +52,14 @@ pub fn select_camera(
     Ok(())
 }
 
+/// Checks if value is in interval.<br/>
 fn is_in_interval(value: i32, left: i32, right: i32) -> bool {
     return value > left && value < right;
 }
 
+/// Handler which updates configuration of selected camera.<br/>
+/// If ok => returns nothing.<br/>
+/// If err => returns string error.<br/>
 #[tauri::command]
 pub fn set_camera_config(conf: CameraConfig, state: tauri::State<Devices>) -> Result<(), String> {
     debug!("Handler set_config has been invoken");
@@ -75,6 +86,9 @@ pub fn set_camera_config(conf: CameraConfig, state: tauri::State<Devices>) -> Re
     }
 }
 
+/// Handler for getting list of available microphones.<br/>
+/// If ok => returns vector of camera names.<br/>
+/// If err => returns string error.<br/>
 #[tauri::command]
 pub fn get_microphones(state: tauri::State<PortAudio>) -> Result<Vec<String>, String> {
     match get_mikes(&*state) {
@@ -88,6 +102,9 @@ pub fn get_microphones(state: tauri::State<PortAudio>) -> Result<Vec<String>, St
     }
 }
 
+/// Handler which receives index of microphone and sets it as chosen.<br/>
+/// If ok => returns nothing.<br/>
+/// If err => returns string error.<br/>
 #[tauri::command]
 pub fn select_microphone(
     index: usize,

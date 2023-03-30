@@ -26,6 +26,7 @@ use log::{debug, error, info, warn};
 use simple_logger::SimpleLogger;
 
 fn main() {
+    // Setting up the logger.
     match SimpleLogger::new()
         .with_level(log::LevelFilter::Debug)
         .init()
@@ -34,29 +35,39 @@ fn main() {
         Err(err) => panic!("Cannot initialize logger: {:?}", err),
     };
 
+    // Importing config.
     debug!("Config parsing");
     let conf = import_config();
     info!("Config: {:?}", conf);
 
+    // Setting up default camera.
     debug!("Getting default camera index");
     let cam = panic_error!(
         set_cam(get_cams().unwrap()[0].index().clone(), &conf.camera,),
         "setting up camera",
     );
 
-    let pa = portaudio::PortAudio::new().unwrap();
+    // Setting up portaudio.
+    debug!("Getting portaudio");
+    let pa = panic_error!(portaudio::PortAudio::new(), "getting portaudio library");
 
+    // Setting up default microphone.
     debug!("Getting default micro");
     let mike = panic_error!(set_mike(0, &pa), "setting up microphone");
 
+    // Creating devices.
     debug!("Getting devices");
     let devices = get_devices(conf, cam, mike);
 
+    // Test mascot getting.
     mascot::get_mascot(&devices);
 
+    // Starting app.
     debug!("Building the app");
     tauri::Builder::default()
+        // Adding devices to state.
         .manage(devices)
+        // Adding portaudio to state.
         .manage(pa)
         .invoke_handler(tauri::generate_handler![
             get_mascot,
