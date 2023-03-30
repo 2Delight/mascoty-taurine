@@ -187,7 +187,7 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
                 }
               })
             }}>
-              <input style={{ backgroundColor: menuGray, flex: 1, paddingRight: 40 }} disabled={true} placeholder="Press search icon   -->" value={path} >
+              <input style={{ backgroundColor: menuGray, flex: 1, paddingRight: 40 }} disabled={true} placeholder="Part's Directory..." value={path} >
 
               </input>
               <div style={{ position: "absolute", right: 10, top: 5 }}>
@@ -219,18 +219,18 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
                     mascot.setMascot(mascot.mascot)
                     handleClose()
                   } else {
-                    exists(mascot.mascot.workingDir + sep + designation + "_" + name).then((resp) => {
+                    exists(mascot.mascot.workingDir + sep + mascot.mascot.emotions[mascot.mascot.selectedEmotion].name + "_" + EPart[Number(designation)] + "_" + name + ".png").then((resp) => {
                       if (resp) {
                         toast.warn("Part with same name and destination already exists")
                       } else {
-                        copyFile(path, mascot.mascot.workingDir + sep + designation + "_" + name, {}).then(() => { }).catch((e) => toast.error(e))
+                        copyFile(path, mascot.mascot.workingDir + sep + mascot.mascot.emotions[mascot.mascot.selectedEmotion].name + "_" + EPart[Number(designation)] + "_" + name + ".png", {}).then(() => { }).catch((e) => toast.error(e))
                         // let newPath = tauri.convertFileSrc(docsPath + mascot.mascot.workingDir + sep + designation + "_" + name)
 
                         mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.push({
                           name: name,
                           visibility: true,
                           // sourcePath: "https://asset.localhost/"+path,
-                          sourcePath: mascot.mascot.workingDir + sep + designation + "_" + name,
+                          sourcePath: mascot.mascot.workingDir + sep + mascot.mascot.emotions[mascot.mascot.selectedEmotion].name + "_" + EPart[Number(designation)] + "_" + name + ".png",
                           positionX: 0,
                           positionY: 0,
                           height: height,

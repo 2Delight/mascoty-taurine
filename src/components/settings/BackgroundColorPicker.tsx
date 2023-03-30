@@ -51,7 +51,8 @@ export default function MaskotBackgroundColorPicker() {
         minWidth: 17,
         borderRadius: "6px",
         borderColor: "black",
-        border: "2px solid black"
+        border: "2px solid black",
+        cursor: "pointer"
       }} onClick={handleOpen}>
       </div>
       <Modal

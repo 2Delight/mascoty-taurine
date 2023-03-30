@@ -94,6 +94,7 @@ a {
   color: black;
   text-align: left;
   cursor: default;
+  user-select: none;
 }
 
 .resizerb:hover {
@@ -141,6 +142,7 @@ a {
   border: solid;
   border-width: 2px;
   border-color: #00bccf;
+  cursor: pointer;
 
   /* outline: 3px solid #00bccf; */
   /* color: #fbb217; */
@@ -197,6 +199,7 @@ a {
   outline: 2px solid;
   outline-color: #00bccf;
   outline-offset: 0px;
+  cursor: pointer;
 
   transition: background-color 0.2s, outline-color 0.3s, outline-offset 0.2s;
 }

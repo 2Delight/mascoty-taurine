@@ -88,10 +88,10 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
         readTextFile(proj.path + sep + "CONF_" + proj.name + ".mascot").then((text) => {
             try {
                 let msct: IMascot = JSON.parse(text)
-                appWindow.setTitle(msct.projectName + " (~" + msct.workingDir + "~)")
+                appWindow.setTitle("Mascoty | " + msct.projectName + " | " + msct.workingDir)
                 mascot?.setMascot(msct)
                 exit(false)
-            } catch (e : any) {
+            } catch (e: any) {
                 toast.error(e)
             }
         }).catch(() => {
@@ -123,7 +123,7 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
         <ProjectAdd open={openDialog} setOpen={setOpenDialog} addProject={addProject} />
         <Proceed open={openProceed} setOpen={setOpenProceed} question={(projects && deleteProj > -1 && deleteProj < projects.length) ? "Do you want to delete " + projects[deleteProj].name + "?" : ""} proceed={deleteProject} />
         <div style={{ flexDirection: "row", display: "flex" }}>
-            <div style={{ height: "100vh", minWidth: 230, width: 230, backgroundColor: contextMenuGray, alignItems: "center", alignContent: "center",borderRight: "3px solid " + focusBlue,}}>
+            <div style={{ height: "100vh", minWidth: 230, width: 230, backgroundColor: contextMenuGray, alignItems: "center", alignContent: "center", borderRight: "3px solid " + focusBlue, }}>
                 <img src={logo} style={{ width: 200, alignSelf: "center", marginInline: 15, marginTop: 10, marginBottom: 10, }} />
                 <div style={{ flex: 0, marginBottom: 20, flexDirection: "column" }}>
                     <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
