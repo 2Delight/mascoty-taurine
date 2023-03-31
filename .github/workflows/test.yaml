@@ -38,8 +38,8 @@ jobs:
           wget https://download.pytorch.org/libtorch/nightly/cpu/libtorch-shared-with-deps-latest.zip
           unzip libtorch-shared-with-deps-latest.zip
 
-          pip3 install detectron2
-          pip3 install torch==1.11.0
+          pip3 install torch==1.11.1
+          pip install detectron2 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cu111/torch1.10/index.html
           pip3 install torchvision
           pip3 install torchaudio
       
