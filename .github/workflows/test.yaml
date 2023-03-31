@@ -59,6 +59,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Create Dist Directory
+        run: sudo mkdir dist
+
       - name: Test
         run: cargo test --verbose --verbose
         working-directory: src-tauri
