@@ -48,6 +48,9 @@ jobs:
 
       - name: Install PortAudio
         run: brew install portaudio
+      
+      - name: Install LibTorch
+        run: brew install torch
 
       - name: Test
         run: cargo test --verbose --verbose
