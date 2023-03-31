@@ -35,9 +35,6 @@ jobs:
 
           sudo ldconfig
       
-      - name: Find Library
-        run: locate libtorch_cpu
-      
       - name: Install LibTorch
         run: |
           wget https://download.pytorch.org/libtorch/nightly/cpu/libtorch-shared-with-deps-latest.zip
@@ -47,6 +44,9 @@ jobs:
           pip3 install git+https://github.com/facebookresearch/detectron2
           pip3 install torchvision
           pip3 install torchaudio
+      
+      - name: Find Library
+        run: locate libtorch_cpu
       
       - name: Install PortAudio
         run: |
