@@ -24,6 +24,7 @@ import up from "./assets/parts-icons/up.svg"
 import { isRegistered, register, registerAll } from '@tauri-apps/api/globalShortcut';
 import Slider from "./components/settings/Slider";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { CreateFiles } from "./utils/Router";
 
 
 export const MascotContext = createContext<{
@@ -95,11 +96,14 @@ export default function App() {
           }}>
 
             <KeyboardArrowUpIcon className="selector"
-              onClick={() => setContextVisible(true)}
+              onClick={() => { 
+                setContextVisible(true) 
+              
+              }}
             />
 
             {/* <img className="selector" src={up} */}
-            <Slide in={contextVisible} direction="right" unmountOnExit>
+            <Slide in={contextVisible} direction="right" unmountOnExit timeout={200}>
               <div
                 // className="context-menu" 
                 style={{
@@ -198,9 +202,13 @@ export default function App() {
 
                 <div style={{ flex: 10 }} />
 
-                <div className="msct-button" style={{ margin: 4, padding: 7, borderRadius: 10, color: menuGray }}>
+                <div className="msct-button" style={{ margin: 4, padding: 7, borderRadius: 10, color: menuGray }}
+                  onClick={() => {
+                    CreateFiles(mascot)
+                  }}>
                   Start Broadcast
                 </div>
+                <div className="shadow" />
 
               </div>
               <MascotCanvas />

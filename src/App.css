@@ -150,23 +150,25 @@ a {
 }
 
 .context-menu:hover {
-  opacity: 1;
+  /* opacity: 1;
   transform: translateX(0);
   background-color: #2b2b2b;
-  z-index: 4;
-  transition: transform 0.5s;
+  z-index: 4; */
+  border-right: 2px solid #00bccf;
+  transition: border-right 0.5s;
+  
   /* border-color: #00bccf; */
 }
 
 .context-menu {
   /* opacity: 0; */
-  transform: translateX(-92%);
-  opacity: 0;
+  /* transform: translateX(-92%); */
+  /* opacity: 0; */
   /* background-color: #454545; */
-  transition: transform 0.3s;
+  /* transition: transform 0.3s; */
   /* transition-timing-function: ease-out; */
-  z-index: 2;
-  border-right: 1px solid transparent;
+  z-index: 5;
+  border-right: 2px solid transparent;
 }
 
 .selector {

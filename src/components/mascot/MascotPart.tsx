@@ -30,7 +30,7 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
             // setLoading(false)
             getImageSize(tauri.convertFileSrc(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].sourcePath)).then((dimens) => {
                 if (dimens) {
-                    setDefaultHW({ h: dimens.height * mascot.mascot.zoom / 100, w: dimens.width * mascot.mascot.zoom / 100})
+                    setDefaultHW({ h: dimens.height * mascot.mascot.zoom / 100, w: dimens.width * mascot.mascot.zoom / 100 })
                 }
             })
             setLoading(false)
@@ -177,7 +177,7 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
 
     const dragref = useRef(null)
     return (!loading ?
-        partIndex == mascot?.mascot.selectedPart ?
+        partIndex == mascot?.mascot.selectedPart && useFocus ?
             <div style={{
                 zIndex: 100,
             }}>

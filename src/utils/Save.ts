@@ -1,4 +1,4 @@
-import { writeTextFile, BaseDirectory, writeBinaryFile } from "@tauri-apps/api/fs";
+import { writeTextFile, BaseDirectory, writeBinaryFile, readDir, removeFile } from "@tauri-apps/api/fs";
 import { sep } from "@tauri-apps/api/path";
 import html2canvas from "html2canvas";
 import IMascot from "../components/logic/IMascot";
@@ -26,4 +26,25 @@ export default async function saveMascot(mascot: IMascot) {
             }
         });
     })
+    await validateProject(mascot)
+}
+
+export async function validateProject(mascot: IMascot) {
+    const entries = await readDir(mascot.workingDir, { recursive: true });
+    let paths = [mascot.workingDir + "CONF_" + mascot.projectName + ".mascot"]
+    console.log("Paths:")
+    for (let i = 0; i < mascot.emotions.length; i++) {
+        for (let j = 0; j < mascot.emotions[i].parts.length; j++) {
+            paths.push(mascot.emotions[i].parts[j].sourcePath)
+            console.log(mascot.emotions[i].parts[j].sourcePath)
+        }
+    }
+
+
+    for (const entry of entries) {
+        console.log(`Entry: ${entry.path}`)
+        if (!paths.includes(entry.path)) {
+            removeFile(entry.path).then(() => console.log("Removed junk - " + entry.path))
+        }
+    }
 }
