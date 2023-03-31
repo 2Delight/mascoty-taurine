@@ -50,7 +50,7 @@ jobs:
         run: brew install portaudio
       
       - name: Install LibTorch
-        run: brew install pytorch
+        run: brew install libtorch
 
       - name: Test
         run: cargo test --verbose --verbose
