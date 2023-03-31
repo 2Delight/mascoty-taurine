@@ -1,0 +1,41 @@
+name: Test
+
+on:
+  push:
+    branches: ["master", "ci"]
+  pull_request:
+    branches: ["master", "ci"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Test
+        run: cargo test --verbose --verbose
+        working-directory: src-tauri
+
+  macos:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Test
+        run: cargo test --verbose --verbose
+        working-directory: src-tauri
+
+  windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Test
+        run: cargo test --verbose --verbose
+        working-directory: src-tauri
