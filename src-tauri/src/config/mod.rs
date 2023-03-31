@@ -7,7 +7,7 @@ use tch::CModule;
 
 /// Main app config which contains camera properties and model.
 /// ```
-/// let conf = config::import_config();
+/// let conf = mascoty_taurine::config::import_config();
 /// println!("{:?}", conf);
 /// ```
 pub struct Config {
@@ -25,14 +25,14 @@ impl std::fmt::Debug for Config {
 
 /// Camera config which includes width and height as resolution sides in px and fps as frames per second
 /// ```
-/// let cam_conf = config::CameraConfig {
+/// let cam_conf = mascoty_taurine::config::CameraConfig {
 ///     height: 720,
 ///     width: 1080,
 ///     fps: 30,
 /// };
 /// println!("{:?}", cam_conf);
 /// ```
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq)]
 pub struct CameraConfig {
     pub height: u32,
     pub width: u32,
@@ -41,8 +41,15 @@ pub struct CameraConfig {
 
 /// Imports camera config from config.yaml and model from model.pt
 /// ```
-/// let conf = config::import_config();
-/// println!("{:?}", conf);
+/// let conf = mascoty_taurine::config::import_config();
+/// 
+/// let def_cam = mascoty_taurine::config::CameraConfig {
+///     height: 720,
+///     width: 1280,
+///     fps: 30,
+/// };
+/// 
+/// assert!(conf.camera == def_cam);
 /// ```
 pub fn import_config() -> Config {
     debug!("Deserializing YAML");

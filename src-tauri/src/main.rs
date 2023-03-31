@@ -5,7 +5,7 @@
 
 use mascoty_taurine::commands::*;
 use mascoty_taurine::config::import_config;
-use mascoty_taurine::devices::{get_cams, get_devices, set_cam, set_mike};
+use mascoty_taurine::devices::{get_cams, set_cam, set_mike, Devices};
 use mascoty_taurine::panic_error;
 
 use log::{debug, error, info, warn};
@@ -45,7 +45,7 @@ fn main() {
 
     // Creating devices.
     debug!("Getting devices");
-    let devices = get_devices(conf, cam, mike);
+    let devices = Devices::new(conf, cam, mike);
 
     // Test mascot getting.
     panic_error!(mascoty_taurine::mascot::get_mascot(&devices), "getting mascot");

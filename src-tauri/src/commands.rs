@@ -15,9 +15,11 @@ pub fn get_mascot(state: tauri::State<Devices>) -> Result<mascot::Mascot, String
     }
 }
 
-/// Handler for getting list of available cameras.<br/>
-/// If ok => returns vector of camera names.<br/>
-/// If err => returns string error.<br/>
+/// Handler for getting list of available cameras.
+/// 
+/// If ok => returns vector of camera names.
+/// 
+/// If err => returns string error.
 #[tauri::command]
 pub fn get_cameras() -> Result<Vec<String>, String> {
     debug!("Handler get_cameras has been invoken");
@@ -31,9 +33,11 @@ pub fn get_cameras() -> Result<Vec<String>, String> {
     }
 }
 
-/// Handler which receives index of camera and sets it as chosen.<br/>
-/// If ok => returns nothing.<br/>
-/// If err => returns string error.<br/>
+/// Handler which receives index of camera and sets it as chosen.
+/// 
+/// If ok => returns nothing.
+/// 
+/// If err => returns string error.
 #[tauri::command]
 pub fn select_camera(
     index: usize,
@@ -55,14 +59,16 @@ pub fn select_camera(
     Ok(())
 }
 
-/// Checks if value is in interval.<br/>
+/// Checks if value is in interval.
 fn is_in_interval(value: i32, left: i32, right: i32) -> bool {
     return value > left && value < right;
 }
 
-/// Handler which updates configuration of selected camera.<br/>
-/// If ok => returns nothing.<br/>
-/// If err => returns string error.<br/>
+/// Handler which updates configuration of selected camera.
+/// 
+/// If ok => returns nothing.
+/// 
+/// If err => returns string error.
 #[tauri::command]
 pub fn set_camera_config(conf: CameraConfig, state: tauri::State<Devices>) -> Result<(), String> {
     debug!("Handler set_config has been invoken");
@@ -89,9 +95,11 @@ pub fn set_camera_config(conf: CameraConfig, state: tauri::State<Devices>) -> Re
     }
 }
 
-/// Handler for getting list of available microphones.<br/>
-/// If ok => returns vector of camera names.<br/>
-/// If err => returns string error.<br/>
+/// Handler for getting list of available microphones.
+/// 
+/// If ok => returns vector of camera names.
+/// 
+/// If err => returns string error.
 #[tauri::command]
 pub fn get_microphones(state: tauri::State<PortAudio>) -> Result<Vec<String>, String> {
     match get_mikes(&*state) {
@@ -105,16 +113,18 @@ pub fn get_microphones(state: tauri::State<PortAudio>) -> Result<Vec<String>, St
     }
 }
 
-/// Handler which receives index of microphone and sets it as chosen.<br/>
-/// If ok => returns nothing.<br/>
-/// If err => returns string error.<br/>
+/// Handler which receives index of microphone and sets it as chosen.
+/// 
+/// If ok => returns nothing.
+/// 
+/// If err => returns string error.
 #[tauri::command]
 pub fn select_microphone(
     index: usize,
     pa: tauri::State<PortAudio>,
     state: tauri::State<Devices>,
 ) -> Result<(), String> {
-    state.set_up_microphone(match set_mike(index, &pa) {
+    state.update_microphone(match set_mike(index, &pa) {
         Ok(val) => val,
         Err(err) => return Err(err.to_string()),
     })
