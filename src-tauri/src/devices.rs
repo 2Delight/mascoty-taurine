@@ -6,6 +6,7 @@ use std::sync::{
 };
 // use std::cell::RefCell;
 
+use log::{debug, error, info, warn};
 use nokhwa::{
     pixel_format::RgbFormat,
     utils::{
@@ -14,16 +15,17 @@ use nokhwa::{
     },
 };
 use nokhwa::{query, Camera, NokhwaError};
-
 use portaudio::{stream::Input, DeviceIndex, DeviceInfo, Error, NonBlocking, PortAudio, Stream};
 
-use log::{debug, error, info, warn};
-
+/// Microphone input receiver.
 pub struct Microphone {
     receiver: Receiver<Vec<f32>>,
     stream_: Stream<NonBlocking, Input<f32>>,
 }
 
+/// Devices input receiver.
+///
+/// Mutex is needed to safely get mutable fields from &Devices.
 pub struct Devices {
     pub camera: Mutex<Camera>,
     pub config: Mutex<Config>,
@@ -35,6 +37,18 @@ unsafe impl Sync for Devices {}
 unsafe impl Send for Devices {}
 
 impl Devices {
+    /// Initializes all devices.
+    pub fn new(config: Config, camera: Camera, microphone: Microphone) -> Devices {
+        debug!("Initializing devices");
+
+        Devices {
+            camera: Mutex::new(camera),
+            config: Mutex::new(config),
+            microphone: Mutex::new(microphone),
+        }
+    }
+
+    /// Initializes camera based on the config.
     pub fn set_up_camera(&self, config: &CameraConfig, camera: Camera) -> Result<(), String> {
         info!(
             "Setting the camera №{:?} with config {:?}",
@@ -61,7 +75,31 @@ impl Devices {
         Ok(())
     }
 
-    pub fn set_up_microphone(&self, microphone: Microphone) -> Result<(), String> {
+    /// Updates camera settings based on config.
+    pub fn set_camera_settings(&self, config: &CameraConfig) -> Result<(), NokhwaError> {
+        let mut cam = self.camera.lock().unwrap();
+
+        cam.set_resolution(Resolution {
+            width_x: config.width,
+            height_y: config.height,
+        })?;
+        cam.set_frame_rate(config.fps)?;
+
+        Ok(())
+    }
+
+    /// Gets index of currently selected camera.
+    pub fn get_camera_index(&self) -> Result<CameraIndex, String> {
+        debug!("Sending camera index");
+
+        match self.camera.lock() {
+            Ok(val) => Ok(val.index().clone()),
+            Err(_) => Err("Cannot get value from camera mutex".to_string()),
+        }
+    }
+
+    /// Updates microphone based on passed new one.
+    pub fn update_microphone(&self, microphone: Microphone) -> Result<(), String> {
         info!("Setting the microphone");
 
         let mut mike_guard = match self.microphone.lock() {
@@ -75,27 +113,7 @@ impl Devices {
         Ok(())
     }
 
-    pub fn get_camera_index(&self) -> Result<CameraIndex, String> {
-        debug!("Sending camera index");
-
-        match self.camera.lock() {
-            Ok(val) => Ok(val.index().clone()),
-            Err(_) => Err("Cannot get value from camera mutex".to_string()),
-        }
-    }
-
-    pub fn set_camera_settings(&self, config: &CameraConfig) -> Result<(), NokhwaError> {
-        let mut cam = self.camera.lock().unwrap();
-
-        cam.set_resolution(Resolution {
-            width_x: config.width,
-            height_y: config.height,
-        })?;
-        cam.set_frame_rate(config.fps)?;
-
-        Ok(())
-    }
-
+    /// Gets current microphone volume.
     pub fn get_volume(&self) -> u8 {
         const MAXIMUM_VOLUME: f32 = 25000f32;
 
@@ -117,11 +135,14 @@ impl Devices {
     }
 }
 
+/// Gets list of available microphones.
 pub fn get_mikes(pa: &PortAudio) -> Result<Vec<(DeviceIndex, DeviceInfo)>, Error> {
     let devices: Vec<(portaudio::DeviceIndex, portaudio::DeviceInfo)> = pa
         .devices()?
+        // Filters working devices.
         .filter(|device| device.is_ok())
         .map(|device| device.unwrap())
+        // Filters microphones.
         .filter(|device| device.1.max_input_channels > 0)
         .collect();
 
@@ -132,6 +153,7 @@ pub fn get_mikes(pa: &PortAudio) -> Result<Vec<(DeviceIndex, DeviceInfo)>, Error
     Ok(devices)
 }
 
+/// Initializes microphone based on index.
 pub fn set_mike(index: usize, pa: &PortAudio) -> Result<Microphone, Error> {
     const CHANNELS_NUMBER: i32 = 1;
     const FRAMES_NUMBER_PER_BUFFER: u32 = 256;
@@ -174,6 +196,7 @@ pub fn set_mike(index: usize, pa: &PortAudio) -> Result<Microphone, Error> {
     })
 }
 
+/// Gets list of available cameras.
 pub fn get_cams() -> Result<Vec<CameraInfo>, NokhwaError> {
     debug!("Getting camera list");
 
@@ -187,6 +210,7 @@ pub fn get_cams() -> Result<Vec<CameraInfo>, NokhwaError> {
     Ok(cams)
 }
 
+/// Initializes camera based on index.
 pub fn set_cam(index: CameraIndex, config: &CameraConfig) -> Result<Camera, NokhwaError> {
     info!("Setting the camera №{:?} with config {:?}", index, config);
 
@@ -205,14 +229,4 @@ pub fn set_cam(index: CameraIndex, config: &CameraConfig) -> Result<Camera, Nokh
     camera.open_stream()?;
 
     Ok(camera)
-}
-
-pub fn get_devices(config: Config, camera: Camera, microphone: Microphone) -> Devices {
-    debug!("Initializing devices");
-
-    Devices {
-        camera: Mutex::new(camera),
-        config: Mutex::new(config),
-        microphone: Mutex::new(microphone),
-    }
 }

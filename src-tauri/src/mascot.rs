@@ -4,10 +4,10 @@ use crate::emotions::Emotion;
 
 use log::{debug, error, info, warn};
 use nokhwa::{pixel_format::*, NokhwaError};
-use rand::Rng;
 use serde::{Deserialize, Serialize};
 use tch::Tensor;
 
+/// Mascot properties.
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Mascot {
     pub emotion: Emotion,
@@ -16,13 +16,15 @@ pub struct Mascot {
     pub voice: u8,
 }
 
-fn to_wb(tensor: Tensor) -> Tensor {
+/// Transforms RGB image tensor to BW.
+fn to_bw(tensor: Tensor) -> Tensor {
     (tensor.index(&[Some(Tensor::of_slice(&[0i64])), None, None])
         + tensor.index(&[Some(Tensor::of_slice(&[1i64])), None, None])
         + tensor.index(&[Some(Tensor::of_slice(&[2i64])), None, None]))
         / 3f64
 }
 
+/// Gets index for largest value in tensor.
 fn argmax(tensor: &Vec<f64>) -> u8 {
     let mut index = 0u8;
 
@@ -35,6 +37,7 @@ fn argmax(tensor: &Vec<f64>) -> u8 {
     index
 }
 
+/// Gets properties of mascot based on device input.
 pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     debug!("Getting input");
     debug!("Getting camera instance");
@@ -81,7 +84,7 @@ pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     //     .unsqueeze(0)
     //     .apply(model);
 
-    let output = to_wb(tch::vision::imagenet::load_image_and_resize224("img.jpg").unwrap())
+    let output = to_bw(tch::vision::imagenet::load_image_and_resize224("img.jpg").unwrap())
         .unsqueeze(0)
         .apply(model)
         .squeeze();

@@ -1,6 +1,11 @@
 /// Macro wich checks if there's an error, logs info and returns result if successful
 /// ```
-/// let ans = check_error!(ans_res, "message you want to pass");
+/// use log::{debug, error, info, warn};
+/// 
+/// let res: Result<(), ()> = Result::Ok(());
+/// let ans = mascoty_taurine::check_error!(res, "message you want to pass");
+/// 
+/// assert!(ans == ());
 /// ```
 #[macro_export]
 macro_rules! check_error {
@@ -20,7 +25,12 @@ macro_rules! check_error {
 
 /// Macro wich panics if there's an error, logs info and returns result if successful
 /// ```
-/// let ans = panic_error!(ans_res, "message you want to pass");
+/// use log::{debug, error, info, warn};
+/// 
+/// let res: Result<(), ()> = Result::Ok(());
+/// let ans = mascoty_taurine::panic_error!(res, "message you want to pass");
+/// 
+/// assert!(ans == ());
 /// ```
 #[macro_export]
 macro_rules! panic_error {
@@ -40,9 +50,18 @@ macro_rules! panic_error {
 
 /// HashMap initialization macro.
 /// ```
-/// let d = init_dict!{
-///     "test".to_string() => "Test",
-/// }
+/// use log::{debug, error, info, warn};
+/// 
+/// let d = mascoty_taurine::init_dict!{
+///     "test0".to_string() => "Test0",
+///     "test1".to_string() => "Test1",
+/// };
+/// 
+/// let mut hm = std::collections::HashMap::<String, &str>::new();
+/// hm.insert("test0".to_string(), "Test0");
+/// hm.insert("test1".to_string(), "Test1");
+/// 
+/// assert!(d == hm);
 /// ```
 #[macro_export]
 macro_rules! init_dict {
