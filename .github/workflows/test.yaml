@@ -35,6 +35,9 @@ jobs:
 
           sudo ldconfig
       
+      - name: Find Library
+        run: locate libtorch_cpu
+      
       - name: Install LibTorch
         run: |
           wget https://download.pytorch.org/libtorch/nightly/cpu/libtorch-shared-with-deps-latest.zip
