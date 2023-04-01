@@ -1,5 +1,5 @@
 import { Modal } from "@mui/material";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { BlockPicker, CirclePicker, SketchPicker } from "react-color";
 import { useDispatch } from "react-redux";
 import { MascotContext } from "../../App";
@@ -15,8 +15,13 @@ export default function MaskotBackgroundColorPicker() {
   const [color, setColor] = React.useState("black")
 
   // const dispatch = useDispatch()
-
   const mascot = useContext(MascotContext);
+
+  useEffect(() => {
+    if (mascot) {
+      setColor(mascot.mascot.bgColor)
+    }
+  }, [mascot?.mascot])
 
   return (
     <div style={{
@@ -46,7 +51,8 @@ export default function MaskotBackgroundColorPicker() {
         minWidth: 17,
         borderRadius: "6px",
         borderColor: "black",
-        border: "2px solid black"
+        border: "2px solid black",
+        cursor: "pointer"
       }} onClick={handleOpen}>
       </div>
       <Modal
@@ -68,7 +74,7 @@ export default function MaskotBackgroundColorPicker() {
             presetColors={['#D0021B', '#F5A623', '#F8E71C', '#8B572A', '#7ED321', '#417505', '#BD10E0', '#9013FE', '#4A90E2', '#50E3C2', '#B8E986', '#000000', '#4A4A4A', '#9B9B9B', '#FFFFFF']}
             color={color}
             onChangeComplete={(clr) => {
-              setColor(clr.hex)
+              // setColor(clr.hex)
               if (mascot) {
                 mascot.mascot = structuredClone(mascot.mascot)
                 mascot.mascot.bgColor = clr.hex

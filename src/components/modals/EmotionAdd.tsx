@@ -1,14 +1,16 @@
-import { MenuItem, Modal, Select, SelectChangeEvent } from "@mui/material";
+import { MenuItem, Modal, Select, SelectChangeEvent, Slide } from "@mui/material";
 import React, { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import { BlockPicker, CirclePicker, SketchPicker } from "react-color";
 import { useDispatch } from "react-redux";
 import { MascotContext } from "../../App";
-import { interactGray, menuGray } from "../../utils/Colors";
+import { contextMenuGray, focusBlue, interactGray, menuGray } from "../../utils/Colors";
 import { descriptEmotion, descriptPart } from "../../utils/EDescriptor";
 import { EEmotion } from "../logic/EEmotion";
 import { EPart } from "../logic/EPart";
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import { open } from "@tauri-apps/api/dialog"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // import { changeColor } from "../../utils/redux_state/BackgroundSlice";
 
 
@@ -54,143 +56,157 @@ export default function EmotionAdd({ open, setOpen, redact }: { open: boolean, s
       aria-describedby="modal-modal-description"
       disableAutoFocus={true}
     >
-      <div style={{
-        position: "absolute",
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        backgroundColor: interactGray,
-        borderRadius: 30,
-        width: "30%",
-        // height: "40%",
-        minWidth: 300,
-        padding: 40,
-        flexDirection: "column",
-      }}>
-        <div style={{ flexDirection: "row", display: "flex", marginBottom: 10 }}>
-          <a style={{ textAlign: "left", color: "white", width: 100 }}>
-            Name
-          </a>
-          <input style={{ backgroundColor: menuGray, flex: 1 }} placeholder="Name your emotion..." value={name} onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            setName(e.target.value);
+      <Slide direction="down" in={open} mountOnEnter unmountOnExit style={{ transform: 'translate(-50%, -50%)' }}>
+        <div
+          style={{
+            position: "absolute",
+            top: '35%',
+            left: 'calc(50vw - 200px)',
+
+            backgroundColor: contextMenuGray,
+            border: "solid",
+            borderWidth: 3,
+            borderColor: focusBlue,
+            padding: 20,
+            borderRadius: 30,
+            width: "30%",
+            maxWidth: 400,
+            minWidth: 300,
+            flexDirection: "column",
+            userSelect: "none",
           }}>
-          </input>
-        </div>
-        <div style={{ flexDirection: "row", display: "flex", marginBottom: 10 }}>
-          <a style={{ textAlign: "left", color: "white", width: 100 }}>
-            Designation
-          </a>
-          <div style={{ borderRadius: 4, borderWidth: 10, padding: 2, borderColor: "white", backgroundColor: menuGray, flex: 1 }}>
-            <Select
-              value={designation}
-              onChange={handleChange}
-              displayEmpty
-            >
-              {<MenuItem value={0}>
-                <div style={{ flexDirection: "row", display: "flex", width: "100%" }}>
-                  <a style={{ color: "white", textAlign: "right", alignSelf: "center" }}>
-                    Neutral
-                  </a>
-                  <div style={{ flex: 1 }} />
-                  <img style={{ height: 20, aspectRatio: 1 }} src={descriptEmotion(EEmotion.default)} />
-                </div>
-              </MenuItem>
-              }
-              {<MenuItem value={1}>
-                <div style={{ flexDirection: "row", display: "flex", width: "100%" }}>
-                  <a style={{ color: "white", textAlign: "right", alignSelf: "center" }}>
-                    Anger
-                  </a>
-                  <div style={{ flex: 1 }} />
-                  <img style={{ height: 20, aspectRatio: 1 }} src={descriptEmotion(EEmotion.angry)} />
-                </div>
-              </MenuItem>
-              }
-              {<MenuItem value={2}>
-                <div style={{ flexDirection: "row", display: "flex", width: "100%" }}>
-                  <a style={{ color: "white", textAlign: "right", alignSelf: "center" }}>
-                    Disgust
-                  </a>
-                  <div style={{ flex: 1 }} />
-                  <img style={{ height: 20, aspectRatio: 1 }} src={descriptEmotion(EEmotion.disgust)} />
-                </div>
-              </MenuItem>
-              }
-              {<MenuItem value={3}>
-                <div style={{ flexDirection: "row", display: "flex", width: "100%" }}>
-                  <a style={{ color: "white", textAlign: "right", alignSelf: "center" }}>
-                    Fear
-                  </a>
-                  <div style={{ flex: 1 }} />
-                  <img style={{ height: 20, aspectRatio: 1 }} src={descriptEmotion(EEmotion.fear)} />
-                </div>
-              </MenuItem>
-              }
-              {<MenuItem value={4}>
-                <div style={{ flexDirection: "row", display: "flex", width: "100%" }}>
-                  <a style={{ color: "white", textAlign: "right", alignSelf: "center" }}>
-                    Happiness
-                  </a>
-                  <div style={{ flex: 1 }} />
-                  <img style={{ height: 20, aspectRatio: 1 }} src={descriptEmotion(EEmotion.happy)} />
-                </div>
-              </MenuItem>
-              }
-              {<MenuItem value={5}>
-                <div style={{ flexDirection: "row", display: "flex", width: "100%" }}>
-                  <a style={{ color: "white", textAlign: "right", alignSelf: "center" }}>
-                    Sadness
-                  </a>
-                  <div style={{ flex: 1 }} />
-                  <img style={{ height: 20, aspectRatio: 1 }} src={descriptEmotion(EEmotion.sad)} />
-                </div>
-              </MenuItem>
-              }
-              {<MenuItem value={6}>
-                <div style={{ flexDirection: "row", display: "flex", width: "100%" }}>
-                  <a style={{ color: "white", textAlign: "right", alignSelf: "center" }}>
-                    Surprise
-                  </a>
-                  <div style={{ flex: 1 }} />
-                  <img style={{ height: 20, aspectRatio: 1 }} src={descriptEmotion(EEmotion.surprise)} />
-                </div>
-              </MenuItem>
-              }
-            </Select>
+          <div style={{ flexDirection: "row", display: "flex", marginBottom: 10 }}>
+            <a style={{ textAlign: "left", color: "white", width: 100 }}>
+              Name
+            </a>
+            <input style={{ backgroundColor: menuGray, flex: 1 }} placeholder="Name your emotion..." value={name} onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              setName(e.target.value);
+            }}>
+            </input>
           </div>
-        </div>
-        <button style={{ flex: 1, width: "100%" }} onClick={() => {
-          if (designation !== "" && name !== "") {
-            console.log(EPart[Number(designation)])
-            if (mascot) {
-              mascot.mascot = structuredClone(mascot.mascot)
-              if (redact) {
-                mascot.mascot.emotions[mascot.mascot.selectedEmotion] = {
-                  name: name,
-                  visibility: true,
-                  parts: mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts,
-                  emotion: Number(designation),
+          <div style={{ flexDirection: "row", display: "flex", marginBottom: 10 }}>
+            <a style={{ textAlign: "left", color: "white", width: 100 }}>
+              Designation
+            </a>
+            <div style={{ borderRadius: 4, borderWidth: 10, flex: 1 }}>
+              <Select
+                value={designation}
+                onChange={handleChange}
+                displayEmpty
+              >
+                {<MenuItem value={0}>
+                  <div style={{ flexDirection: "row", display: "flex", width: "100%" }}>
+                    <a style={{ color: "white", textAlign: "right", alignSelf: "center" }}>
+                      Neutral
+                    </a>
+                    <div style={{ flex: 1 }} />
+                    <img style={{ height: 20, aspectRatio: 1 }} src={descriptEmotion(EEmotion.default)} />
+                  </div>
+                </MenuItem>
+                }
+                {<MenuItem value={1}>
+                  <div style={{ flexDirection: "row", display: "flex", width: "100%" }}>
+                    <a style={{ color: "white", textAlign: "right", alignSelf: "center" }}>
+                      Anger
+                    </a>
+                    <div style={{ flex: 1 }} />
+                    <img style={{ height: 20, aspectRatio: 1 }} src={descriptEmotion(EEmotion.angry)} />
+                  </div>
+                </MenuItem>
+                }
+                {<MenuItem value={2}>
+                  <div style={{ flexDirection: "row", display: "flex", width: "100%" }}>
+                    <a style={{ color: "white", textAlign: "right", alignSelf: "center" }}>
+                      Disgust
+                    </a>
+                    <div style={{ flex: 1 }} />
+                    <img style={{ height: 20, aspectRatio: 1 }} src={descriptEmotion(EEmotion.disgust)} />
+                  </div>
+                </MenuItem>
+                }
+                {<MenuItem value={3}>
+                  <div style={{ flexDirection: "row", display: "flex", width: "100%" }}>
+                    <a style={{ color: "white", textAlign: "right", alignSelf: "center" }}>
+                      Fear
+                    </a>
+                    <div style={{ flex: 1 }} />
+                    <img style={{ height: 20, aspectRatio: 1 }} src={descriptEmotion(EEmotion.fear)} />
+                  </div>
+                </MenuItem>
+                }
+                {<MenuItem value={4}>
+                  <div style={{ flexDirection: "row", display: "flex", width: "100%" }}>
+                    <a style={{ color: "white", textAlign: "right", alignSelf: "center" }}>
+                      Happiness
+                    </a>
+                    <div style={{ flex: 1 }} />
+                    <img style={{ height: 20, aspectRatio: 1 }} src={descriptEmotion(EEmotion.happy)} />
+                  </div>
+                </MenuItem>
+                }
+                {<MenuItem value={5}>
+                  <div style={{ flexDirection: "row", display: "flex", width: "100%" }}>
+                    <a style={{ color: "white", textAlign: "right", alignSelf: "center" }}>
+                      Sadness
+                    </a>
+                    <div style={{ flex: 1 }} />
+                    <img style={{ height: 20, aspectRatio: 1 }} src={descriptEmotion(EEmotion.sad)} />
+                  </div>
+                </MenuItem>
+                }
+                {<MenuItem value={6}>
+                  <div style={{ flexDirection: "row", display: "flex", width: "100%" }}>
+                    <a style={{ color: "white", textAlign: "right", alignSelf: "center" }}>
+                      Surprise
+                    </a>
+                    <div style={{ flex: 1 }} />
+                    <img style={{ height: 20, aspectRatio: 1 }} src={descriptEmotion(EEmotion.surprise)} />
+                  </div>
+                </MenuItem>
+                }
+              </Select>
+            </div>
+          </div>
+
+          <div className="msct-button" style={{ marginTop: 20, padding: 3, borderRadius: 10, color: menuGray }}
+            onClick={() => {
+              if (designation !== "" && name !== "") {
+                console.log(EPart[Number(designation)])
+                if (mascot) {
+                  mascot.mascot = structuredClone(mascot.mascot)
+                  if (redact) {
+                    mascot.mascot.emotions[mascot.mascot.selectedEmotion] = {
+                      name: name,
+                      visibility: true,
+                      parts: mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts,
+                      emotion: Number(designation),
+                    }
+                  } else {
+                    mascot.mascot.emotions.push({
+                      name: name,
+                      visibility: true,
+                      parts: [],
+                      emotion: Number(designation),
+                    })
+                    mascot.mascot.selectedEmotion = mascot.mascot.emotions.length - 1
+                    console.log("Selected Emotion after ADDITION: " + mascot.mascot.selectedEmotion)
+                  }
+                  mascot.setMascot(mascot.mascot)
+                  handleClose()
                 }
               } else {
-                mascot.mascot.emotions.push({
-                  name: name,
-                  visibility: true,
-                  parts: [],
-                  emotion: Number(designation),
-                })
-                mascot.mascot.selectedEmotion = mascot.mascot.emotions.length-1
-                console.log("Selected Emotion after ADDITION: " + mascot.mascot.selectedEmotion )
+                if (name === "") {
+                  toast.error("Name's empty")
+                }
+                if (designation === "") {
+                  toast.error("Designation's not selected")
+                }
               }
-              mascot.setMascot(mascot.mascot)
-              handleClose()
-            }
-          } else {
-            alert("Can't Add Emotion Due To Your Irresponsability")
-          }
-        }}>
-          Add Part
-        </button>
-      </div>
+            }}>
+            Add Part
+          </div>
+        </div>
+      </Slide>
     </Modal>
   );
 }

@@ -1,30 +1,89 @@
-import { useContext } from "react";
+import { Slide } from "@mui/material";
+import { writeBinaryFile, writeFile } from "@tauri-apps/api/fs";
+import { atob } from "buffer";
+import html2canvas from "html2canvas";
+import { createRef, useCallback, useContext, useRef, useState } from "react";
 import { useSelector } from "react-redux"
 import { MascotContext } from "../../App";
-import { useAppDispatch, useAppSelector } from "../../utils/redux_state/StoreHooks"
+import { contextMenuGray, menuGray } from "../../utils/Colors";
 import IPart from "../logic/IPart";
 import MascotPart from "./MascotPart";
 
 export default function MascotCanvas() {
-
-  // const color = useAppSelector((state) => state.background.color)
-  // const dispatch = useAppDispatch()
+  const reeeef = createRef<HTMLDivElement>()
 
   const mascot = useContext(MascotContext);
 
-  return <div className="mascotPlace" style={{
+  const [inFocus, setInFocus] = useState(false)
+
+  const zoomIn = () => {
+    if (mascot) {
+      let a = structuredClone(mascot.mascot)
+      a.zoom += 5
+      mascot.setMascot(a)
+      console.log("ZOOM: " + a.zoom)
+    }
+  }
+
+  const zoomOut = () => {
+    if (mascot) {
+      console.log(mascot.mascot)
+      let a = structuredClone(mascot.mascot)
+      a.zoom -= 5
+      mascot.setMascot(a)
+      console.log("ZOOM: " + a.zoom)
+    }
+  }
+
+  return <div style={{
     flex: 10,
-    // height: "100%",
-    background: mascot?.mascot.bgColor,
-    overflow: "auto",
-    margin: 10,
-    borderRadius: "10px 0 0 0 ",
-    position: "relative",
-    // aspectRatio: 1
-  }}
-  >
-    {mascot && mascot.mascot.emotions.length > 0 && mascot.mascot.emotions[mascot.mascot.selectedEmotion]?.parts?.map((c, i) => {
-      return c.visibility && <MascotPart partIndex={i} key={i + c.sourcePath + c.name} />
-    })}
+    // overflow: "auto",
+    // margin: 10,
+    paddingTop: 10,
+    paddingLeft: 10,
+    position: "relative"
+  }} onMouseEnter={() => setInFocus(true)}
+    onMouseLeave={() => setInFocus(false)}>
+    <div className="mascotPlace" ref={reeeef} style={{
+      // flex: 10,
+      overflow: "auto",
+      height: "100%",
+      // margin: 10,
+      borderRadius: "10px 0 0 0 ",
+      background: mascot?.mascot.bgColor,
+      // 
+    }}
+
+    >
+      <div className="canvas"
+        style={{
+          position: "relative",
+          // margin: 10,
+        }}>
+        {mascot && mascot.mascot.emotions.length > 0 && mascot.mascot.emotions[mascot.mascot.selectedEmotion]?.parts?.map((c, i) => {
+          return c.visibility && <MascotPart partIndex={i} key={i + c.sourcePath + c.name} useFocus={inFocus} />
+        })}
+      </div>
+    </div>
+
+    <Slide direction="up" in={inFocus} mountOnEnter unmountOnExit style={{ transform: 'translateX(100px)', position: "absolute", left: "calc(50% - 110px)", bottom: 30, }}>
+      <div style={{ userSelect: "none", opacity: 0.8, position: "absolute", flexDirection: "row", display: "flex" }}>
+        <div style={{ marginRight: 5, cursor: "pointer", fontSize: 16, padding: 10, width: 24, borderRadius: 30, backgroundColor: contextMenuGray, color: menuGray }}
+          onClick={() => {
+            zoomIn()
+          }}>
+          +
+        </div>
+        <div style={{ marginRight: 5, fontSize: 16, padding: 10, minWidth: 100, borderRadius: 30, backgroundColor: contextMenuGray, color: menuGray }}>
+          Zoom: {(mascot && mascot.mascot) ? Math.floor(mascot.mascot.zoom) : ""}%
+        </div>
+        <div style={{ marginRight: 5, cursor: "pointer", fontSize: 16, padding: 10, width: 24, borderRadius: 30, backgroundColor: contextMenuGray, color: menuGray }}
+          onClick={() => {
+            zoomOut()
+          }}>
+          -
+        </div>
+      </div>
+    </Slide>
   </div>
 }

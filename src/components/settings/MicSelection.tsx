@@ -2,19 +2,21 @@ import KeyboardVoiceTwoToneIcon from '@mui/icons-material/KeyboardVoiceTwoTone';
 import { SelectChangeEvent, Select, MenuItem } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { menuGray } from '../../utils/Colors';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // function useVolumeLevel() {
 
 //     const [level, setLevel] = useState(0);
 //     const [isRecording, setIsRecording] = useState(false)
 //     const [max, setMax] = useState(0)
-  
+
 //     const stopRecording = () => {
 //       setLevel(0)
 //       window.soundMeter.stop()
 //       setIsRecording(false)
 //     }
-  
+
 //     const startRecording = () => {
 //       const constraints = window.constraints = {
 //         audio: true,
@@ -24,18 +26,18 @@ import { menuGray } from '../../utils/Colors';
 //         window.AudioContext = window.AudioContext || window.webkitAudioContext;
 //         window.audioContext = new AudioContext();
 //       } catch (e) {
-//         alert('Web Audio API not supported.');
+//         toast.error('Web Audio API not supported.');
 //       }
-  
+
 //       navigator.mediaDevices
 //         .getUserMedia(constraints)
 //         .then(handleSuccess)
 //         .catch(handleError);
-  
+
 //       setIsRecording(true)
 //     }
-  
-  
+
+
 //     const updateVolume = () => {
 //       if (window.soundMeter && isRecording) {
 //         let v = window.soundMeter.instant * 200
@@ -43,16 +45,16 @@ import { menuGray } from '../../utils/Colors';
 //         setMax(Math.max(max, level))
 //       }
 //     }
-  
-  
+
+
 //     useEffect(() => {
 //       let intervalId: string | number | NodeJS.Timeout | undefined
 //       intervalId = setInterval(updateVolume, 50)
-  
-  
+
+
 //       return () => clearInterval(intervalId);
 //     });
-  
+
 //     return [startRecording, stopRecording, level];
 //   }
 
@@ -141,22 +143,32 @@ export default function MicSelection() {
         }
     })
 
-    return <div style={{ display: "flex", flexDirection: "row", borderRadius: 10, backgroundColor: menuGray, justifyContent: "center", alignItems: "center", flex: 1, margin: 4 }}>
+    return <div
+        style={{
+            display: "flex",
+            flexDirection: "row",
+            borderRadius: 10,
+            backgroundColor: menuGray,
+            justifyContent: "center",
+            alignItems: "center",
+            flex: 1,
+            margin: 4
+        }}>
         <KeyboardVoiceTwoToneIcon className="dumbIcon" />
-        <div style={{ flex: 4 }}>
-            <Select
-                value={age}
-                onChange={handleChange}
-                displayEmpty
-            >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-            </Select>
-        </div>
-        <button onClick={() => {setUga(getMicrophoneVolume)}}>
+        <div style={{ flex: 10 }} />
+        <Select
+            style={{ maxWidth: 160, minWidth: 160 }}
+            value={age}
+            onChange={handleChange}
+            displayEmpty
+        >
+            <MenuItem value={10}>Ten</MenuItem>
+            <MenuItem value={20}>Twenty</MenuItem>
+            <MenuItem value={30}>Thirty</MenuItem>
+        </Select>
+        {/* <button onClick={() => {setUga(getMicrophoneVolume)}}>
             {uga}
-        </button>
+        </button> */}
         {/* <a>{uga}</a>
         <button onClick={()=> {
             setUga(getMicrophoneVolume())

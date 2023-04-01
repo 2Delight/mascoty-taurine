@@ -18,24 +18,34 @@ export default function CamSelection() {
             .then((response: any) => aboba = response)
             .then(() => {
                 setCams(aboba)
-                setCamera(aboba.length > 0? aboba[0]: '')
+                setCamera(aboba.length > 0 ? aboba[0] : '')
             })
     }, [])
 
 
-    return <div style={{ display: "flex", flexDirection: "row", borderRadius: 10, backgroundColor: menuGray, justifyContent: "center", alignItems: "center", flex: 1, margin: 4 }}>
+    return <div
+        style={{
+            display: "flex",
+            flexDirection: "row",
+            borderRadius: 10,
+            backgroundColor: menuGray,
+            justifyContent: "center",
+            alignItems: "center",
+            flex: 1,
+            margin: 4
+        }}>
         <CameraAltTwoToneIcon className="dumbIcon" />
-        <div style={{ flex: 4 }}>
-            <Select
-                value={camera}
-                onChange={handleChange}
-                displayEmpty
-            >
-                {cams.map((c, i) =>
-                    <MenuItem key={i} value={c}>{c}</MenuItem>
-                )}
+        <div style={{ flex: 10 }} />
+        <Select
+            style={{ maxWidth: 160, minWidth:160 }}
+            value={camera}
+            onChange={handleChange}
+            displayEmpty
+        >
+            {cams.map((c, i) =>
+                <MenuItem key={i} value={c}>{c}</MenuItem>
+            )}
 
-            </Select>
-        </div>
+        </Select>
     </div>
 }

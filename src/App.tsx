@@ -1,22 +1,31 @@
-import { createContext, useMemo, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 
-import { ThemeProvider } from "@mui/material";
+import { Slide, ThemeProvider } from "@mui/material";
 import EmotionsSelection from "./components/emotions/EmotionsSelection";
 import MaskotBackgroundColorPicker from "./components/settings/BackgroundColorPicker";
 import MicMinMaxDisplay from "./components/settings/MicMinMaxDisplay";
 import ShakeSettings from "./components/settings/ShakeSettings";
 import MicSelection from "./components/settings/MicSelection";
 import CamSelection from "./components/settings/CamSelection";
-import FPSSElection from "./components/settings/FPSSelection";
 import MascotCanvas from "./components/mascot/MascotCanvas";
 import { theme } from "./utils/MuiTheme";
 import PartsSelection from "./components/parts/PartsSelection";
 import IMascot from "./components/logic/IMascot";
-import { EEmotion } from "./components/logic/EEmotion";
-import { ThemeContext } from "@emotion/react";
-import { EPart } from "./components/logic/EPart";
+import Projects from "./Projects";
+import { DummyMascot } from "./utils/DummyMascot";
+import saveMascot from "./utils/Save";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { backgroundGray, contextMenuGray, focusBlue, interactActiveGray, interactActiveHoverGray, interactGray, menuGray } from "./utils/Colors";
+import logo from "./assets/mascoty_logo_inline.png"
+import up from "./assets/parts-icons/up.svg"
+import { isRegistered, register, registerAll } from '@tauri-apps/api/globalShortcut';
+import Slider from "./components/settings/Slider";
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+// import { CreateFiles } from "./utils/Router";
+import ShadowCanvas from "./components/mascot/ShadowCanvas";
 
 
 export const MascotContext = createContext<{
@@ -24,142 +33,198 @@ export const MascotContext = createContext<{
   setMascot: React.Dispatch<React.SetStateAction<IMascot>>
 } | null>(null);
 
+export const ProjectContext = createContext<{
+  project: IMascot,
+  setProject: React.Dispatch<React.SetStateAction<IMascot>>
+} | null>(null);
+
+
 export default function App() {
-  const [mascot, setMascot] = useState<IMascot>({
-    blink: false,
-    emotion: EEmotion.default,
-    lips: false,
-    voice: "",
-    emotions: [
-      {
-        name: "abiba",
-        visibility: true,
-        parts: [
-        ],
-        emotion: EEmotion.happy,
-      },
-      {
-        name: "robomuzhikh",
-        visibility: false,
-        parts: [{
-          name: "Eyes_C",
-          visibility: true,
-          sourcePath: "/pics/eyes_c.png",
-          positionX: 100,
-          positionY: 100,
-          height: 100,
-          width: 100,
-          type: EPart.eyesClosed
-        },
-        {
-          name: "Eyes_O",
-          visibility: true,
-          sourcePath: "/pics/eyes_o.png",
-          positionX: 0,
-          positionY: 0,
-          height: 100,
-          width: 100,
-          type: EPart.eyesOpened
-        },
-        {
-          name: "Face",
-          visibility: true,
-          sourcePath: "/pics/face.png",
-          positionX: 0,
-          positionY: 0,
-          height: 100,
-          width: 100,
-          type: EPart.face
-        },
-        {
-          name: "Mouth_C",
-          visibility: true,
-          sourcePath: "/pics/mouth_c.png",
-          positionX: 0,
-          positionY: 0,
-          height: 100,
-          width: 100,
-          type: EPart.mouthClosed
-        },
-        {
-          name: "Mouth_O",
-          visibility: true,
-          sourcePath: "/pics/mouth_o.png",
-          positionX: 0,
-          positionY: 0,
-          height: 100,
-          width: 100,
-          type: EPart.mouthOpened
-        },
-        ],
-        emotion: EEmotion.angry,
-      },
-    ],
-    bgColor: "black",
-    selectedEmotion: 0,
-    selectedPart: 0,
-  });
+  const [selecting, setSelecting] = useState(true)
+  const [mascot, setMascot] = useState<IMascot>(DummyMascot);
+  const [contextVisible, setContextVisible] = useState(false)
+
+  const [broadcasting, setBroadcasting] = useState(false)
 
   const value = useMemo(
     () => ({ mascot, setMascot }),
     [mascot]
   );
 
+  // useEffect(() => {
+  //   loadShortcuts()
+  // }, [])
+
+  // const zoomIn = () => {
+  //   console.log(value.mascot)
+  //   let a = structuredClone(value.mascot)
+  //   a.zoom = (Math.floor(a.zoom * 100) + 5) / 100
+  //   setMascot(a)
+  //   console.log("ZOOM: " + a.zoom)
+  // }
+
+  // const zoomOut = () => {
+  //   console.log(value.mascot)
+  //   let a = structuredClone(value.mascot)
+  //   a.zoom = (Math.floor(a.zoom * 100) - 5) / 100
+  //   setMascot(a)
+  //   console.log("ZOOM: " + a.zoom)
+  // }
+
+  // const loadShortcuts = async () => {
+  //   if (!(await isRegistered("CommandOrControl+Plus")) && !(await isRegistered("CommandOrControl+-"))) {
+  //     register('CommandOrControl+Plus', zoomIn)
+  //     register('CommandOrControl+-', zoomOut)
+  //     console.log("added shortcuts")
+  //   }
+  // }
+
   return (
     <ThemeProvider theme={theme}>
       <MascotContext.Provider value={value}>
-        <div className="container" style={{
-          margin: 0
-        }}>
-          <div className="main" style={{
-            height: "100vh"
+        <ToastContainer
+          position="bottom-center"
+          autoClose={1000}
+          hideProgressBar
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark" />
+        {selecting ? <Projects exit={setSelecting} /> :
+          <div className="container" style={{
+            margin: 0
           }}>
-            <div className="emotionsNparts" style={{
-              justifyContent: "center",
-              overflow: "block",
-              display: "flex",
-              flexDirection: "column",
-              flex: 1,
-            }}>
-              <EmotionsSelection />
-              <PartsSelection />
-            </div>
 
-            <div className="settings" style={{
-              justifyContent: "center",
-              minWidth: 400,
-              flex: 0,
-            }}>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <div style={{ display: "flex", flexDirection: "row" }}>
-                  <MicSelection />
-                  <CamSelection />
+            <KeyboardArrowUpIcon className="selector"
+              onClick={() => {
+                setContextVisible(true)
+
+              }}
+            />
+
+            {/* <img className="selector" src={up} */}
+            <Slide in={contextVisible} direction="right" unmountOnExit timeout={200}>
+              <div
+                // className="context-menu" 
+                style={{
+                  position: "absolute", height: "100vh", width: 230, left: 0,
+                  zIndex: 10,
+                  // borderRightColor: focusBlue,
+                  // borderRightWidth: 5,
+                  borderRight: "2px solid " + focusBlue,
+                  backgroundColor: contextMenuGray,
+                  // borderRight: "solid",
+                  // borderRightWidth: 3, borderColor: interactActiveHoverGray,
+                }}
+                onMouseLeave={() => setContextVisible(false)}
+              >
+                <img src={logo} style={{ width: 200, alignSelf: "center", margin: 10, }} />
+                <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
+                  onClick={() => {
+                    saveMascot(mascot).then(() => toast.success("Project saved")).catch((e) => toast.warn("Project can not be saved due to: " + e))
+                  }}>
+                  Save
+                </div>
+                <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
+                  onClick={() => {
+                    setSelecting(true)
+                    setContextVisible(false)
+                  }}>
+                  Go To Projects
                 </div>
               </div>
+            </Slide>
 
-              <div style={{ display: "flex", flexDirection: "row" }}>
-                <ShakeSettings />
-                <FPSSElection />
+
+            <div className="main" style={{
+              height: "100vh",
+              backgroundColor: contextMenuGray
+            }}>
+              <div className="emotionsNparts" style={{
+                justifyContent: "center",
+                overflow: "block",
+                display: "flex",
+                flexDirection: "column",
+                flex: 1,
+                paddingLeft: 10,
+                maxWidth: 230,
+                minWidth: 230,
+              }}>
+                <EmotionsSelection />
+                <PartsSelection />
               </div>
 
-              <div style={{ display: "flex", flexDirection: "row" }}>
-                <MicMinMaxDisplay />
-              </div>
+              <div className="settings" style={{
+                justifyContent: "center",
+                minWidth: 200,
+                marginTop: 8,
+                marginBottom: 10,
+                flex: 0,
+                display: "flex",
+                flexDirection: "column"
+              }}>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <div style={{ display: "flex", flexDirection: "row" }}>
+                    <MicSelection />
+                  </div>
+                </div>
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <CamSelection />
+                </div>
 
-              <div style={{ display: "flex", flexDirection: "row" }}>
-                <MaskotBackgroundColorPicker />
-                <div style={{ flex: 1 }}></div>
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <ShakeSettings />
+                  {/* <FPSSElection /> */}
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <MicMinMaxDisplay />
+                </div>
+
+
+                {/* <div style={{ display: "flex", flexDirection: "row" }}>
+                  <button onClick={zoomIn}>
+                    +
+                  </button>
+                  <a style={{ color: "white", flex: 1, textAlign: "center" }}>
+                    {"ZOOM: " + mascot.zoom}
+                  </a>
+                  <button onClick={zoomOut}>
+                    -
+                  </button>
+                </div> */}
+
+
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <MaskotBackgroundColorPicker />
+                  {/* <div style={{ flex: 1 }}></div> */}
+                </div>
+
+                <div style={{ flex: 10 }} />
+
+                <div className="msct-button" style={{ margin: 4, padding: 7, borderRadius: 10, color: menuGray }}
+                  onClick={() => {
+                    let broadcastingStatus = !broadcasting
+                    setBroadcasting(broadcastingStatus)
+
+                    if (broadcastingStatus) {
+
+                    } else {
+
+                    }
+                  }}>
+                  {broadcasting ? "Stop Broadcast" : "Start Broadcast"}
+                </div>
+                <div className="shadow" />
+
               </div>
+              {broadcasting ? <ShadowCanvas mascot={mascot} /> : <MascotCanvas />}
             </div>
-
-            <MascotCanvas />
-            {/* 
-            <button onClick={() => console.log(mascot)}>
-
-            </button> */}
-
           </div>
-        </div>
+        }
       </MascotContext.Provider>
     </ThemeProvider>
   );

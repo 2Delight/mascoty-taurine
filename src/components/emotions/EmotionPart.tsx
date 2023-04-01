@@ -34,7 +34,7 @@ export default function Emotion({ emotionIndex }: { emotionIndex: number }) {
             flex: 4
         }}></div>
 
-        <div style={{ justifyContent: "center", alignItems: "center", display: "flex" }}
+        <div style={{ justifyContent: "center", alignItems: "center", display: "flex", marginRight:3, }}
             onClick={() => {
                 if (mascot) {
                     mascot.mascot = structuredClone(mascot.mascot)
