@@ -24,7 +24,8 @@ import up from "./assets/parts-icons/up.svg"
 import { isRegistered, register, registerAll } from '@tauri-apps/api/globalShortcut';
 import Slider from "./components/settings/Slider";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { CreateFiles } from "./utils/Router";
+// import { CreateFiles } from "./utils/Router";
+import ShadowCanvas from "./components/mascot/ShadowCanvas";
 
 
 export const MascotContext = createContext<{
@@ -42,6 +43,8 @@ export default function App() {
   const [selecting, setSelecting] = useState(true)
   const [mascot, setMascot] = useState<IMascot>(DummyMascot);
   const [contextVisible, setContextVisible] = useState(false)
+
+  const [broadcasting, setBroadcasting] = useState(false)
 
   const value = useMemo(
     () => ({ mascot, setMascot }),
@@ -96,9 +99,9 @@ export default function App() {
           }}>
 
             <KeyboardArrowUpIcon className="selector"
-              onClick={() => { 
-                setContextVisible(true) 
-              
+              onClick={() => {
+                setContextVisible(true)
+
               }}
             />
 
@@ -204,14 +207,21 @@ export default function App() {
 
                 <div className="msct-button" style={{ margin: 4, padding: 7, borderRadius: 10, color: menuGray }}
                   onClick={() => {
-                    CreateFiles(mascot)
+                    let broadcastingStatus = !broadcasting
+                    setBroadcasting(broadcastingStatus)
+
+                    if (broadcastingStatus) {
+
+                    } else {
+
+                    }
                   }}>
-                  Start Broadcast
+                  {broadcasting ? "Stop Broadcast" : "Start Broadcast"}
                 </div>
                 <div className="shadow" />
 
               </div>
-              <MascotCanvas />
+              {broadcasting ? <ShadowCanvas mascot={mascot} /> : <MascotCanvas />}
             </div>
           </div>
         }

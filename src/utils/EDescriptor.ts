@@ -43,7 +43,7 @@ export function descriptEmotion(part: EEmotion) {
         case EEmotion.default: {
             return def
         }
-        case EEmotion.angry : {
+        case EEmotion.angry: {
             return angry
         }
         case EEmotion.disgust: {
@@ -62,5 +62,33 @@ export function descriptEmotion(part: EEmotion) {
             return sad
         }
     }
+}
 
+export function descriptRawEmotion(emo: string) {
+    switch (emo) {
+        case "default": {
+            return EEmotion.default
+        }
+        case "angry": {
+            return EEmotion.angry
+        }
+        case "disgust": {
+            return EEmotion.disgust
+        }
+        case "fear": {
+            return EEmotion.fear
+        }
+        case "happy": {
+            return EEmotion.happy
+        }
+        case "surprise": {
+            return EEmotion.surprise
+        }
+        case "sad": {
+            return EEmotion.sad
+        }
+        default: {
+            return EEmotion.default
+        }
+    }
 }
