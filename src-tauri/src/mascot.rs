@@ -27,7 +27,7 @@ fn to_bw(tensor: Tensor) -> Tensor {
 }
 
 /// Gets index for largest value in tensor.
-fn argmax(tensor: &Vec<f64>) -> u8 {
+fn argmax(tensor: &[f64]) -> u8 {
     let mut index = 0u8;
 
     for i in 0..tensor.len() {
@@ -106,7 +106,7 @@ pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
 
     let mascot = Mascot {
         emotion: emotion,
-        blink: now.duration_since(UNIX_EPOCH).unwrap().as_secs() % 2 == 0,
+        blink: now.duration_since(UNIX_EPOCH).unwrap().as_secs() % 10 == 0,
         lips: volume > 10,
         voice: volume,
     };
