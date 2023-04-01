@@ -29,7 +29,7 @@ export default function ShadowCanvas({ mascot }: { mascot: IMascot }) {
             console.log("CANT FIND MASCOT")
         }
 
-        let inter = setInterval(() => getData(nemoIndexes), 100)
+        let inter = setInterval(() => getData(nemoIndexes), 1000)
 
         return () => {
             console.log("STOPING")

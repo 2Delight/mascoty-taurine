@@ -2,6 +2,8 @@ use crate::devices::Devices;
 use crate::panic_error;
 use crate::emotions::Emotion;
 
+use std::time::{SystemTime, UNIX_EPOCH};
+
 use log::{debug, error, info, warn};
 use nokhwa::{pixel_format::*, NokhwaError};
 use serde::{Deserialize, Serialize};
@@ -47,7 +49,7 @@ pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     debug!("Getting frame");
     let buffer = camera.frame()?;
 
-    // buffer.decode_image::<RgbFormat>()?.save("img.jpg").unwrap();
+    buffer.decode_image::<RgbFormat>()?.save("img.jpg").unwrap();
 
     // image::save_buffer("img.png", buffer.buffer(), camera.resolution().width_x, camera.resolution().height_y, image::ColorType::Rgb8).unwrap();
 
@@ -98,10 +100,17 @@ pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     info!("{}", emotion);
 
     debug!("Sending info");
-    Ok(Mascot {
+
+    let volume = devices.get_volume();
+    let now = SystemTime::now();
+
+    let mascot = Mascot {
         emotion: emotion,
-        blink: false,
-        lips: false,
-        voice: devices.get_volume(),
-    })
+        blink: now.duration_since(UNIX_EPOCH).unwrap().as_secs() % 2 == 0,
+        lips: volume > 10,
+        voice: volume,
+    };
+
+    info!("Mascot: {:?}", mascot);
+    Ok(mascot)
 }
