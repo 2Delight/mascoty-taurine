@@ -35,13 +35,8 @@ jobs:
       
       - name: Install LibTorch
         run: |
-          wget https://download.pytorch.org/libtorch/nightly/cpu/libtorch-shared-with-deps-latest.zip
+          wget https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-2.0.0%2Bcpu.zip
           unzip libtorch-shared-with-deps-latest.zip
-
-          pip3 install torch==1.11.0
-          pip3 install git+https://github.com/facebookresearch/detectron2
-          pip3 install torchvision
-          pip3 install torchaudio
       
       - name: Install PortAudio
         run: |
