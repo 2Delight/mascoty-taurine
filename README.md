@@ -1,6 +1,6 @@
 # Mascoty Taurine
 
-## Status
+## Statuses
 |OS       |Build                                                                                                   |Test                                                                                                   |
 |---------|--------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
 |Windows  |![Windows](https://github.com/2Delight/mascoty-taurine/actions/workflows/windows-build.yaml/badge.svg)  |![Windows](https://github.com/2Delight/mascoty-taurine/actions/workflows/windows-test.yaml/badge.svg)  |
