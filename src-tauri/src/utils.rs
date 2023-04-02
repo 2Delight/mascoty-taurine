@@ -16,7 +16,7 @@ macro_rules! check_error {
                 val
             }
             Err(err) => {
-                error!("Error during {}: {:?}", $s, err);
+                debug!("Error during {}: {:?}", $s, err);
                 return;
             }
         }

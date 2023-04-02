@@ -2,7 +2,8 @@ use crate::devices::Devices;
 use crate::panic_error;
 use crate::emotions::Emotion;
 
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::{time::{SystemTime, UNIX_EPOCH}, io::Cursor};
+use std::io::{Read, Write};
 
 use log::{debug, error, info, warn};
 use nokhwa::{pixel_format::*, NokhwaError};
@@ -45,64 +46,31 @@ fn argmax(tensor: &[f64]) -> u8 {
 pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     debug!("Getting input");
     debug!("Getting camera instance");
-
     let mut camera = devices.camera.lock().unwrap();
 
     debug!("Getting frame");
-    let buffer = camera.frame()?;
+    let frame = camera.frame()?;
 
-    buffer.decode_image::<RgbFormat>()?.save("img.jpg").unwrap();
+    debug!("Getting path");
+    let path = tauri::api::path::document_dir().unwrap().join("MASCOTY").join("img.jpg");
+    let path = path.as_os_str().to_str().unwrap();
 
-    // image::save_buffer("img.png", buffer.buffer(), camera.resolution().width_x, camera.resolution().height_y, image::ColorType::Rgb8).unwrap();
+    debug!("Saving image");
+    let img = frame.decode_image::<RgbFormat>().unwrap();
+    img.save(path).unwrap();
 
-    // let img = image::open("img.png").unwrap();
-
-    // let mut img = Vec::new();
-    // img.resize(
-    //     camera.resolution().x() as usize * camera.resolution().y() as usize * 3,
-    //     0,
-    // );
-    // camera.write_frame_to_buffer::<RgbFormat>(&mut img).unwrap();
-    // let img = image::io::Reader::new(std::io::Cursor::new(&img))
-    //     .with_guessed_format()
-    //     .unwrap()
-    //     .decode()
-    //     .unwrap();
-
-    // debug!("{}", frame.source_frame_format());
-
-    // debug!("Decoding image");
-    // let mut img = Vec::new();
-    // img.resize(
-    //     frame.resolution().x() as usize * frame.resolution().y() as usize * 3,
-    //     0,
-    // );
-
-    // frame.decode_image_to_buffer::<RgbFormat>(&mut img).unwrap();
-
+    debug!("Using model");
     let model = &mut devices.config.lock().unwrap().model;
-    model.set_eval();
-
-    // let output = tch::vision::imagenet::load_image_and_resize224_from_memory(img.as_bytes())
-    //     .unwrap()
-    //     .unsqueeze(0)
-    //     .apply(model);
-
-    let output = to_bw(tch::vision::imagenet::load_image_and_resize224("img.jpg").unwrap())
+    let output = to_bw(tch::vision::imagenet::load_image_and_resize224(path).unwrap())
         .unsqueeze(0)
         .apply(model)
         .squeeze();
-
-    info!(
-        "{:?}",
-        output
-    );
+    info!("Model output: {:?}",output);
 
     let emotion = Emotion::from_num(argmax(&output.iter::<f64>().unwrap().collect::<Vec<f64>>()));
-    info!("{}", emotion);
+    info!("Got emotion: {}", emotion);
 
-    debug!("Sending info");
-
+    debug!("Getting volume");
     let volume = devices.get_volume();
     let now = SystemTime::now();
 
