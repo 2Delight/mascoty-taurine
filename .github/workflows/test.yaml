@@ -46,7 +46,9 @@ jobs:
           pip3 install torchaudio
       
       - name: Find Library
-        run: locate libtorch_cpu
+        run: |
+          sudo apt-get install locate
+          locate libtorch_cpu
       
       - name: Install PortAudio
         run: |
@@ -85,7 +87,7 @@ jobs:
         run: mkdir dist
     
       - name: Install PortAudio
-        run: conda install pyaudio
+        run: pip3 install pyaudio
 
       - name: Test
         run: cargo test --verbose --verbose
