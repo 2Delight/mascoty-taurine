@@ -1,4 +1,4 @@
-# Mascoty Taurine
+# Mascoty
 
 ## Statuses
 |OS       |Build                                                                                                   |Test                                                                                                   |
