@@ -19,6 +19,8 @@ pub struct Mascot {
 }
 
 /// Transforms RGB image tensor to BW.
+/// 
+/// It takes original 3-channel tensor and makes 1-channel tensor with mean vallues.
 fn to_bw(tensor: Tensor) -> Tensor {
     (tensor.index(&[Some(Tensor::of_slice(&[0i64])), None, None])
         + tensor.index(&[Some(Tensor::of_slice(&[1i64])), None, None])

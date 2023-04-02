@@ -32,7 +32,21 @@ jobs:
           sudo apt-get install libgtk-3-dev
           sudo apt-get install libayatana-appindicator3-dev
           sudo apt-get install librsvg2-dev
+      
+      - name: Install LibTorch
+        run: |
+          wget https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-2.0.0%2Bcpu.zip
+          unzip libtorch-shared-with-deps-2.0.0+cpu.zip
+      
+      - name: Install PortAudio
+        run: |
+          sudo apt-get install portaudio19-dev
 
+      - name: LDConfig
+        run: |
+          sudo ldconfig -p
+          sudo ldconfig -v
+      
       - name: Test
         run: cargo test --verbose --verbose
         working-directory: src-tauri
@@ -48,6 +62,9 @@ jobs:
 
       - name: Install PortAudio
         run: brew install portaudio
+      
+      - name: Install LibTorch
+        run: brew install libtorch
 
       - name: Test
         run: cargo test --verbose --verbose
@@ -61,6 +78,9 @@ jobs:
 
       - name: Create Dist Directory
         run: mkdir dist
+    
+      - name: Install PortAudio
+        run: pip3 install pyaudio
 
       - name: Test
         run: cargo test --verbose --verbose
