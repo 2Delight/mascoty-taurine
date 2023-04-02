@@ -19,6 +19,12 @@ jobs:
       - name: Create Dist Directory
         run: sudo mkdir dist
 
+      - name: Install Clang
+        run: |
+          sudo apt install clang
+          export CC=clang
+          export CXX=clang++
+
       - name: Install Tauri Deps
         run: |
           sudo apt update
@@ -32,6 +38,7 @@ jobs:
           sudo apt-get install libgtk-3-dev
           sudo apt-get install libayatana-appindicator3-dev
           sudo apt-get install librsvg2-dev
+          sudo apt-get install libtorch_cpu
 
           sudo ldconfig
       
@@ -44,12 +51,6 @@ jobs:
           pip3 install git+https://github.com/facebookresearch/detectron2
           pip3 install torchvision
           pip3 install torchaudio
-      
-      - name: Install Locate
-        run: sudo apt-get install locate
-
-      - name: Find Library
-        run: locate libtorch_cpu
       
       - name: Install PortAudio
         run: |
