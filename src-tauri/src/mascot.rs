@@ -81,7 +81,6 @@ pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     // frame.decode_image_to_buffer::<RgbFormat>(&mut img).unwrap();
 
     let model = &mut devices.config.lock().unwrap().model;
-    model.set_eval();
 
     // let output = tch::vision::imagenet::load_image_and_resize224_from_memory(img.as_bytes())
     //     .unwrap()
