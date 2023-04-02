@@ -45,10 +45,11 @@ jobs:
           pip3 install torchvision
           pip3 install torchaudio
       
+      - name: Install Locate
+        run: sudo apt-get install locate
+
       - name: Find Library
-        run: |
-          sudo apt-get install locate
-          locate libtorch_cpu
+        run: locate libtorch_cpu
       
       - name: Install PortAudio
         run: |
