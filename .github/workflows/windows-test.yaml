@@ -1,0 +1,27 @@
+name: Windows Test
+
+on:
+  push:
+    branches: ["master", "ci"]
+  pull_request:
+    branches: ["master", "ci"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create Dist Directory
+        run: mkdir dist
+    
+      - name: Install PortAudio
+        run: pip3 install pyaudio
+
+      - name: Test
+        run: cargo test --verbose --verbose
+        working-directory: src-tauri

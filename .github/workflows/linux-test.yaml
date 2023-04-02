@@ -1,4 +1,4 @@
-name: Test
+name: Linux Test
 
 on:
   push:
@@ -10,7 +10,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  linux:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -47,41 +47,6 @@ jobs:
           sudo ldconfig -p
           sudo ldconfig -v
       
-      - name: Test
-        run: cargo test --verbose --verbose
-        working-directory: src-tauri
-
-  macos:
-    runs-on: macos-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Create Dist Directory
-        run: sudo mkdir dist
-
-      - name: Install PortAudio
-        run: brew install portaudio
-      
-      - name: Install LibTorch
-        run: brew install libtorch
-
-      - name: Test
-        run: cargo test --verbose --verbose
-        working-directory: src-tauri
-
-  windows:
-    runs-on: windows-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Create Dist Directory
-        run: mkdir dist
-    
-      - name: Install PortAudio
-        run: pip3 install pyaudio
-
       - name: Test
         run: cargo test --verbose --verbose
         working-directory: src-tauri

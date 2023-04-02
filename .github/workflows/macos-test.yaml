@@ -1,0 +1,30 @@
+name: MacOS Test
+
+on:
+  push:
+    branches: ["master", "ci"]
+  pull_request:
+    branches: ["master", "ci"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create Dist Directory
+        run: sudo mkdir dist
+
+      - name: Install PortAudio
+        run: brew install portaudio
+      
+      - name: Install LibTorch
+        run: brew install libtorch
+
+      - name: Test
+        run: cargo test --verbose --verbose
+        working-directory: src-tauri
