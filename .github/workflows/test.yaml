@@ -53,7 +53,7 @@ jobs:
       
       - name: Install PortAudio
         run: |
-          sudo apt-get install mingw-w64-x86_64-portaudio
+          sudo apt-get install portaudio19-dev
 
       - name: Test
         run: cargo test --verbose --verbose
