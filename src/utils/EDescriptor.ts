@@ -92,3 +92,28 @@ export function descriptRawEmotion(emo: string) {
         }
     }
 }
+export function descriptRawPart(part: string) {
+    switch (part) {
+        case "background": {
+            return EPart.background
+        }
+        case "eyes_c": {
+            return EPart.eyesClosed
+        }
+        case "eyes_o": {
+            return EPart.eyesOpened
+        }
+        case "face": {
+            return EPart.face
+        }
+        case "mouth_c": {
+            return EPart.mouthClosed
+        }
+        case "mouth_o": {
+            return EPart.mouthOpened
+        }
+        default: {
+            return EPart.background
+        }
+    }
+}

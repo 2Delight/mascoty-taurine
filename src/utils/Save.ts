@@ -43,7 +43,7 @@ export async function validateProject(mascot: IMascot) {
 
     for (const entry of entries) {
         console.log(`Entry: ${entry.path}`)
-        if (!paths.includes(entry.path)) {
+        if (!paths.includes(entry.path) && entry.path.endsWith(".masset")) {
             removeFile(entry.path).then(() => console.log("Removed junk - " + entry.path))
         }
     }

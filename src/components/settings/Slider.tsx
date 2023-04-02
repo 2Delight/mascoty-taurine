@@ -15,11 +15,11 @@ export default function Slider() {
 
 
     const normToNums = (val: number) => {
-        console.log("norm to nums " + Math.floor(val / 100 * (maxW)))
+        // console.log("norm to nums " + Math.floor(val / 100 * (maxW)))
         return Math.floor(val / 100 * (maxW))
     }
     const numsToNorm = (val: number) => {
-        console.log("nums to norm " + Math.floor(val / (maxW) * 100))
+        // console.log("nums to norm " + Math.floor(val / (maxW) * 100))
         return Math.floor(val / (maxW) * 100)
     }
 

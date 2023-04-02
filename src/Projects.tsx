@@ -6,7 +6,7 @@ import { documentDir } from '@tauri-apps/api/path';
 import search from './assets/search.svg'
 import ISave from "./components/logic/IConf";
 import { exists, readFile } from "fs";
-import { readTextFile, BaseDirectory, writeTextFile, removeDir, createDir, readDir, removeFile } from '@tauri-apps/api/fs';
+import { readTextFile, BaseDirectory, writeTextFile, removeDir, createDir, readDir, removeFile, copyFile } from '@tauri-apps/api/fs';
 import { EEmotion } from "./components/logic/EEmotion";
 import { EPart } from "./components/logic/EPart";
 import IConf from "./components/logic/IConf";
@@ -25,6 +25,11 @@ import blankPreview from './assets/blank_project.png'
 import aboba from "./assets/mascoty-logo-nobg.svg"
 import logo from "./assets/mascoty_logo_inline.png"
 import { open } from "@tauri-apps/api/dialog"
+import { DummyMascot } from "./utils/DummyMascot";
+import { descriptRawEmotion, descriptRawPart } from "./utils/EDescriptor";
+import { getImageSize } from "react-image-size";
+import ProjectAddScrap from "./components/modals/ProjectAddScrap";
+import generateUUID from "./utils/UUIDGen";
 
 const handler = async () => {
     let aboba = await open({
@@ -39,6 +44,7 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
 
     const [dataPath, setDataPath] = useState("")
     const [openDialog, setOpenDialog] = useState(false)
+    const [openDialogAdd, setOpenDialogAdd] = useState(false)
     const [openProceed, setOpenProceed] = useState(false)
     const [projects, setProjects] = useState<IConf[] | null>(null)
 
@@ -150,7 +156,7 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
                     readTextFile(entry.path).then((text) => {
                         try {
                             let msct: IMascot = JSON.parse(text)
-                            
+
                             for (let i = 0; i < msct.emotions.length; i++) {
                                 for (let j = 0; j < msct.emotions[i].parts.length; j++) {
                                     msct.emotions[i].parts[j].sourcePath = msct.emotions[i].parts[j].sourcePath.replace(msct.workingDir, pathCopy + sep)
@@ -175,20 +181,143 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
             }
         }
     }
+    async function createProjectFromFiles(path: string, destination: string) {
+        const entries = await readDir(path, { recursive: true });
+        let dummy = structuredClone(DummyMascot)
+
+        let name = path.substring(path.lastIndexOf(sep) + 1, path.length)
+        dummy.workingDir = destination + sep + name + sep
+        dummy.projectName = name
+
+        await createDir(dummy.workingDir).catch(() => {
+            toast.error("Project With Same Name Already Exists")
+            return
+        })
+
+        for (const entry of entries) {
+            // console.log("entry: " + entry.name)
+            if (entry.children && entry.name) {
+                dummy.emotions.push({
+                    name: entry.name,
+                    visibility: true,
+                    parts: [],
+                    emotion: descriptRawEmotion(entry.name),
+                })
+                const emoEntry = await readDir(entry.path, { recursive: false });
+                for (const file of emoEntry) {
+                    if (!file.children && file.name) {
+                        const ext = file.name.substring(file.name.lastIndexOf('.'), file.name.length)
+                        if (ext === ".jpg" || ext === ".png" || ext === ".jpeg") {
+                            const dimens = await getImageSize(tauri.convertFileSrc(file.path))
+                            let height = 100
+                            let width = 100
+                            if (dimens) {
+                                height = dimens.height
+                                width = dimens.width
+                            }
+                            let id = generateUUID()
+                            await copyFile(file.path, dummy.workingDir + entry.name + "_" + file.name.substring(0, file.name.lastIndexOf('.')) + "_" + id + ".masset", {}).catch((e) => toast.error(e))
+
+                            dummy.emotions[dummy.emotions.length - 1].parts.push({
+                                name: file.name,
+                                visibility: true,
+                                sourcePath: dummy.workingDir + entry.name + "_" + file.name.substring(0, file.name.lastIndexOf('.')) + "_" + id + ".masset",
+                                positionX: 0,
+                                positionY: 0,
+                                height: height,
+                                width: width,
+                                type: descriptRawPart(file.name.substring(0, file.name.lastIndexOf(".")))
+                            })
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
+        console.log(dummy)
+
+
+
+        writeTextFile(dummy.workingDir + "CONF_" + name + ".mascot", JSON.stringify(dummy), { dir: BaseDirectory.Document }).then(() => {
+            addProject("CONF_" + name + ".mascot", destination + sep + name, name)
+            // setOpen(false)
+        }).catch(() => {
+            toast.error("Can't Create Config File For Project " + name)
+        })
+
+
+
+
+
+        // // console.log(`Entry: ${entry.path}`)
+        // if (entry.name && entry.path.endsWith(".mascot") && entry.name.startsWith("CONF_")) {
+        //     let name = path.substring(path.lastIndexOf(sep) + 1, path.length)
+        //     if ("CONF_" + name + ".mascot" !== entry.name) {
+        //         console.log("SADA " + path.lastIndexOf(sep))
+        //         console.log("SADA " + path.length)
+        //         console.log("No Match: CONF_" + name + ".mascot" + " - " + entry.name)
+        //     } else {
+        //         console.log("Dir And Conf Match!")
+
+        //         let newProjects: IConf[] | null = projects
+        //         if (!newProjects) {
+        //             newProjects = []
+        //         }
+
+        //         readTextFile(entry.path).then((text) => {
+        //             try {
+        //                 let msct: IMascot = JSON.parse(text)
+
+        //                 for (let i = 0; i < msct.emotions.length; i++) {
+        //                     for (let j = 0; j < msct.emotions[i].parts.length; j++) {
+        //                         msct.emotions[i].parts[j].sourcePath = msct.emotions[i].parts[j].sourcePath.replace(msct.workingDir, pathCopy + sep)
+        //                     }
+        //                 }
+        //                 msct.workingDir = pathCopy + sep
+        //                 console.log("MSCT: " + msct.workingDir)
+        //                 writeTextFile(entry.path, JSON.stringify(msct)).then(() => {
+        //                     newProjects?.push({ name: name, path: pathCopy + sep, previewPath: pathCopy + sep + "preview_" + name + ".png" })
+        //                     console.log(name + " " + pathCopy + " " + pathCopy + sep + "preview_" + name + ".png")
+        //                     setProjects(newProjects)
+        //                     writeTextFile(dataPath + "conf.json", JSON.stringify(newProjects)).then(() => {
+        //                         console.log("updated config")
+        //                         loadData()
+        //                     })
+        //                 })
+        //             } catch (e: any) {
+        //                 toast.error(e)
+        //             }
+        //         })
+        //     }
+        // }
+    }
+
 
     return (<>
         <ProjectAdd open={openDialog} setOpen={setOpenDialog} addProject={addProject} />
+        <ProjectAddScrap open={openDialogAdd} setOpen={setOpenDialogAdd} addProject={createProjectFromFiles} />
         <Proceed open={openProceed} setOpen={setOpenProceed} question={(projects && deleteProj > -1 && deleteProj < projects.length) ? "Do you want to delete " + projects[deleteProj].name + "?" : ""} proceed={deleteProject} />
         <div style={{ flexDirection: "row", display: "flex" }}>
-            <div style={{ height: "100vh", minWidth: 230, width: 230, backgroundColor: contextMenuGray, alignItems: "center", alignContent: "center", borderRight: "3px solid " + focusBlue, }}>
+            <div style={{ height: "100vh", minWidth: 230, width: 230, backgroundColor: contextMenuGray, borderRight: "3px solid " + focusBlue, display: "flex", flexDirection: "column" }}>
+                <div style={{ flex: 10 }} />
                 <img src={logo} style={{ width: 200, alignSelf: "center", marginInline: 15, marginTop: 10, marginBottom: 10, }} />
-                <div style={{ flex: 0, marginBottom: 20, flexDirection: "column" }}>
+                <div style={{ flex: 10 }} />
+                <div style={{ flex: 0, flexDirection: "column" }}>
                     <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
                         onClick={() => {
                             setOpenDialog(true)
                             console.log("exited")
                         }}>
-                        Create
+                        Create Blank Project
+                    </div>
+                    <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
+                        onClick={() => {
+                            setOpenDialogAdd(true)
+                        }}>
+                        Create From Source
                     </div>
                     <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
                         onClick={() => {
@@ -198,7 +327,7 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
                                 toast.warn("Project is not selected!");
                             }
                         }}>
-                        Open
+                        Open Project
                     </div>
                     <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
                         onClick={() => {
@@ -210,7 +339,7 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
                                 }
                             })
                         }}>
-                        Add
+                        Add Existing Project
                     </div>
                     <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
                         onClick={() => {
@@ -221,7 +350,7 @@ export default function Projects({ exit, }: { exit: React.Dispatch<React.SetStat
                                 toast.warn("Project is not selected!");
                             }
                         }}>
-                        Delete
+                        Delete Project
                     </div>
                     {/* <div style={{ margin: 10, textAlign: "center", padding: 7, borderRadius: 10, border: "solid", borderWidth: 2, borderColor: interactGray, backgroundColor: interactGray, color: "white" }}
                         onClick={() => {
