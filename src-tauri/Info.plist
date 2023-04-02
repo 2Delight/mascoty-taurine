@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>NSCameraUsageDescription</key>
-	<string>Request camera access for WebRTC</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Request microphone access for WebRTC</string>
-</dict>
+	<dict>
+		<key>NSCameraUsageDescription</key>
+		<string>Camera is needed for getting emotions from your handsome/beautiful face</string>
+		
+		<key>NSMicrophoneUsageDescription</key>
+		<string>Microphone is needed for getting volume of your gorgeous voice</string>
+	</dict>
 </plist>
