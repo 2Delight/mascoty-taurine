@@ -38,7 +38,6 @@ jobs:
           sudo apt-get install libgtk-3-dev
           sudo apt-get install libayatana-appindicator3-dev
           sudo apt-get install librsvg2-dev
-          sudo apt-get install libtorch_cpu
 
           sudo ldconfig
       
