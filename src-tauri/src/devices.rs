@@ -168,18 +168,18 @@ pub fn set_mike(index: usize, host: &Host) -> Result<Microphone, DevicesError> {
     let device = &devices[index].1;
 
     let conf = device.default_input_config().unwrap();
-    println!("Default input stream config: {:?}", conf);
+    info!("Default input stream config: {:?}", conf);
 
     let (sender, receiver) = std::sync::mpsc::channel::<Vec<f32>>();
 
     let err_callback = move |err| {
-        println!("an error occurred on stream: {}", err);
+        error!("an error occurred on stream: {}", err);
     };
 
     let send_callback = move |data: &[f32], _: &_| match sender.send(data.to_vec()) {
         Ok(()) => {}
         Err(err) => {
-            println!("{:?}", err);
+            error!("{:?}", err);
         }
     };
 
