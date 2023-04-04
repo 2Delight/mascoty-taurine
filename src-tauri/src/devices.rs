@@ -6,6 +6,10 @@ use std::sync::{
 };
 // use std::cell::RefCell;
 
+use cpal::{
+    traits::{DeviceTrait, HostTrait, StreamTrait},
+    Device, DevicesError, Host, Stream, SupportedStreamConfig,
+};
 use log::{debug, error, info, warn};
 use nokhwa::{
     pixel_format::RgbFormat,
@@ -15,12 +19,11 @@ use nokhwa::{
     },
 };
 use nokhwa::{query, Camera, NokhwaError};
-use cpal::{Stream, Host, traits::{HostTrait, DeviceTrait, StreamTrait}, Device, SupportedStreamConfig, DevicesError};
 
 /// Microphone input receiver.
 pub struct Microphone {
     receiver: Receiver<Vec<f32>>,
-    stream_: Stream,
+    stream: Stream,
 }
 
 /// Devices input receiver.
@@ -174,23 +177,25 @@ pub fn set_mike(index: usize, host: &Host) -> Result<Microphone, DevicesError> {
     };
 
     let send_callback = move |data: &[f32], _: &_| match sender.send(data.to_vec()) {
+        Ok(()) => {}
         Err(err) => {
             println!("{:?}", err);
         }
-        _ => {}
     };
 
-    let input_stream = device.build_input_stream(
-        &conf.config(),
-        send_callback,
-        err_callback,
-        None,
-    ).unwrap();
+    let input_stream = device
+        .build_input_stream(
+            &conf.config(),
+            send_callback,
+            err_callback,
+            None,
+        )
+        .unwrap();
     input_stream.play().unwrap();
 
     Ok(Microphone {
         receiver: receiver,
-        stream_: input_stream,
+        stream: input_stream,
     })
 }
 
