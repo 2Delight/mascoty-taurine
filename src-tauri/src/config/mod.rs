@@ -7,7 +7,7 @@ use tch::CModule;
 
 /// Main app config which contains camera properties and model.
 /// ```
-/// use mascoty_taurine::info;
+/// use log::info;
 /// 
 /// let conf = mascoty_taurine::config::import_config();
 /// info!("{:?}", conf);
@@ -27,7 +27,7 @@ impl std::fmt::Debug for Config {
 
 /// Camera config which includes width and height as resolution sides in px and fps as frames per second
 /// ```
-/// use mascoty_taurine::info;
+/// use log::info;
 /// 
 /// let cam_conf = mascoty_taurine::config::CameraConfig {
 ///     height: 720,
