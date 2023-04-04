@@ -16,6 +16,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+
+      - name: Update Node.js
+        run: npm install
+
       - name: Install Tauri Deps
         run: |
           sudo apt update
@@ -39,16 +45,6 @@ jobs:
           pip3 install -U torch==1.11.0
           pip3 install torchvision
           pip3 install torchaudio
-      
-      - name: Install PortAudio
-        run: |
-          sudo apt-get install portaudio19-dev
-
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-
-      - name: Update Node.js
-        run: npm install
 
       - name: Tauri Build
         run: npx tauri build --verbose

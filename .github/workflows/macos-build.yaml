@@ -16,14 +16,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install PortAudio
-        run: brew install portaudio
-
       - name: Use Node.js
         uses: actions/setup-node@v3
 
       - name: Update Node.js
         run: npm install
+
+      - name: Install LibTorch
+        run: brew install libtorch
 
       - name: Tauri Build
         run: npx tauri build --verbose
