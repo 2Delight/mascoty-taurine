@@ -35,7 +35,7 @@ fn main() {
         "setting up camera",
     );
 
-    let host = cpal::host_from_id(cpal::available_hosts()[0]).unwrap();
+    let host = panic_error!(cpal::host_from_id(cpal::available_hosts()[0]), "host set up");
 
     // Setting up default microphone.
     debug!("Getting default micro");
