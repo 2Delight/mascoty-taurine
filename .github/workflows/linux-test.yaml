@@ -16,6 +16,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+
+      - name: Update Node.js
+        run: npm install
+
       - name: Create Dist Directory
         run: sudo mkdir dist
 
@@ -37,10 +43,6 @@ jobs:
         run: |
           wget https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-2.0.0%2Bcpu.zip
           unzip libtorch-shared-with-deps-2.0.0+cpu.zip
-      
-      - name: Install PortAudio
-        run: |
-          sudo apt-get install portaudio19-dev
 
       - name: LDConfig
         run: |

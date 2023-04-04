@@ -16,11 +16,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+
+      - name: Update Node.js
+        run: npm install
+
       - name: Create Dist Directory
         run: mkdir dist
-    
-      - name: Install PortAudio
-        run: pip3 install pyaudio
 
       - name: Test
         run: cargo test --verbose --verbose
