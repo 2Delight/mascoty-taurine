@@ -23,7 +23,7 @@ jobs:
         run: npm install
 
       - name: Install LibTorch
-        run: brew install libtorch
+        run: brew install pytorch
 
       - name: Tauri Build
         run: npx tauri build --verbose
