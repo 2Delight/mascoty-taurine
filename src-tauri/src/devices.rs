@@ -15,12 +15,12 @@ use nokhwa::{
     },
 };
 use nokhwa::{query, Camera, NokhwaError};
-use portaudio::{stream::Input, DeviceIndex, DeviceInfo, Error, NonBlocking, PortAudio, Stream};
+use cpal::{Stream, Host, traits::{HostTrait, DeviceTrait, StreamTrait}, Device, SupportedStreamConfig, DevicesError};
 
 /// Microphone input receiver.
 pub struct Microphone {
     receiver: Receiver<Vec<f32>>,
-    stream_: Stream<NonBlocking, Input<f32>>,
+    stream_: Stream,
 }
 
 /// Devices input receiver.
@@ -115,7 +115,7 @@ impl Devices {
 
     /// Gets current microphone volume.
     pub fn get_volume(&self) -> u8 {
-        const MAXIMUM_VOLUME: f32 = 25000f32;
+        const MAXIMUM_VOLUME: f32 = 100f32;
 
         let volume: f32 = self
             .microphone
@@ -136,63 +136,61 @@ impl Devices {
 }
 
 /// Gets list of available microphones.
-pub fn get_mikes(pa: &PortAudio) -> Result<Vec<(DeviceIndex, DeviceInfo)>, Error> {
-    let devices: Vec<(portaudio::DeviceIndex, portaudio::DeviceInfo)> = pa
-        .devices()?
-        // Filters working devices.
-        .filter(|device| device.is_ok())
-        .map(|device| device.unwrap())
-        // Filters microphones.
-        .filter(|device| device.1.max_input_channels > 0)
-        .collect();
+pub fn get_mikes(host: &Host) -> Result<Vec<(usize, Device, SupportedStreamConfig)>, DevicesError> {
+    let devices = host.devices()?;
 
-    if devices.len() == 0 {
-        return Err(Error::InvalidDevice);
+    let mut microphones = Vec::new();
+    for (device_index, device) in devices.enumerate() {
+        match device.default_input_config() {
+            Ok(config) => {
+                microphones.push((device_index, device, config));
+            }
+            Err(_) => {
+                continue;
+            }
+        }
     }
 
-    Ok(devices)
+    Ok(microphones)
 }
 
 /// Initializes microphone based on index.
-pub fn set_mike(index: usize, pa: &PortAudio) -> Result<Microphone, Error> {
+pub fn set_mike(index: usize, host: &Host) -> Result<Microphone, DevicesError> {
     const CHANNELS_NUMBER: i32 = 1;
     const FRAMES_NUMBER_PER_BUFFER: u32 = 256;
     const CHOSEN: usize = 0;
 
-    let devices = get_mikes(pa)?;
-    let input_params = portaudio::StreamParameters::<f32>::new(
-        devices[index].0,
-        CHANNELS_NUMBER,
-        true,
-        devices[index].1.default_low_input_latency,
-    );
+    let devices = get_mikes(host)?;
 
-    let input_settings = portaudio::InputStreamSettings::new(
-        input_params,
-        devices[CHOSEN].1.default_sample_rate,
-        FRAMES_NUMBER_PER_BUFFER,
-    );
+    let device = &devices[index].1;
+
+    let conf = device.default_input_config().unwrap();
+    println!("Default input stream config: {:?}", conf);
 
     let (sender, receiver) = std::sync::mpsc::channel::<Vec<f32>>();
-    let callback = move |portaudio::InputStreamCallbackArgs { buffer, .. }| match sender
-        .send(buffer.to_vec())
-    {
-        Ok(()) => portaudio::Continue,
-        Err(err) => {
-            error!("{:?}", err);
-            portaudio::Complete
-        }
+
+    let err_callback = move |err| {
+        println!("an error occurred on stream: {}", err);
     };
 
-    let mut stream = pa.open_non_blocking_stream(input_settings, callback)?;
+    let send_callback = move |data: &[f32], _: &_| match sender.send(data.to_vec()) {
+        Err(err) => {
+            println!("{:?}", err);
+        }
+        _ => {}
+    };
 
-    stream.start()?;
-    info!("Is stream active: {}", stream.is_active()?);
-    info!("Is stream stopped: {}", stream.is_stopped()?);
+    let input_stream = device.build_input_stream(
+        &conf.config(),
+        send_callback,
+        err_callback,
+        None,
+    ).unwrap();
+    input_stream.play().unwrap();
 
     Ok(Microphone {
         receiver: receiver,
-        stream_: stream,
+        stream_: input_stream,
     })
 }
 

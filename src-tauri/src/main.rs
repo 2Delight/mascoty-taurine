@@ -35,13 +35,11 @@ fn main() {
         "setting up camera",
     );
 
-    // Setting up portaudio.
-    debug!("Getting portaudio");
-    let pa = panic_error!(portaudio::PortAudio::new(), "getting portaudio library");
+    let host = cpal::host_from_id(cpal::available_hosts()[0]).unwrap();
 
     // Setting up default microphone.
     debug!("Getting default micro");
-    let mike = panic_error!(set_mike(DEFAULT_DEVICE_INDEX, &pa), "setting up microphone");
+    let mike = panic_error!(set_mike(DEFAULT_DEVICE_INDEX, &host), "setting up microphone");
 
     // Creating devices.
     debug!("Getting devices");
@@ -52,8 +50,8 @@ fn main() {
     tauri::Builder::default()
         // Adding devices to state.
         .manage(devices)
-        // Adding portaudio to state.
-        .manage(pa)
+        // Adding host to state.
+        .manage(host)
         .invoke_handler(tauri::generate_handler![
             get_mascot,
             get_cameras,
