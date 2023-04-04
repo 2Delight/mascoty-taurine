@@ -31,4 +31,7 @@ node_modules/
 dist
 dist-ssr
 *.local
+
+# Tests
 img.jpg
+test-projects
