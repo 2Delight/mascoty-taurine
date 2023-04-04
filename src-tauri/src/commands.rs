@@ -2,8 +2,9 @@ use crate::config::CameraConfig;
 use crate::devices::{get_cams, get_mikes, set_cam, set_mike, Devices};
 use crate::mascot;
 
+use cpal::Host;
+use cpal::traits::DeviceTrait;
 use log::{debug, error, info, warn};
-use portaudio::PortAudio;
 
 /// Handler for getting Mascot.
 #[tauri::command]
@@ -101,11 +102,11 @@ pub fn set_camera_config(conf: CameraConfig, state: tauri::State<Devices>) -> Re
 /// 
 /// If err => returns string error.
 #[tauri::command]
-pub fn get_microphones(state: tauri::State<PortAudio>) -> Result<Vec<String>, String> {
+pub fn get_microphones(state: tauri::State<Host>) -> Result<Vec<String>, String> {
     match get_mikes(&*state) {
         Ok(mikes) => Ok(mikes
             .iter()
-            .map(|mike| format!("{:?}. {}", mike.0, mike.1.name))
+            .map(|mike| format!("{:?}. {}, {:?}", mike.0, mike.1.name().unwrap(), mike.2))
             .collect()),
         Err(err) => {
             return Err(err.to_string());
@@ -121,7 +122,7 @@ pub fn get_microphones(state: tauri::State<PortAudio>) -> Result<Vec<String>, St
 #[tauri::command]
 pub fn select_microphone(
     index: usize,
-    pa: tauri::State<PortAudio>,
+    pa: tauri::State<Host>,
     state: tauri::State<Devices>,
 ) -> Result<(), String> {
     state.update_microphone(match set_mike(index, &pa) {
