@@ -27,7 +27,7 @@ jobs:
       
       - name: Install LibTorch
         run: |
-          pip3 install -U torch==1.13.1+cpu
+          pip3 install -U torch==1.13.1
           pip3 install torchvision
           pip3 install torchaudio
 
