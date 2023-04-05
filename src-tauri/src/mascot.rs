@@ -6,7 +6,7 @@ use std::{time::{SystemTime, UNIX_EPOCH}, io::Cursor};
 use std::io::{Read, Write};
 
 use log::{debug, error, info, warn};
-use nokhwa::{pixel_format::*, NokhwaError};
+use nokhwa::{pixel_format::*, NokhwaError, Buffer};
 use serde::{Deserialize, Serialize};
 use tch::Tensor;
 
@@ -42,6 +42,41 @@ fn argmax(tensor: &[f64]) -> u8 {
     index
 }
 
+/// Helps to find coordinates of corners for square crop image.
+fn get_cropped_corners(mut width: u32, mut height: u32) -> (u32, u32, u32, u32) {
+    if width < height {
+        (width, height) = (height, width);
+    }
+
+    ((width - height) / 2, 0, height, height)
+}
+
+/// Crops image.
+fn crop_image(path: &str) {
+    let mut img = image::open(path).unwrap();
+
+    let points = get_cropped_corners(img.width(), img.height());
+    let img = image::imageops::crop(&mut img, points.0, points.1, points.2, points.3);
+
+    img.to_image().save(path).unwrap();
+}
+
+/// Gets emotion from input
+fn get_emotion(devices: &Devices, image_path: &str) -> Emotion {
+    debug!("Using model");
+    let model = &mut devices.config.lock().unwrap().model;
+    let output = to_bw(tch::vision::imagenet::load_image_and_resize224(image_path).unwrap())
+        .unsqueeze(0)
+        .apply(model)
+        .squeeze();
+    info!("Model output: {:?}",output);
+
+    let emotion = Emotion::from_num(argmax(&output.iter::<f64>().unwrap().collect::<Vec<f64>>()));
+    info!("Got emotion: {}", emotion);
+
+    emotion
+}
+
 /// Gets properties of mascot based on device input.
 pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     debug!("Getting input");
@@ -56,31 +91,21 @@ pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     let path = path.as_os_str().to_str().unwrap();
 
     debug!("Saving image");
-    let img = frame.decode_image::<RgbFormat>().unwrap();
+    let img = frame.decode_image::<RgbFormat>()?;
     img.save(path).unwrap();
 
-    debug!("Using model");
-    let model = &mut devices.config.lock().unwrap().model;
-    let output = to_bw(tch::vision::imagenet::load_image_and_resize224(path).unwrap())
-        .unsqueeze(0)
-        .apply(model)
-        .squeeze();
-    info!("Model output: {:?}",output);
-
-    let emotion = Emotion::from_num(argmax(&output.iter::<f64>().unwrap().collect::<Vec<f64>>()));
-    info!("Got emotion: {}", emotion);
+    crop_image(path);
 
     debug!("Getting volume");
     let volume = devices.get_volume();
-    let now = SystemTime::now();
 
     let mascot = Mascot {
-        emotion: emotion,
-        blink: now.duration_since(UNIX_EPOCH).unwrap().as_secs() % 10 == 0,
+        emotion: get_emotion(devices, path),
+        blink: SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs() % 10 == 0,
         lips: volume > 10,
         voice: volume,
     };
-
     info!("Mascot: {:?}", mascot);
+
     Ok(mascot)
 }

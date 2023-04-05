@@ -53,6 +53,8 @@ fn main() {
     debug!("Getting devices");
     let devices = Devices::new(conf, cam, mike);
 
+    mascoty_taurine::mascot::get_mascot(&devices).unwrap();
+
     // Starting app.
     debug!("Building the app");
     tauri::Builder::default()
