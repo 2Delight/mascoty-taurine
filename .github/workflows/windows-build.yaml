@@ -22,5 +22,11 @@ jobs:
       - name: Update Node.js
         run: npm install
 
+      - name: Install LibTorch
+        run: |
+          pip3 install -U torch==1.11.0+cpu
+          pip3 install torchvision
+          pip3 install torchaudio
+
       - name: Tauri Build
         run: npx tauri build --verbose

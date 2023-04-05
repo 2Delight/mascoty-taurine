@@ -24,6 +24,12 @@ jobs:
 
       - name: Create Dist Directory
         run: mkdir dist
+      
+      - name: Install LibTorch
+        run: |
+          pip3 install -U torch==1.11.0+cpu
+          pip3 install torchvision
+          pip3 install torchaudio
 
       - name: Test
         run: cargo test --verbose --verbose
