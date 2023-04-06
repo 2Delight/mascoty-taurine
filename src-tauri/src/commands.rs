@@ -131,7 +131,7 @@ pub fn select_microphone(
     })
 }
 
-/// Gets current volume
+/// Gets current volume in interval [0; 100].
 #[tauri::command]
 pub fn get_volume(
     state: tauri::State<Devices>,

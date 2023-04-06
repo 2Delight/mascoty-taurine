@@ -1,4 +1,4 @@
-use super::import_config;
+use super::{import_config, CameraConfig};
 
 #[test]
 fn check_config_import() {
@@ -6,4 +6,12 @@ fn check_config_import() {
     assert!(conf.camera.height > 0);
     assert!(conf.camera.width > 0);
     assert!(conf.camera.fps > 0);
+
+    let conf = import_config();
+    let def_cam = CameraConfig {
+        height: 720,
+        width: 1280,
+        fps: 30,
+    };
+    assert!(conf.camera == def_cam);
 }
