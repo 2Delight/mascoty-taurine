@@ -151,10 +151,10 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
             document.body.removeEventListener("mousemove", onMouseMove);
             if (mascot) {
                 mascot.mascot = structuredClone(mascot.mascot)
-                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionX = shadowXY.x / zoom
-                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionY = shadowXY.y / zoom
-                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].height = shadowHW.h / zoom
-                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].width = shadowHW.w / zoom
+                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionX = shadowXY.x * 100 / zoom
+                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionY = shadowXY.y * 100 / zoom
+                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].height = shadowHW.h * 100 / zoom
+                mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].width = shadowHW.w * 100 / zoom
                 console.log(mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex])
                 mascot.setMascot(mascot.mascot)
             }
