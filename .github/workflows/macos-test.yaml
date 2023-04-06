@@ -1,0 +1,33 @@
+name: MacOS Test
+
+on:
+  push:
+    branches: ["master", "ci"]
+  pull_request:
+    branches: ["master", "ci"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+
+      - name: Update Node.js
+        run: npm install
+
+      - name: Create Dist Directory
+        run: sudo mkdir dist
+      
+      - name: Install LibTorch
+        run: brew install pytorch
+
+      - name: Test
+        run: cargo test --verbose --verbose
+        working-directory: src-tauri

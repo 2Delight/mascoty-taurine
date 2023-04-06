@@ -40,7 +40,7 @@ export function descriptPart(part: EPart) {
 
 export function descriptEmotion(part: EEmotion) {
     switch (part) {
-        case EEmotion.default: {
+        case EEmotion.neutral: {
             return def
         }
         case EEmotion.angry: {
@@ -66,8 +66,8 @@ export function descriptEmotion(part: EEmotion) {
 
 export function descriptRawEmotion(emo: string) {
     switch (emo) {
-        case "default": {
-            return EEmotion.default
+        case "neutral": {
+            return EEmotion.neutral
         }
         case "angry": {
             return EEmotion.angry
@@ -88,7 +88,7 @@ export function descriptRawEmotion(emo: string) {
             return EEmotion.sad
         }
         default: {
-            return EEmotion.default
+            return EEmotion.neutral
         }
     }
 }

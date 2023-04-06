@@ -36,8 +36,10 @@ export default function ShadowCanvas({ mascot }: { mascot: IMascot }) {
             console.log("CANT FIND MASCOT")
         }
 
+
         let inter = setInterval(() => getData(nemoIndexes), getMascotInterval)
         let interVoice = setInterval(() => updateVol(), updateVoiceInterval)
+
 
         return () => {
             console.log("STOPING")

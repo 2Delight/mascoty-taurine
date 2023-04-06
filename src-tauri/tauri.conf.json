@@ -7,8 +7,8 @@
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "mascoty-taurine",
-    "version": "0.0.0"
+    "productName": "Mascoty",
+    "version": "0.1.0"
   },
   "tauri": {
     "allowlist": {

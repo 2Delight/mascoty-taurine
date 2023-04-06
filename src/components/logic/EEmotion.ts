@@ -1,5 +1,5 @@
 export enum EEmotion {
-    default,
+    neutral,
     angry,
     disgust,
     fear,

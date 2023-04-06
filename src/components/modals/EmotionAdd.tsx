@@ -100,7 +100,7 @@ export default function EmotionAdd({ open, setOpen, redact }: { open: boolean, s
                       Neutral
                     </a>
                     <div style={{ flex: 1 }} />
-                    <img style={{ height: 20, aspectRatio: 1 }} src={descriptEmotion(EEmotion.default)} />
+                    <img style={{ height: 20, aspectRatio: 1 }} src={descriptEmotion(EEmotion.neutral)} />
                   </div>
                 </MenuItem>
                 }
