@@ -45,6 +45,10 @@ features = [
     "window-set-title",
 ]
 
+[dependencies.tokio]
+version = "1.27.0"
+features = ["sync"]
+
 [dependencies.nokhwa]
 version = "0.10.3"
 features = ["input-native", "output-wgpu"]

@@ -63,7 +63,7 @@ fn crop_image(path: &str) {
 /// Gets emotion from input
 fn get_emotion(devices: &Devices, image_path: &str) -> Emotion {
     debug!("Using model");
-    let model = &mut devices.config.lock().unwrap().model;
+    let model = &mut devices.config.blocking_lock().model;
     let output = to_bw(tch::vision::imagenet::load_image_and_resize224(image_path).unwrap())
         .unsqueeze(0)
         .apply(model)
@@ -80,7 +80,7 @@ fn get_emotion(devices: &Devices, image_path: &str) -> Emotion {
 pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     debug!("Getting input");
     debug!("Getting camera instance");
-    let mut camera = devices.camera.lock().unwrap();
+    let mut camera = devices.camera.blocking_lock();
 
     debug!("Getting frame");
     let frame = camera.frame()?;

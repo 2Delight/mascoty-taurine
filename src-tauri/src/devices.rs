@@ -1,11 +1,10 @@
 use crate::config::{CameraConfig, Config};
 
 use std::sync::{
-    Arc, RwLock,
+    Arc,
     mpsc::{Receiver, Sender},
-    Mutex, MutexGuard, PoisonError,
 };
-// use std::cell::RefCell;
+use tokio::sync::Mutex;
 
 use cpal::{
     traits::{DeviceTrait, HostTrait, StreamTrait},
@@ -25,7 +24,7 @@ use nokhwa::{query, Camera, NokhwaError};
 const MIKE_LENGTH: usize = 512;
 /// Microphone input receiver.
 pub struct Microphone {
-    receiver: Arc<RwLock<[f32; MIKE_LENGTH]>>,
+    receiver: Arc<Mutex<Vec<f32>>>,
     stream: Stream,
 }
 
@@ -62,20 +61,10 @@ impl Devices {
             config
         );
 
-        let mut conf_guard = match self.config.lock() {
-            Ok(val) => val,
-            Err(_) => {
-                return Err("Cannot get value from config mutex".to_string());
-            }
-        };
+        let mut conf_guard = self.config.blocking_lock();
         conf_guard.camera = *config;
 
-        let mut cam_guard = match self.camera.lock() {
-            Ok(val) => val,
-            Err(_) => {
-                return Err("Cannot get value from camera mutex".to_string());
-            }
-        };
+        let mut cam_guard = self.camera.blocking_lock();
         *cam_guard = camera;
 
         Ok(())
@@ -83,7 +72,7 @@ impl Devices {
 
     /// Updates camera settings based on config.
     pub fn set_camera_settings(&self, config: &CameraConfig) -> Result<(), NokhwaError> {
-        let mut cam = self.camera.lock().unwrap();
+        let mut cam = self.camera.blocking_lock();
 
         cam.set_resolution(Resolution {
             width_x: config.width,
@@ -95,25 +84,17 @@ impl Devices {
     }
 
     /// Gets index of currently selected camera.
-    pub fn get_camera_index(&self) -> Result<CameraIndex, String> {
+    pub fn get_camera_index(&self) -> CameraIndex {
         debug!("Sending camera index");
 
-        match self.camera.lock() {
-            Ok(val) => Ok(val.index().clone()),
-            Err(_) => Err("Cannot get value from camera mutex".to_string()),
-        }
+        self.camera.blocking_lock().index().clone()
     }
 
     /// Updates microphone based on passed new one.
     pub fn update_microphone(&self, microphone: Microphone) -> Result<(), String> {
         info!("Setting the microphone");
 
-        let mut mike_guard = match self.microphone.lock() {
-            Ok(val) => val,
-            Err(_) => {
-                return Err("Cannot get value from config mutex".to_string());
-            }
-        };
+        let mut mike_guard = self.microphone.blocking_lock();
         *mike_guard = microphone;
 
         Ok(())
@@ -122,17 +103,9 @@ impl Devices {
     /// Gets current microphone volume.
     pub fn get_volume(&self) -> u8 {
         const MAXIMUM_VOLUME: f32 = 100f32;
-
-        let nums: [f32; MIKE_LENGTH] = loop {
-            match &self.microphone.lock().unwrap().receiver.read() {
-                Ok(val) => {
-                    break **val
-                }
-                Err(_) => {
-                    continue;
-                }
-            };
-        };
+        
+        let mike = self.microphone.blocking_lock();
+        let nums = mike.receiver.blocking_lock();
 
         debug!("Microphone info lenght: {}", nums.len());
         let volume: f32 = nums.iter().map(|vol| vol.abs()).sum();
@@ -176,7 +149,7 @@ pub fn set_mike(index: usize, host: &Host) -> Result<Microphone, DevicesError> {
     let conf = device.default_input_config().unwrap();
     info!("Default input stream config: {:?}", conf);
 
-    let receiver = std::sync::Arc::new(std::sync::RwLock::new([0f32; MIKE_LENGTH]));
+    let receiver = Arc::new(Mutex::new(Vec::new()));
     let sender = receiver.clone();
 
     let err_callback = move |err| {
@@ -184,7 +157,8 @@ pub fn set_mike(index: usize, host: &Host) -> Result<Microphone, DevicesError> {
     };
 
     let send_callback = move |data: &[f32], _: &_| {
-        sender.write().unwrap().copy_from_slice(data);
+        sender.blocking_lock().resize(data.len(), 0f32);
+        sender.blocking_lock().copy_from_slice(data);
     };
 
     let input_stream = device
