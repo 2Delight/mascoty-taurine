@@ -122,11 +122,19 @@ pub fn get_microphones(state: tauri::State<Host>) -> Result<Vec<String>, String>
 #[tauri::command]
 pub fn select_microphone(
     index: usize,
-    pa: tauri::State<Host>,
+    host: tauri::State<Host>,
     state: tauri::State<Devices>,
 ) -> Result<(), String> {
-    state.update_microphone(match set_mike(index, &pa) {
+    state.update_microphone(match set_mike(index, &host) {
         Ok(val) => val,
         Err(err) => return Err(err.to_string()),
     })
+}
+
+/// Gets current volume
+#[tauri::command]
+pub fn get_volume(
+    state: tauri::State<Devices>,
+) -> u8 {
+    state.get_volume()
 }

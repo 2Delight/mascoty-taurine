@@ -16,7 +16,6 @@ pub struct Mascot {
     pub emotion: Emotion,
     pub blink: bool,
     pub lips: bool,
-    pub voice: u8,
 }
 
 /// Transforms RGB image tensor to BW.
@@ -96,14 +95,10 @@ pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
 
     crop_image(path);
 
-    debug!("Getting volume");
-    let volume = devices.get_volume();
-
     let mascot = Mascot {
         emotion: get_emotion(devices, path),
         blink: SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs() % 10 == 0,
-        lips: volume > 10,
-        voice: volume,
+        lips: devices.get_volume() > 10,
     };
     info!("Mascot: {:?}", mascot);
 
