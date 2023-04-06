@@ -11,9 +11,16 @@ import ShadowPart from "./ShadowPart";
 import { get_mascot } from "../../utils/Commands";
 import { descriptRawEmotion } from "../../utils/EDescriptor";
 
+const getMascotInterval = 1000
+const updateVoiceInterval = 20
+
 export default function ShadowCanvas({ mascot }: { mascot: IMascot }) {
     const [mc, setMc] = useState<IMascot>(mascot);
 
+    var oldVol = 0
+    var vol = 0
+
+    const [volume, setVol] = useState(0)
 
     useEffect(() => {
         let nemoIndexes: number[] = []
@@ -29,14 +36,31 @@ export default function ShadowCanvas({ mascot }: { mascot: IMascot }) {
             console.log("CANT FIND MASCOT")
         }
 
-        let inter = setInterval(() => getData(nemoIndexes), 100)
+        let inter = setInterval(() => getData(nemoIndexes), getMascotInterval)
+        let interVoice = setInterval(() => updateVol(), updateVoiceInterval)
 
         return () => {
             console.log("STOPING")
             clearInterval(inter)
+            clearInterval(interVoice)
         }
         // }
     }, [])
+
+    const updateVol = () => {
+        // if (oldVol > vol) {
+        //     oldVol--
+        // }
+        // if (oldVol < vol) {
+        //     oldVol++
+        // }
+        if (Math.abs(vol - oldVol) < 2)
+            return
+        oldVol += (vol - oldVol) * (updateVoiceInterval / getMascotInterval)
+        console.log(oldVol)
+        setVol(oldVol)
+        // setVol(Number(oldVol))
+    }
 
     const getData = (ei: number[]) => {
         get_mascot().then((data) => applyDataToMascot(data as IMascotData, ei))
@@ -65,6 +89,8 @@ export default function ShadowCanvas({ mascot }: { mascot: IMascot }) {
                 console.log("emotion No" + i + " visible")
             }
         }
+
+        vol = dt.voice
 
         for (let i = 0; i < mcc.emotions[emoIndexes[emo]].parts.length; i++) {
             switch (mcc.emotions[emoIndexes[emo]].parts[i].type) {
@@ -123,12 +149,17 @@ export default function ShadowCanvas({ mascot }: { mascot: IMascot }) {
             <div className="canvas"
                 style={{ position: "relative", }}
             >
-                {mc && mc.emotions.map((x, j) => {
-                    return x.parts.map((c, i) => {
-                        return <ShadowPart part={c} emoVisible={x.visibility} zoom={mc.zoom} key={j + "_" + i} />
-                    })
-                }
-                )}
+                <div style={{
+                    position: "absolute",
+                    bottom: volume,
+                }}>
+                    {mc && mc.emotions.map((x, j) => {
+                        return x.parts.map((c, i) => {
+                            return <ShadowPart part={c} emoVisible={x.visibility} zoom={mc.zoom} key={j + "_" + i} />
+                        })
+                    }
+                    )}
+                </div>
             </div>
         </div>
     </div>

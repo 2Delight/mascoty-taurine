@@ -23,7 +23,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import blankPreview from './assets/blank_project.png'
 import aboba from "./assets/mascoty-logo-nobg.svg"
-import logo from "./assets/mascoty_logo_inline.png"
+import logo from "./assets/mascoty_inline_logo.png"
 import { open } from "@tauri-apps/api/dialog"
 import { DummyMascot } from "./utils/DummyMascot";
 import { descriptRawEmotion, descriptRawPart } from "./utils/EDescriptor";
