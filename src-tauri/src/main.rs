@@ -46,7 +46,7 @@ fn main() {
     debug!("Getting default micro");
     let mike = panic_error!(
         set_mike(DEFAULT_DEVICE_INDEX, &host),
-        "setting up microphone"
+        "setting up microphone",
     );
 
     // Creating devices.

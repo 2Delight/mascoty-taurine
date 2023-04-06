@@ -106,7 +106,7 @@ pub fn get_microphones(state: tauri::State<Host>) -> Result<Vec<String>, String>
     match get_mikes(&*state) {
         Ok(mikes) => Ok(mikes
             .iter()
-            .map(|mike| format!("{:?}. {}, {:?}", mike.0, mike.1.name().unwrap(), mike.2))
+            .map(|mike| format!("{}", mike.1.name().unwrap()))
             .collect()),
         Err(err) => {
             return Err(err.to_string());

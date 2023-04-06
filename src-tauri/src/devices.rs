@@ -20,8 +20,6 @@ use nokhwa::{
 };
 use nokhwa::{query, Camera, NokhwaError};
 
-
-const MIKE_LENGTH: usize = 512;
 /// Microphone input receiver.
 pub struct Microphone {
     receiver: Arc<Mutex<Vec<f32>>>,
@@ -138,10 +136,6 @@ pub fn get_mikes(host: &Host) -> Result<Vec<(usize, Device, SupportedStreamConfi
 
 /// Initializes microphone based on index.
 pub fn set_mike(index: usize, host: &Host) -> Result<Microphone, DevicesError> {
-    const CHANNELS_NUMBER: i32 = 1;
-    const FRAMES_NUMBER_PER_BUFFER: u32 = 256;
-    const CHOSEN: usize = 0;
-
     let devices = get_mikes(host)?;
 
     let device = &devices[index].1;
