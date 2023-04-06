@@ -8,10 +8,11 @@ import { EEmotion } from "../logic/EEmotion";
 import { EPart } from "../logic/EPart";
 import { toast } from "react-toastify";
 import ShadowPart from "./ShadowPart";
-import { get_mascot } from "../../utils/Commands";
+import { get_mascot, get_volume } from "../../utils/Commands";
 import { descriptRawEmotion } from "../../utils/EDescriptor";
 
-const getMascotInterval = 500
+const getMascotInterval = 1000
+const getVolumeInterval = 100
 const updateVoiceInterval = 20
 
 export default function ShadowCanvas({ mascot }: { mascot: IMascot }) {
@@ -38,13 +39,15 @@ export default function ShadowCanvas({ mascot }: { mascot: IMascot }) {
 
 
         let inter = setInterval(() => getData(nemoIndexes), getMascotInterval)
-        let interVoice = setInterval(() => updateVol(), updateVoiceInterval)
+        // let interVoice = setInterval(() => updateVol(), updateVoiceInterval)
+        let interVolume = setInterval(() => getVol(), getVolumeInterval)
 
 
         return () => {
             console.log("STOPING")
             clearInterval(inter)
-            clearInterval(interVoice)
+            // clearInterval(interVoice)
+            clearInterval(interVolume)
         }
         // }
     }, [])
@@ -62,6 +65,10 @@ export default function ShadowCanvas({ mascot }: { mascot: IMascot }) {
         console.log(oldVol)
         setVol(oldVol)
         // setVol(Number(oldVol))
+    }
+
+    const getVol = () => {
+        get_volume().then((data) => setVol(Number(data)))
     }
 
     const getData = (ei: number[]) => {
