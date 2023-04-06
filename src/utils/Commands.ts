@@ -5,6 +5,11 @@ export async function get_mascot() {
     return await invoke("get_mascot", {});
 }
 
+export async function get_volume() {
+    return await invoke("get_volume", {});
+}
+
+
 export async function get_cams() {
     return await invoke("get_cameras")
 }
