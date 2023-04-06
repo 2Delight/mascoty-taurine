@@ -19,7 +19,7 @@ import saveMascot from "./utils/Save";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { backgroundGray, contextMenuGray, focusBlue, interactActiveGray, interactActiveHoverGray, interactGray, menuGray } from "./utils/Colors";
-import logo from "./assets/mascoty_logo_inline.png"
+import logo from "./assets/mascoty_inline_logo.png"
 import up from "./assets/parts-icons/up.svg"
 import { isRegistered, register, registerAll } from '@tauri-apps/api/globalShortcut';
 import Slider from "./components/settings/Slider";
@@ -116,12 +116,16 @@ export default function App() {
                   // borderRightWidth: 5,
                   borderRight: "2px solid " + focusBlue,
                   backgroundColor: contextMenuGray,
+                  display:"flex",
+                  flexDirection:"column"
                   // borderRight: "solid",
                   // borderRightWidth: 3, borderColor: interactActiveHoverGray,
                 }}
                 onMouseLeave={() => setContextVisible(false)}
               >
+                <div style={{flex:10}}/>
                 <img src={logo} style={{ width: 200, alignSelf: "center", margin: 10, }} />
+                <div style={{flex:10}}/>
                 <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
                   onClick={() => {
                     saveMascot(mascot).then(() => toast.success("Project saved")).catch((e) => toast.warn("Project can not be saved due to: " + e))

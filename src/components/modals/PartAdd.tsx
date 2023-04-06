@@ -12,6 +12,7 @@ import { copyFile, exists } from '@tauri-apps/api/fs';
 import { sep } from "@tauri-apps/api/path";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import generateUUID from "../../utils/UUIDGen";
 
 const handler = async () => {
   let aboba = await open({
@@ -219,31 +220,30 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
                     mascot.setMascot(mascot.mascot)
                     handleClose()
                   } else {
-                    exists(mascot.mascot.workingDir + mascot.mascot.emotions[mascot.mascot.selectedEmotion].name + "_" + EPart[Number(designation)] + "_" + name + ".png").then((resp) => {
-                      if (resp) {
-                        toast.warn("Part with same name and destination already exists")
-                      } else {
-                        copyFile(path, mascot.mascot.workingDir + mascot.mascot.emotions[mascot.mascot.selectedEmotion].name + "_" + EPart[Number(designation)] + "_" + name + ".png", {}).then(() => { }).catch((e) => toast.error(e))
-                        // let newPath = tauri.convertFileSrc(docsPath + mascot.mascot.workingDir + sep + designation + "_" + name)
+                    // exists(mascot.mascot.workingDir + mascot.mascot.emotions[mascot.mascot.selectedEmotion].name + "_" + EPart[Number(designation)] + "_" + name + ".masset").then((resp) => {
+                    if (mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.find((item) => item.name === name)) {
+                      toast.warn("Part with same name already exists within this emotion")
+                    } else {
+                      let id = generateUUID()
+                      copyFile(path, mascot.mascot.workingDir + mascot.mascot.emotions[mascot.mascot.selectedEmotion].name + "_" + name + "_" + id + ".masset", {}).then(() => { }).catch((e) => toast.error(e))
+                      // let newPath = tauri.convertFileSrc(docsPath + mascot.mascot.workingDir + sep + designation + "_" + name)
 
-                        mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.push({
-                          name: name,
-                          visibility: true,
-                          // sourcePath: "https://asset.localhost/"+path,
-                          sourcePath: mascot.mascot.workingDir + mascot.mascot.emotions[mascot.mascot.selectedEmotion].name + "_" + EPart[Number(designation)] + "_" + name + ".png",
-                          positionX: 0,
-                          positionY: 0,
-                          height: height,
-                          width: width,
-                          type: Number(designation)
-                        })
-                        mascot.setMascot(mascot.mascot)
-                        handleClose()
-                      }
-                    }).catch((e) => { toast.error(e) })
-
+                      mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts.push({
+                        name: name,
+                        visibility: true,
+                        // sourcePath: "https://asset.localhost/"+path,
+                        sourcePath: mascot.mascot.workingDir + mascot.mascot.emotions[mascot.mascot.selectedEmotion].name + "_" + name + "_" + id + ".masset",
+                        positionX: 0,
+                        positionY: 0,
+                        height: height,
+                        width: width,
+                        type: Number(designation)
+                      })
+                      mascot.setMascot(mascot.mascot)
+                      handleClose()
+                    }
+                    //   }).catch((e) => { toast.error(e) })
                   }
-
                 }
               } else {
                 if (name === "") {
@@ -256,7 +256,8 @@ export default function PartAdd({ open, setOpen, redact }: { open: boolean, setO
                   toast.error("No path given")
                 }
               }
-            }}>
+            }
+            }>
             {redact ? "Redact Part" : "Add Part"}
           </div>
         </div>
