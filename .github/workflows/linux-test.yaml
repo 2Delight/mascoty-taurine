@@ -58,6 +58,7 @@ jobs:
         run: |
           sudo ldconfig -p
           sudo ldconfig -v
+          sudo ldconfig -n libtorch/lib
 
       # - name: Build Rust Debug
       #   run: cargo build --verbose --verbose
