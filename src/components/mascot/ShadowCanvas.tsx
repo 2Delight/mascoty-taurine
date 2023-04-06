@@ -11,7 +11,7 @@ import ShadowPart from "./ShadowPart";
 import { get_mascot } from "../../utils/Commands";
 import { descriptRawEmotion } from "../../utils/EDescriptor";
 
-const getMascotInterval = 1000
+const getMascotInterval = 500
 const updateVoiceInterval = 20
 
 export default function ShadowCanvas({ mascot }: { mascot: IMascot }) {
