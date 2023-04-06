@@ -32,6 +32,8 @@ jobs:
 
           setx /M PATH "%PATH%;%CD%libtorch\lib\"
 
+          echo %PATH%
+
       - name: Tauri Build
         run: npx tauri build --verbose
 

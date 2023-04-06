@@ -35,6 +35,8 @@ jobs:
 
           setx /M PATH "%PATH%;%CD%libtorch\lib\"
 
+          echo %PATH%
+
 
       - name: Test
         run: cargo test --verbose --verbose
