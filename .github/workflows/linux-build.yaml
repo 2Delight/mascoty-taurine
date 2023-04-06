@@ -51,13 +51,13 @@ jobs:
           unzip libtorch-shared-with-deps-1.13.0+cpu.zip
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/libtorch/lib
         
-      - name: Build Rust Debug
-        run: cargo build --verbose --verbose
-        working-directory: src-tauri
+      # - name: Build Rust Debug
+      #   run: cargo build --verbose --verbose
+      #   working-directory: src-tauri
       
-      - name: Build Rust Release
-        run: cargo build --release --verbose --verbose
-        working-directory: src-tauri
+      # - name: Build Rust Release
+      #   run: cargo build --release --verbose --verbose
+      #   working-directory: src-tauri
 
       - name: Tauri Build
         run: npx tauri build --verbose
