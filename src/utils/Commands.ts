@@ -15,5 +15,13 @@ export async function get_cams() {
 }
 
 export async function set_cams(val: number) {
-    return await invoke("get_cameras", {val, aboba, })
+    return await invoke("set_cameras", {index: val, config: aboba, })
+}
+
+export async function get_mics() {
+    return await invoke("get_microphones")
+}
+
+export async function set_mics(val: number) {
+    return await invoke("select_microphone", {index: val})
 }
