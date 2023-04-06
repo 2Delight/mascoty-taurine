@@ -123,7 +123,17 @@ impl Devices {
     pub fn get_volume(&self) -> u8 {
         const MAXIMUM_VOLUME: f32 = 100f32;
 
-        let nums: [f32; MIKE_LENGTH] = *self.microphone.lock().unwrap().receiver.read().unwrap();
+        let nums: [f32; MIKE_LENGTH] = loop {
+            match &self.microphone.lock().unwrap().receiver.read() {
+                Ok(val) => {
+                    break **val
+                }
+                Err(_) => {
+                    continue;
+                }
+            };
+        };
+
         debug!("Microphone info lenght: {}", nums.len());
         let volume: f32 = nums.iter().map(|vol| vol.abs()).sum();
         if volume < MAXIMUM_VOLUME {
