@@ -21,7 +21,7 @@ export default function MicSelection() {
             .then((response: any) => aboba = response)
             .then(() => {
                 // alert(aboba)
-                aboba = aboba.map(item => item = item.substring(item.indexOf("(") + 1, item.lastIndexOf(")")))
+                // aboba = aboba.map(item => item = item.substring(item.indexOf("(") + 1, item.lastIndexOf(")")))
                 setMics(aboba)
                 setMic(aboba.length > 0 ? aboba[0] : '')
             }).catch((ex) => alert(ex))
