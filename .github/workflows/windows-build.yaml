@@ -33,12 +33,20 @@ jobs:
 
       - name: Add LibTorch to PATH
         run: |
-          $curr = Get-Location
-          $torch = "libtorch\lib"
-          $joined = Join-Path $curr $torch
+          $CURR = Get-Location
+          echo $CURR
+
+          $TORCH = "libtorch\lib\"
+          $JOINED = Join-Path $CURR $TORCH
           
-          $env:Path += ";$joined"
-          echo $env:Path
+          $env:PATH += ";$JOINED"
+          echo $env:PATH
+
+          $TORCH_DLL = "libtorch\lib\torch_cpu.dll"
+          $JOINED_DLL = Join-Path $CURR $TORCH_DLL
+          
+          $env:Path += ";$JOINED_DLL"
+          echo $env:PATH
 
       - name: Tauri Build
         run: npx tauri build --verbose
