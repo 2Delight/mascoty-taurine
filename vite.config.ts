@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import { resolve } from 'path'
 import react from "@vitejs/plugin-react";
 
 // https://vitejs.dev/config/
@@ -17,6 +18,13 @@ export default defineConfig({
   // https://tauri.studio/v1/api/config#buildconfig.beforedevcommand
   envPrefix: ["VITE_", "TAURI_"],
   build: {
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        nested: resolve(__dirname, 'canvas.html'),
+      },
+    },
+
     // Tauri supports es2021
     target: process.env.TAURI_PLATFORM == "windows" ? "chrome105" : "safari13",
     // don't minify for debug builds

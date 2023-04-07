@@ -217,20 +217,22 @@ export default function App() {
                     // let broadcastingStatus = !broadcasting
                     // setBroadcasting(broadcastingStatus)
 
-                    // if (broadcastingStatus) {
-                    // const webview = new WebviewWindow('canvas', {
-                    //   url: "canvas.html",
-                    // })
-                    // // since the webview window is created asynchronously,
-                    // // Tauri emits the `tauri://created` and `tauri://error` to notify you of the creation response
-                    // webview.once('tauri://created', function () {
-                    //   console.log("SPAWNED")
-                    // })
-                    // webview.once('tauri://error', function (e) {
-                    //   console.log(e)
-                    // })
 
                     set_raw_mascot(JSON.stringify(mascot))
+                    // if (broadcastingStatus) {
+                    const webview = new WebviewWindow('canvas', {
+                      url: "canvas.html",
+                    })
+                    // since the webview window is created asynchronously,
+                    // Tauri emits the `tauri://created` and `tauri://error` to notify you of the creation response
+                    webview.once('tauri://created', function () {
+                      console.log("SPAWNED")
+                    })
+                    webview.once('tauri://error', function (e) {
+                      console.log(e)
+                    })
+
+                    
 
                     const canvasWindow = WebviewWindow.getByLabel('canvas')
 
@@ -243,7 +245,7 @@ export default function App() {
                 <div className="shadow" />
 
               </div>
-              {broadcasting ? <ShadowCanvas mascot={mascot} /> : <MascotCanvas />}
+              {broadcasting ? <ShadowCanvas/> : <MascotCanvas />}
             </div>
           </div>
         }

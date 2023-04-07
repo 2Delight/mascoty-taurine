@@ -8,38 +8,46 @@ import { EEmotion } from "../logic/EEmotion";
 import { EPart } from "../logic/EPart";
 import { toast } from "react-toastify";
 import ShadowPart from "./ShadowPart";
-import { get_mascot, get_volume } from "../../utils/Commands";
+import { get_mascot, get_raw_mascot, get_volume } from "../../utils/Commands";
 import { descriptRawEmotion } from "../../utils/EDescriptor";
+import "../../App.css";
 
 const getMascotInterval = 1000
-const getVolumeInterval = 100
+const getVolumeInterval = 50
 const updateVoiceInterval = 20
 
-export default function ShadowCanvas({ mascot }: { mascot: IMascot }) {
-    const [mc, setMc] = useState<IMascot>(mascot);
+export default function ShadowCanvas() {
+    const [mc, setMc] = useState<IMascot>();
 
+    var mascot: IMascot;
     var oldVol = 0
     var vol = 0
+    var emoIndexes: number[] = []
 
     const [volume, setVol] = useState(0)
-    const [normVol, setNormVol] = useState(0)
 
     useEffect(() => {
-        let nemoIndexes: number[] = []
-        if (mascot) {
-            console.log("MASCOT SET")
-            console.log(mascot)
+        let inteval = setInterval(() => {
+            get_raw_mascot().then((data) => {
+                let a = JSON.parse(String(data))
+                if ((a as IMascot).workingDir !== "") {
+                    console.log("SET MASCOT")
+                    console.log(a)
+                    for (let i = 0; i < a.emotions.length; i++) {
+                        emoIndexes[a.emotions[i].emotion] = i
+                        console.log(a.emotions[i].emotion)
+                    }
+                    setMc(a)
+                    mascot = a
+                    clearInterval(inteval)
+                } else {
+                    console.log("bad data")
+                }
+            })
+        }, 10)
 
-            for (let i = 0; i < mascot.emotions.length; i++) {
-                nemoIndexes[mascot.emotions[i].emotion] = i
-                console.log(mascot.emotions[i].emotion)
-            }
-        } else {
-            console.log("CANT FIND MASCOT")
-        }
 
-
-        let inter = setInterval(() => getData(nemoIndexes), getMascotInterval)
+        let inter = setInterval(() => getData(), getMascotInterval)
         let interVoice = setInterval(() => updateVol(), updateVoiceInterval)
         let interVolume = setInterval(() => getVol(), getVolumeInterval)
 
@@ -63,7 +71,7 @@ export default function ShadowCanvas({ mascot }: { mascot: IMascot }) {
         // if (Math.abs(vol - oldVol) < 2)
         //     return
         oldVol += (vol - oldVol) * (updateVoiceInterval / getMascotInterval)
-        console.log(oldVol)
+        // console.log(oldVol)
         setVol(Math.floor(oldVol))
         // setVol(Number(oldVol))
     }
@@ -76,24 +84,31 @@ export default function ShadowCanvas({ mascot }: { mascot: IMascot }) {
         })
     }
 
-    const getData = (ei: number[]) => {
-        get_mascot().then((data) => applyDataToMascot(data as IMascotData, ei))
+    const getData = () => {
+        get_mascot().then((data) => applyDataToMascot(data as IMascotData))
     }
 
-    const applyDataToMascot = (dt: IMascotData, emoIndexes: number[]) => {
+    const applyDataToMascot = (dt: IMascotData) => {
         // dt.emotion = 'angry'
         let emo: EEmotion = descriptRawEmotion(dt.emotion)
         // console.log("EMO: " + emo)
         // console.log("EMOINDEX " + emoIndexes[emo])
-        console.log(dt)
-        console.log(mc)
-        if (emoIndexes[emo] === undefined) {
+        // console.log(dt)
+        // console.log(mc)
+        if (emoIndexes[emo] === undefined || mc?.workingDir === "") {
             console.log("Bad Emotion")
-            console.log(dt)
+            // console.log(dt)
             return
         }
 
-        let mcc = structuredClone(mc)
+        let mcc = mascot
+
+        if (!mcc) {
+            console.log("NO MASCOT")
+            return
+        } else {
+            console.log(mcc)
+        }
 
         for (let i = 0; i < mcc.emotions.length; i++) {
             if (i !== emoIndexes[emo]) {
@@ -145,20 +160,23 @@ export default function ShadowCanvas({ mascot }: { mascot: IMascot }) {
                 }
             }
         }
-        setMc(mcc)
+        setMc((old) => structuredClone(mcc))
+        mascot = mcc
     }
 
     return <div className="shadowPlace" style={{
-        flex: 10,
-        paddingTop: 10,
-        paddingLeft: 10,
-        position: "relative",
+        position: "absolute",
+        overflow:"hidden",
+        height: "100%",
+        width: "100%",
+        backgroundColor:"black",
+        margin:0,
 
     }}>
         <div style={{
             overflow: "hidden",
             height: "100%",
-            backgroundColor: mascot.bgColor,
+            backgroundColor: mc?.bgColor,
         }}>
             <div className="canvas"
                 style={{ position: "relative", }}
