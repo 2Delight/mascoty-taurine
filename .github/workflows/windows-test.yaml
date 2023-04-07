@@ -33,6 +33,8 @@ jobs:
           unzip libtorch.zip
 
           ls
+          $CURR = Get-Location
+          ls -Path '$CURR\libtorch\'
 
       - name: Add LibTorch to PATH
         run: |
