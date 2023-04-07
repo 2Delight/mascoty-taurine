@@ -51,6 +51,7 @@ jobs:
           unzip libtorch-cxx11-abi-shared-with-deps-1.13.0+cpu.zip
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/libtorch/lib
           sudo ldconfig -n $PWD/libtorch/lib
+          sudo ldconfig $PWD/libtorch/lib
 
       - name: LDConfig Reload
         run: |
