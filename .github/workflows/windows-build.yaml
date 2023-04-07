@@ -31,13 +31,14 @@ jobs:
 
           ls
           ls -Path libtorch
+          ls -Path libtorch\lib
 
       - name: Add LibTorch to PATH
         run: |
           $CURR = Get-Location
           echo $CURR
 
-          $TORCH = "libtorch\lib\"
+          $TORCH = "libtorch\lib"
           $JOINED = Join-Path $CURR $TORCH
           
           $env:PATH += ";$JOINED"
