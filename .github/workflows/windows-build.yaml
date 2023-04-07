@@ -30,9 +30,11 @@ jobs:
           wget https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-1.13.0%2Bcpu.zip
           unzip libtorch-win-shared-with-deps-1.13.0+cpu.zip
 
-          setx /M PATH "%PATH%;%CD%libtorch\lib\"
+          setx /M PATH "%CD%libtorch\lib;%PATH%"
+          # setx /M PATH "%CD%libtorch\lib\torch_cpu.dll;%PATH%"
 
-          regsvr32.exe /i /n %CD%libtorch\lib\torch_cpu.dll
+          set PATH=%CD%libtorch\lib;%PATH%
+          # set PATH=%CD%libtorch\lib\torch_cpu.dll;%PATH%
 
       - name: Tauri Build
         run: npx tauri build --verbose
