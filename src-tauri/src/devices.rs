@@ -23,7 +23,7 @@ use nokhwa::{query, Camera, NokhwaError};
 /// Microphone input receiver.
 pub struct Microphone {
     receiver: Arc<Mutex<Vec<f32>>>,
-    stream: Stream,
+    _stream: Stream,
 }
 
 /// Devices input receiver.
@@ -162,7 +162,7 @@ pub fn set_mike(index: usize, host: &Host) -> Result<Microphone, DevicesError> {
 
     Ok(Microphone {
         receiver: receiver,
-        stream: input_stream,
+        _stream: input_stream,
     })
 }
 

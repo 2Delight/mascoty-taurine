@@ -21,7 +21,7 @@ pub struct Mascot {
 /// Transforms RGB image tensor to BW.
 /// 
 /// It takes original 3-channel tensor and makes 1-channel tensor with mean vallues.
-fn to_bw(tensor: Tensor) -> Tensor {
+pub(crate) fn to_bw(tensor: Tensor) -> Tensor {
     (tensor.index(&[Some(Tensor::of_slice(&[0i64])), None, None])
         + tensor.index(&[Some(Tensor::of_slice(&[1i64])), None, None])
         + tensor.index(&[Some(Tensor::of_slice(&[2i64])), None, None]))
@@ -29,7 +29,7 @@ fn to_bw(tensor: Tensor) -> Tensor {
 }
 
 /// Gets index for largest value in tensor.
-fn argmax(tensor: &[f64]) -> u8 {
+pub(crate) fn argmax(tensor: &[f64]) -> u8 {
     let mut index = 0u8;
 
     for i in 0..tensor.len() {
@@ -42,7 +42,7 @@ fn argmax(tensor: &[f64]) -> u8 {
 }
 
 /// Helps to find coordinates of corners for square crop image.
-fn get_cropped_corners(mut width: u32, mut height: u32) -> (u32, u32, u32, u32) {
+pub(crate) fn get_cropped_corners(mut width: u32, mut height: u32) -> (u32, u32, u32, u32) {
     if width < height {
         (width, height) = (height, width);
     }
