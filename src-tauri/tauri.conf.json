@@ -26,21 +26,27 @@
         "save": true
       },
       "fs": {
-        "scope": ["**"],
+        "scope": [
+          "**"
+        ],
         "exists": true,
         "createDir": true,
         "readDir": true,
         "readFile": true,
         "writeFile": true,
         "removeDir": true,
-        "removeFile" : true,
+        "removeFile": true,
         "copyFile": true
       },
       "protocol": {
         "asset": true,
-        "assetScope": ["**"]
+        "assetScope": [
+          "**"
+        ]
       },
       "window": {
+        "all": true,
+        "create": true,
         "setTitle": true
       },
       "globalShortcut": {

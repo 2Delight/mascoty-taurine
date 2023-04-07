@@ -10,6 +10,7 @@ use mascoty_taurine::{check_error, commands::*};
 
 use log::{debug, error, info, warn};
 use simple_logger::SimpleLogger;
+use tokio::sync::Mutex;
 
 const DEFAULT_DEVICE_INDEX: usize = 0;
 
@@ -55,6 +56,8 @@ fn main() {
 
     mascoty_taurine::mascot::get_mascot(&devices).unwrap();
 
+    let mascot_json = Mutex::new(String::new());
+    
     // Starting app.
     debug!("Building the app");
     tauri::Builder::default()
@@ -62,6 +65,8 @@ fn main() {
         .manage(devices)
         // Adding host to state.
         .manage(host)
+        // Adding current mascot.
+        .manage(mascot_json)
         .invoke_handler(tauri::generate_handler![
             get_mascot,
             get_cameras,
@@ -69,7 +74,9 @@ fn main() {
             set_camera_config,
             get_microphones,
             select_microphone,
-            get_volume
+            get_volume,
+            get_raw_mascot,
+            set_raw_mascot,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
