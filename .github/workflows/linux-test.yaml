@@ -55,8 +55,8 @@ jobs:
 
       - name: LDConfig
         run: |
-          sudo export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/libtorch/lib
-          sudo echo $PWD/libtorch/lib >> /etc/ld.so.conf          
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/libtorch/lib
+          sudo sh -c "echo $PWD/libtorch/lib >> /etc/ld.so.conf"
           sudo ldconfig
           sudo ldconfig -p
       
