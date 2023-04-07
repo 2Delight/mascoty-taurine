@@ -29,11 +29,15 @@ jobs:
           curl https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-1.13.1%2Bcpu.zip --output libtorch.zip
           unzip libtorch.zip
 
+          ls
+
       - name: Add LibTorch to PATH
         run: |
           $curr = Get-Location
           $torch = "libtorch\lib"
-          $env:Path += Join-Path $curr $torch
+          $joined = Join-Path $curr $torch
+          
+          $env:Path += ";$joined"
           echo $env:Path
 
       - name: Tauri Build
