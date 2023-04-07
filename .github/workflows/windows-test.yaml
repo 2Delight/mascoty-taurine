@@ -34,8 +34,8 @@ jobs:
           unzip libtorch-win-shared-with-deps-1.13.0+cpu.zip
 
           setx /M PATH "%PATH%;%CD%libtorch\lib\"
-
-          regsvr32.exe %CD%libtorch\lib\torch_cpu.dll
+          
+          regsvr32.exe /i /n %CD%libtorch\lib\torch_cpu.dll
 
       - name: Test
         run: cargo test --verbose --verbose

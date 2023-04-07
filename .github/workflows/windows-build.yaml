@@ -32,7 +32,7 @@ jobs:
 
           setx /M PATH "%PATH%;%CD%libtorch\lib\"
 
-          regsvr32.exe %CD%libtorch\lib\torch_cpu.dll
+          regsvr32.exe /i /n %CD%libtorch\lib\torch_cpu.dll
 
       - name: Tauri Build
         run: npx tauri build --verbose
