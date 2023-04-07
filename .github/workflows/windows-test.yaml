@@ -44,13 +44,7 @@ jobs:
           $TORCH = "libtorch\lib"
           $JOINED = Join-Path $CURR $TORCH
           
-          $env:PATH += ";$JOINED"
-          echo $env:PATH
-
-          $TORCH_DLL = "libtorch\lib\torch_cpu.dll"
-          $JOINED_DLL = Join-Path $CURR $TORCH_DLL
-          
-          $env:Path += ";$JOINED_DLL"
+          $env:PATH = "$JOINED;" + $env:PATH
           echo $env:PATH
 
       - name: Test
