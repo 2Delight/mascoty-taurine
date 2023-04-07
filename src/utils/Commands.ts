@@ -25,3 +25,11 @@ export async function get_mics() {
 export async function set_mics(val: number) {
     return await invoke("select_microphone", {index: val})
 }
+
+export async function get_raw_mascot() {
+    return await invoke("get_raw_mascot")
+}
+
+export async function set_raw_mascot(val: string) {
+    return await invoke("set_raw_mascot", {s: val})
+}

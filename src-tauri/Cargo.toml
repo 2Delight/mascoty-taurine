@@ -28,7 +28,7 @@ cpal = "0.15.2"
 
 [dependencies.tauri]
 version = "1.2"
-features = [
+features = [ "window-all",
     "dialog-all",
     "fs-copy-file",
     "fs-create-dir",
@@ -42,7 +42,6 @@ features = [
     "path-all",
     "protocol-asset",
     "shell-open",
-    "window-set-title",
 ]
 
 [dependencies.tokio]

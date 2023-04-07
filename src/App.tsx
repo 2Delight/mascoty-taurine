@@ -27,6 +27,9 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 // import { CreateFiles } from "./utils/Router";
 import ShadowCanvas from "./components/mascot/ShadowCanvas";
 
+import { WebviewWindow } from '@tauri-apps/api/window'
+import { set_raw_mascot } from "./utils/Commands";
+
 
 export const MascotContext = createContext<{
   mascot: IMascot,
@@ -116,16 +119,16 @@ export default function App() {
                   // borderRightWidth: 5,
                   borderRight: "2px solid " + focusBlue,
                   backgroundColor: contextMenuGray,
-                  display:"flex",
-                  flexDirection:"column"
+                  display: "flex",
+                  flexDirection: "column"
                   // borderRight: "solid",
                   // borderRightWidth: 3, borderColor: interactActiveHoverGray,
                 }}
                 onMouseLeave={() => setContextVisible(false)}
               >
-                <div style={{flex:10}}/>
+                <div style={{ flex: 10 }} />
                 <img src={logo} style={{ width: 200, alignSelf: "center", margin: 10, }} />
-                <div style={{flex:10}}/>
+                <div style={{ flex: 10 }} />
                 <div className="msct-button" style={{ margin: 10, padding: 7, borderRadius: 10, color: menuGray }}
                   onClick={() => {
                     saveMascot(mascot).then(() => toast.success("Project saved")).catch((e) => toast.warn("Project can not be saved due to: " + e))
@@ -211,14 +214,29 @@ export default function App() {
 
                 <div className="msct-button" style={{ margin: 4, padding: 7, borderRadius: 10, color: menuGray }}
                   onClick={() => {
-                    let broadcastingStatus = !broadcasting
-                    setBroadcasting(broadcastingStatus)
+                    // let broadcastingStatus = !broadcasting
+                    // setBroadcasting(broadcastingStatus)
 
-                    if (broadcastingStatus) {
+                    // if (broadcastingStatus) {
+                    // const webview = new WebviewWindow('canvas', {
+                    //   url: "canvas.html",
+                    // })
+                    // // since the webview window is created asynchronously,
+                    // // Tauri emits the `tauri://created` and `tauri://error` to notify you of the creation response
+                    // webview.once('tauri://created', function () {
+                    //   console.log("SPAWNED")
+                    // })
+                    // webview.once('tauri://error', function (e) {
+                    //   console.log(e)
+                    // })
 
-                    } else {
+                    set_raw_mascot(JSON.stringify(mascot))
 
-                    }
+                    const canvasWindow = WebviewWindow.getByLabel('canvas')
+
+                    // } else {
+
+                    // }
                   }}>
                   {broadcasting ? "Stop Broadcast" : "Start Broadcast"}
                 </div>

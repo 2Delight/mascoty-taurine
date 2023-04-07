@@ -22,6 +22,7 @@ export default function ShadowCanvas({ mascot }: { mascot: IMascot }) {
     var vol = 0
 
     const [volume, setVol] = useState(0)
+    const [normVol, setNormVol] = useState(0)
 
     useEffect(() => {
         let nemoIndexes: number[] = []
@@ -39,14 +40,14 @@ export default function ShadowCanvas({ mascot }: { mascot: IMascot }) {
 
 
         let inter = setInterval(() => getData(nemoIndexes), getMascotInterval)
-        // let interVoice = setInterval(() => updateVol(), updateVoiceInterval)
+        let interVoice = setInterval(() => updateVol(), updateVoiceInterval)
         let interVolume = setInterval(() => getVol(), getVolumeInterval)
 
 
         return () => {
             console.log("STOPING")
             clearInterval(inter)
-            // clearInterval(interVoice)
+            clearInterval(interVoice)
             clearInterval(interVolume)
         }
         // }
@@ -59,16 +60,20 @@ export default function ShadowCanvas({ mascot }: { mascot: IMascot }) {
         // if (oldVol < vol) {
         //     oldVol++
         // }
-        if (Math.abs(vol - oldVol) < 2)
-            return
+        // if (Math.abs(vol - oldVol) < 2)
+        //     return
         oldVol += (vol - oldVol) * (updateVoiceInterval / getMascotInterval)
         console.log(oldVol)
-        setVol(oldVol)
+        setVol(Math.floor(oldVol))
         // setVol(Number(oldVol))
     }
 
     const getVol = () => {
-        get_volume().then((data) => setVol(Number(data)))
+        get_volume().then((data) => {
+            // vol = Number(data)
+            setVol(Number(data))
+            // console.log(vol)
+        })
     }
 
     const getData = (ei: number[]) => {

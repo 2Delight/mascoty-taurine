@@ -6,6 +6,28 @@ use cpal::Host;
 use cpal::traits::DeviceTrait;
 use log::{debug, error, info, warn};
 
+use std::string::String;
+use std::string;
+
+static mut GLOBAL_STRING: String = String::new();
+
+#[tauri::command]
+pub fn get_raw_mascot() -> String {
+    debug!("Handler get_raw_mascot has been invoken");
+    unsafe {
+        GLOBAL_STRING.clone()
+      }
+}
+
+#[tauri::command]
+pub fn set_raw_mascot(s: String) {
+    debug!("Handler set_raw_mascot has been invoken");
+    debug!("{}",s);
+    unsafe {
+      GLOBAL_STRING = s;
+    }
+  }
+
 /// Handler for getting Mascot.
 #[tauri::command]
 pub fn get_mascot(state: tauri::State<Devices>) -> Result<mascot::Mascot, String> {

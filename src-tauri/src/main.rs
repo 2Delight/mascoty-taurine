@@ -69,7 +69,9 @@ fn main() {
             set_camera_config,
             get_microphones,
             select_microphone,
-            get_volume
+            get_volume,
+            get_raw_mascot,
+            set_raw_mascot,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
