@@ -2,31 +2,25 @@ use crate::config::CameraConfig;
 use crate::devices::{get_cams, get_mikes, set_cam, set_mike, Devices};
 use crate::mascot;
 
-use cpal::Host;
 use cpal::traits::DeviceTrait;
+use cpal::Host;
 use log::{debug, error, info, warn};
+use tokio::sync::Mutex;
 
 use std::string::String;
-use std::string;
-
-static mut GLOBAL_STRING: String = String::new();
 
 #[tauri::command]
-pub fn get_raw_mascot() -> String {
-    debug!("Handler get_raw_mascot has been invoken");
-    unsafe {
-        GLOBAL_STRING.clone()
-      }
+pub fn get_raw_mascot(state: tauri::State<Mutex<String>>) -> String {
+    debug!("Getting mascot JSON");
+    (*state.blocking_lock()).clone()
 }
 
 #[tauri::command]
-pub fn set_raw_mascot(s: String) {
-    debug!("Handler set_raw_mascot has been invoken");
-    debug!("{}",s);
-    unsafe {
-      GLOBAL_STRING = s;
-    }
-  }
+pub fn set_raw_mascot(mascot: String, state: tauri::State<Mutex<String>>) {
+    debug!("Setting mascot JSON");
+    info!("Got mascot: {}", mascot);
+    *state.blocking_lock() = mascot;
+}
 
 /// Handler for getting Mascot.
 #[tauri::command]
@@ -34,14 +28,14 @@ pub fn get_mascot(state: tauri::State<Devices>) -> Result<mascot::Mascot, String
     debug!("Handler get_mascot has been invoken");
     match mascot::get_mascot(&state) {
         Ok(mascot) => Ok(mascot),
-        Err(err) => Err(format!("failed to get mascot: {}", err.to_string()))
+        Err(err) => Err(format!("failed to get mascot: {}", err.to_string())),
     }
 }
 
 /// Handler for getting list of available cameras.
-/// 
+///
 /// If ok => returns vector of camera names.
-/// 
+///
 /// If err => returns string error.
 #[tauri::command]
 pub fn get_cameras() -> Result<Vec<String>, String> {
@@ -57,9 +51,9 @@ pub fn get_cameras() -> Result<Vec<String>, String> {
 }
 
 /// Handler which receives index of camera and sets it as chosen.
-/// 
+///
 /// If ok => returns nothing.
-/// 
+///
 /// If err => returns string error.
 #[tauri::command]
 pub fn select_camera(
@@ -88,9 +82,9 @@ fn is_in_interval(value: i32, left: i32, right: i32) -> bool {
 }
 
 /// Handler which updates configuration of selected camera.
-/// 
+///
 /// If ok => returns nothing.
-/// 
+///
 /// If err => returns string error.
 #[tauri::command]
 pub fn set_camera_config(conf: CameraConfig, state: tauri::State<Devices>) -> Result<(), String> {
@@ -119,9 +113,9 @@ pub fn set_camera_config(conf: CameraConfig, state: tauri::State<Devices>) -> Re
 }
 
 /// Handler for getting list of available microphones.
-/// 
+///
 /// If ok => returns vector of camera names.
-/// 
+///
 /// If err => returns string error.
 #[tauri::command]
 pub fn get_microphones(state: tauri::State<Host>) -> Result<Vec<String>, String> {
@@ -137,9 +131,9 @@ pub fn get_microphones(state: tauri::State<Host>) -> Result<Vec<String>, String>
 }
 
 /// Handler which receives index of microphone and sets it as chosen.
-/// 
+///
 /// If ok => returns nothing.
-/// 
+///
 /// If err => returns string error.
 #[tauri::command]
 pub fn select_microphone(
@@ -155,8 +149,6 @@ pub fn select_microphone(
 
 /// Gets current volume in interval [0; 100].
 #[tauri::command]
-pub fn get_volume(
-    state: tauri::State<Devices>,
-) -> u8 {
+pub fn get_volume(state: tauri::State<Devices>) -> u8 {
     state.get_volume()
 }

@@ -31,5 +31,5 @@ export async function get_raw_mascot() {
 }
 
 export async function set_raw_mascot(val: string) {
-    return await invoke("set_raw_mascot", {s: val})
+    return await invoke("set_raw_mascot", {mascot: val})
 }
