@@ -37,14 +37,6 @@ jobs:
 
           echo %PATH%
 
-      # - name: Build Rust Debug
-      #   run: cargo build --verbose --verbose
-      #   working-directory: src-tauri
-      
-      # - name: Build Rust Release
-      #   run: cargo build --release --verbose --verbose
-      #   working-directory: src-tauri
-
       - name: Test
         run: cargo test --verbose --verbose
         working-directory: src-tauri

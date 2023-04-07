@@ -37,14 +37,6 @@ jobs:
       - name: Tauri Build
         run: npx tauri build --verbose
 
-      # - name: Build Rust Debug
-      #   run: cargo build --verbose --verbose
-      #   working-directory: src-tauri
-      
-      # - name: Build Rust Release
-      #   run: cargo build --release --verbose --verbose
-      #   working-directory: src-tauri
-
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v3
         with:
