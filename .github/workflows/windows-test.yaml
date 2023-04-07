@@ -35,7 +35,7 @@ jobs:
 
       - name: Add LibTorch to PATH
         run: |
-          setx /M PATH "%PATH%;%CD%libtorch\lib"
+          set PATH="%PATH%;%CD%libtorch\lib"
           echo %PATH%
 
       - name: Test
