@@ -17,7 +17,7 @@
 X. Download Windows release MSI installer (coming soon)
 
 ### MacOS
-1. We need to install homebrew:
+1. Install homebrew:
 
 `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
 
