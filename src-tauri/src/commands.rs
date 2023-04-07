@@ -4,7 +4,7 @@ use crate::mascot;
 
 use cpal::traits::DeviceTrait;
 use cpal::Host;
-use log::{debug, error, info, warn};
+use log::{debug, info};
 use tokio::sync::Mutex;
 
 use std::string::String;

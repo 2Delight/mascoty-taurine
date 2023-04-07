@@ -1,6 +1,3 @@
-use crate::commands::*;
-use crate::mascot::{argmax, to_bw};
-
 #[cfg(test)]
 mod utils {
     use crate::{check_error, init_dict, panic_error};
@@ -49,7 +46,7 @@ mod commands {
 
 #[cfg(test)]
 mod ml {
-    use tch::Tensor;
+    
 
     use crate::mascot::argmax;
     #[test]

@@ -1,16 +1,13 @@
 use crate::config::{CameraConfig, Config};
 
-use std::sync::{
-    Arc,
-    mpsc::{Receiver, Sender},
-};
-use tokio::sync::Mutex;
+use std::sync::Arc;
 
+use tokio::sync::Mutex;
 use cpal::{
     traits::{DeviceTrait, HostTrait, StreamTrait},
     Device, DevicesError, Host, Stream, SupportedStreamConfig,
 };
-use log::{debug, error, info, warn};
+use log::{debug, error, info};
 use nokhwa::{
     pixel_format::RgbFormat,
     utils::{

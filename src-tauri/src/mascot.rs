@@ -1,12 +1,10 @@
 use crate::devices::Devices;
-use crate::panic_error;
 use crate::emotions::Emotion;
 
-use std::{time::{SystemTime, UNIX_EPOCH}, io::Cursor};
-use std::io::{Read, Write};
+use std::{time::{SystemTime, UNIX_EPOCH}};
 
-use log::{debug, error, info, warn};
-use nokhwa::{pixel_format::*, NokhwaError, Buffer};
+use log::{debug, info};
+use nokhwa::{pixel_format::*, NokhwaError};
 use serde::{Deserialize, Serialize};
 use tch::Tensor;
 

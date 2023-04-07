@@ -6,9 +6,9 @@
 use mascoty_taurine::config::import_config;
 use mascoty_taurine::devices::{get_cams, set_cam, set_mike, Devices};
 use mascoty_taurine::panic_error;
-use mascoty_taurine::{check_error, commands::*};
+use mascoty_taurine::{commands::*};
 
-use log::{debug, error, info, warn};
+use log::{debug, info};
 use simple_logger::SimpleLogger;
 use tokio::sync::Mutex;
 

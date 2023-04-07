@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests;
 
-use log::{debug, error, info, warn};
+use log::{debug};
 use serde::{Deserialize, Serialize};
 use tch::CModule;
 
