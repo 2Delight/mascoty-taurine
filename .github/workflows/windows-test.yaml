@@ -34,8 +34,10 @@ jobs:
 
       - name: Add LibTorch to PATH
         run: |
-          set PATH="%PATH%;%CD%libtorch\lib"
-          echo %PATH%
+          $curr = Get-Location
+          $torch = "libtorch\lib"
+          $env:Path += Join-Path $curr $torch
+          echo $env:Path
 
       - name: Test
         run: cargo test --verbose --verbose
