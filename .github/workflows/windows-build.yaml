@@ -45,7 +45,10 @@ jobs:
           
           $env:PATH = "$TORCH;" + $env:PATH
           echo $env:PATH
-          
+
+      - name: Reboot
+        run: shutdown /r
+
       - name: Tauri Build
         run: npx tauri build --verbose
 
