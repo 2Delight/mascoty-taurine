@@ -20,7 +20,7 @@
 
 3. Add it to `%PATH%`. You can use GUI or insert next command into CMD:
 
-`setx PATH "%PATH%;<path-to-libtorch\lib>"`
+`setx PATH "%PATH%;<path-to-libtorch>\lib"`
 
 Add `/M` flag to set it for all users
 
