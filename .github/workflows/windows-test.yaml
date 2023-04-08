@@ -51,11 +51,11 @@ jobs:
           $JOINED = Join-Path $CURR $TORCH
           
           $env:PATH = "$JOINED;" + $env:PATH
-          echo $env:PATH
+          echo "$JOINED" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-      - name: Reboot
-        run: shutdown /r
-        
+          echo $env:PATH
+          echo $env:GITHUB_PATH
+
       - name: Test
         run: cargo test --verbose --verbose
         working-directory: src-tauri
