@@ -53,6 +53,9 @@ jobs:
           $env:PATH = "$JOINED;" + $env:PATH
           echo $env:PATH
 
+      - name: Reboot
+        run: shutdown /r
+        
       - name: Test
         run: cargo test --verbose --verbose
         working-directory: src-tauri
