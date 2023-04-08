@@ -25,6 +25,7 @@ jobs:
       - name: Install LibTorch
         run: |
           choco install unzip
+          choco install webview2-runtime
 
           curl https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-1.13.1%2Bcpu.zip --output libtorch.zip
           unzip libtorch.zip
@@ -32,28 +33,6 @@ jobs:
           ls
           ls -Path libtorch
           ls -Path libtorch\lib
-      
-      - name: Register DLL
-        run: |
-          regsvr32 libtorch\lib\asmjit.dll
-          regsvr32 libtorch\lib\c10.dll
-          regsvr32 libtorch\lib\fbgemm.dll
-          regsvr32 libtorch\lib\libiomp5md.dll
-          regsvr32 libtorch\lib\libiompstubs5md.dll
-          regsvr32 libtorch\lib\torch_cpu.dll
-          regsvr32 libtorch\lib\torch_global_deps.dll
-          regsvr32 libtorch\lib\torch.dll
-          regsvr32 libtorch\lib\uv.dll
-
-          regsvr32.exe libtorch\lib\asmjit.dll
-          regsvr32.exe libtorch\lib\c10.dll
-          regsvr32.exe libtorch\lib\fbgemm.dll
-          regsvr32.exe libtorch\lib\libiomp5md.dll
-          regsvr32.exe libtorch\lib\libiompstubs5md.dll
-          regsvr32.exe libtorch\lib\torch_cpu.dll
-          regsvr32.exe libtorch\lib\torch_global_deps.dll
-          regsvr32.exe libtorch\lib\torch.dll
-          regsvr32.exe libtorch\lib\uv.dll
 
       - name: Add LibTorch to PATH
         run: |
@@ -65,9 +44,6 @@ jobs:
           
           $env:PATH = "$JOINED;" + $env:PATH
           echo $env:PATH
-      
-      - name: Install PyTorch
-        run: pip3 install torch torchvision torchaudio
 
       - name: Tauri Build
         run: npx tauri build --verbose
