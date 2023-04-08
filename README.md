@@ -29,7 +29,7 @@ Add `/M` flag to set it for all users (requires super user access)
 
 `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
 
-2. Now install LibTorch:
+2. Install LibTorch:
 
 `brew install pytorch`
 
