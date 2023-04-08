@@ -12,8 +12,6 @@
 
 ### Windows
 
-***TODO***
-
 1. Download [LibTorch](https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-1.13.1%2Bcpu.zip)
 
 2. Unzip it somewhere you like
