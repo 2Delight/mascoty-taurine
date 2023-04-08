@@ -24,28 +24,35 @@ jobs:
 
       - name: Tools
         run: |
-          choco install visualstudio2019buildtools
-          choco install visualstudio2019-workload-vctools
+          # choco install visualstudio2019buildtools
+          # choco install visualstudio2019-workload-vctools
           
           choco install unzip
           # choco install webview2-runtime
 
       - name: Install LibTorch
         run: |
-          curl https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-1.13.1%2Bcpu.zip --output "C:\Program Files\libtorch.zip"
-          unzip "C:\Program Files\libtorch.zip"
+          choco install unzip
+          choco install webview2-runtime
+
+          curl https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-1.13.1%2Bcpu.zip --output libtorch.zip
+          unzip libtorch.zip
 
           ls
-          ls -Path C:\Program Files\libtorch
-          ls -Path C:\Program Files\libtorch\lib
+          ls -Path libtorch
+          ls -Path libtorch\lib
 
       - name: Add LibTorch to PATH
         run: |
-          $TORCH = "C:\Program Files\libtorch\lib"
-          
-          $env:PATH = "$TORCH;" + $env:PATH
-          echo $env:PATH
+          $CURR = Get-Location
+          echo $CURR
 
+          $TORCH = "libtorch\lib"
+          $JOINED = Join-Path $CURR $TORCH
+          
+          $env:PATH = "$JOINED;" + $env:PATH
+          echo $env:PATH
+    
       - name: Reboot
         run: shutdown /r
 
