@@ -68,6 +68,9 @@ jobs:
           
           $env:PATH = "$JOINED;" + $env:PATH
           echo $env:PATH
+     
+      - name: Install PyTorch
+        run: pip3 install torch torchvision torchaudio
 
       - name: Test
         run: cargo test --verbose --verbose
