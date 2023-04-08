@@ -50,10 +50,10 @@ jobs:
           $TORCH = "libtorch\lib"
           $JOINED = Join-Path $CURR $TORCH
           
-          $env:PATH = "$JOINED;" + $env:PATH
+          # $env:PATH = "$JOINED;" + $env:PATH
           echo "$JOINED" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-          echo $env:PATH
+          # echo $env:PATH
           echo $env:GITHUB_PATH
 
       - name: Tauri Build
