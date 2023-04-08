@@ -28,7 +28,7 @@ jobs:
           choco install visualstudio2019-workload-vctools
           
           choco install unzip
-          choco install webview2-runtime
+          # choco install webview2-runtime
 
       - name: Install LibTorch
         run: |
