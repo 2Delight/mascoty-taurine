@@ -14,7 +14,17 @@
 
 ***TODO***
 
-X. Download Windows release MSI installer (coming soon)
+1. Download [LibTorch](https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-1.13.1%2Bcpu.zip)
+
+2. Unzip it somewhere you like
+
+3. Add it to `%PATH%`. You can use GUI or insert next command into CMD:
+
+`setx PATH "%PATH%;<path-to-libtorch\lib>"`
+
+Add `/M` flag to set it for all users
+
+4. Download Windows release MSI installer (coming soon)
 
 ### MacOS
 1. Install homebrew:
