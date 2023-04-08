@@ -32,24 +32,20 @@ jobs:
 
       - name: Install LibTorch
         run: |
-          curl https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-1.13.1%2Bcpu.zip --output libtorch.zip
-          unzip libtorch.zip
+          curl https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-1.13.1%2Bcpu.zip --output "C:\Program Files\libtorch.zip"
+          unzip "C:\Program Files\libtorch.zip"
 
           ls
-          ls -Path libtorch
-          ls -Path libtorch\lib
+          ls -Path C:\Program Files\libtorch
+          ls -Path C:\Program Files\libtorch\lib
 
       - name: Add LibTorch to PATH
         run: |
-          $CURR = Get-Location
-          echo $CURR
-
-          $TORCH = "libtorch\lib"
-          $JOINED = Join-Path $CURR $TORCH
+          $TORCH = "C:\Program Files\libtorch\lib"
           
-          $env:PATH = "$JOINED;" + $env:PATH
+          $env:PATH = "$TORCH;" + $env:PATH
           echo $env:PATH
-
+          
       - name: Tauri Build
         run: npx tauri build --verbose
 
