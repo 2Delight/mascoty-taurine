@@ -39,18 +39,22 @@ mod utils {
 }
 
 #[cfg(test)]
-mod commands {
-    #[test]
-    fn check_raw_mascot() {}
-}
-
-#[cfg(test)]
 mod ml {
-    
-
     use crate::mascot::argmax;
+    use crate::mascot::to_bw;
+    use tch::Tensor;
     #[test]
-    fn check_to_bw() {}
+    fn check_to_bw() {
+        assert_eq!(
+            to_bw(Tensor::zeros(&[3, 10, 10], (tch::Kind::Float, tch::Device::Cpu))),
+            Tensor::zeros(&[1, 10, 10], (tch::Kind::Float, tch::Device::Cpu)),
+        );
+
+        assert_eq!(
+            to_bw(Tensor::ones(&[3, 10, 10], (tch::Kind::Float, tch::Device::Cpu))),
+            Tensor::ones(&[1, 10, 10], (tch::Kind::Float, tch::Device::Cpu)),
+        );
+    }
 
     #[test]
     fn check_argmax() {
