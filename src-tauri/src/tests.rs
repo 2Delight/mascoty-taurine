@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod utils {
     use crate::{check_error, init_dict, panic_error};
+
     #[test]
     fn check_panic_error_ok() {
         let ok: Result<i32, &str> = Result::Ok(0);
@@ -42,7 +43,9 @@ mod utils {
 mod ml {
     use crate::mascot::argmax;
     use crate::mascot::to_bw;
+
     use tch::Tensor;
+    
     #[test]
     fn check_to_bw() {
         assert_eq!(
