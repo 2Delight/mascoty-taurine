@@ -24,12 +24,17 @@ jobs:
 
       - name: Create Dist Directory
         run: mkdir dist
+
+      - name: Tools
+        run: |
+          choco install visualstudio2019buildtools
+          choco install visualstudio2019-workload-vctools
+          
+          choco install unzip
+          choco install webview2-runtime
       
       - name: Install LibTorch
         run: |
-          choco install unzip
-          choco install webview2-runtime
-
           curl https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-1.13.1%2Bcpu.zip --output libtorch.zip
           unzip libtorch.zip
 
