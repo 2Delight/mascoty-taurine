@@ -40,9 +40,9 @@ pub(crate) fn argmax(tensor: &[f64]) -> u8 {
 }
 
 /// Helps to find coordinates of corners for square crop image.
-pub(crate) fn get_cropped_corners(mut width: u32, mut height: u32) -> (u32, u32, u32, u32) {
+pub(crate) fn get_cropped_corners(width: u32, height: u32) -> (u32, u32, u32, u32) {
     if width < height {
-        (width, height) = (height, width);
+        return (0, (height - width), width, width);
     }
 
     ((width - height) / 2, 0, height, height)

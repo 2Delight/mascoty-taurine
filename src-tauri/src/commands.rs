@@ -9,19 +9,6 @@ use tokio::sync::Mutex;
 
 use std::string::String;
 
-#[tauri::command]
-pub fn get_raw_mascot(state: tauri::State<Mutex<String>>) -> String {
-    debug!("Getting mascot JSON");
-    (*state.blocking_lock()).clone()
-}
-
-#[tauri::command]
-pub fn set_raw_mascot(mascot: String, state: tauri::State<Mutex<String>>) {
-    debug!("Setting mascot JSON");
-    info!("Got mascot: {}", mascot);
-    *state.blocking_lock() = mascot;
-}
-
 /// Handler for getting Mascot.
 #[tauri::command]
 pub fn get_mascot(state: tauri::State<Devices>) -> Result<mascot::Mascot, String> {
@@ -30,6 +17,21 @@ pub fn get_mascot(state: tauri::State<Devices>) -> Result<mascot::Mascot, String
         Ok(mascot) => Ok(mascot),
         Err(err) => Err(format!("failed to get mascot: {}", err.to_string())),
     }
+}
+
+/// Gets mascot's source pathes.
+#[tauri::command]
+pub fn get_raw_mascot(state: tauri::State<Mutex<String>>) -> String {
+    debug!("Getting mascot JSON");
+    (*state.blocking_lock()).clone()
+}
+
+/// Sets mascot's source pathes.
+#[tauri::command]
+pub fn set_raw_mascot(mascot: String, state: tauri::State<Mutex<String>>) {
+    debug!("Setting mascot JSON");
+    info!("Got mascot: {}", mascot);
+    *state.blocking_lock() = mascot;
 }
 
 /// Handler for getting list of available cameras.
