@@ -1,4 +1,4 @@
-# Mascoty
+![Mascoty Logo](https://github.com/2Delight/mascoty-taurine/blob/master/src/assets/mascoty_inline_logo.png?raw=true)
 
 ## Statuses
 
