@@ -1,16 +1,16 @@
-name: Windows Build
+name: Windows Release
 
 on:
   push:
-    branches: ["master", "ci"]
+    branches: ["release"]
   pull_request:
-    branches: ["master", "ci"]
+    branches: ["release"]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
+  test:
     runs-on: windows-latest
 
     steps:
@@ -22,9 +22,12 @@ jobs:
       - name: Update Node.js
         run: npm install
 
+      - name: Create Dist Directory
+        run: mkdir dist
+
       - name: Tools
         run: choco install unzip
-
+      
       - name: Install LibTorch
         run: |
           curl https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-1.13.1%2Bcpu.zip --output libtorch.zip
@@ -40,6 +43,10 @@ jobs:
           
           echo "$JOINED" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
+      - name: Test
+        run: cargo test --verbose --verbose
+        working-directory: src-tauri
+      
       - name: Build
         run: npx tauri build --verbose
 
@@ -48,3 +55,13 @@ jobs:
         with:
           name: mascoty-taurine-build
           path: src-tauri/target/release/bundle/msi/*.msi
+      
+      # - name: Create Release
+      #   uses: actions/create-release@latest
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ github.ref }}
+      #     release_name: Release ${{ github.ref }}
+      #     draft: false
+      #     prerelease: false

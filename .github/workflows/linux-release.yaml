@@ -1,16 +1,16 @@
-name: Linux Build
+name: Linux Release
 
 on:
   push:
-    branches: ["master", "ci"]
+    branches: ["release"]
   pull_request:
-    branches: ["master", "ci"]
+    branches: ["release"]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,6 +21,9 @@ jobs:
 
       - name: Update Node.js
         run: npm install
+
+      - name: Create Dist Directory
+        run: sudo mkdir dist
 
       - name: Install Tauri Deps
         run: |
@@ -59,12 +62,26 @@ jobs:
           sudo sh -c "echo $PWD/libtorch/lib >> /etc/ld.so.conf"
           sudo ldconfig
           sudo ldconfig -p
-
+      
+      - name: Test
+        run: cargo test --verbose --verbose
+        working-directory: src-tauri
+      
       - name: Build
         run: npx tauri build --verbose
       
-      - name: Upload Artifact
+      - name: Upload Build
         uses: actions/upload-artifact@v3
         with:
           name: mascoty-taurine-build
           path: src-tauri/target/release/bundle/appimage/*.AppImage
+
+      # - name: Create Release
+      #   uses: actions/create-release@latest
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ github.ref }}
+      #     release_name: Release ${{ github.ref }}
+      #     draft: false
+      #     prerelease: false

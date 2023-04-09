@@ -25,10 +25,10 @@ jobs:
       - name: Install LibTorch
         run: brew install pytorch
 
-      - name: Tauri Build
+      - name: Build
         run: npx tauri build --verbose
       
-      - name: 'Upload Artifact'
+      - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: mascoty-taurine-build
