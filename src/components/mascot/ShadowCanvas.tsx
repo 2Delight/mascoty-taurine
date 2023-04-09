@@ -13,7 +13,7 @@ import { descriptRawEmotion } from "../../utils/EDescriptor";
 import "../../App.css";
 import { appWindow } from "@tauri-apps/api/window";
 
-const getMascotInterval = 10000
+const getMascotInterval = 500
 const getVolumeInterval = 50
 const updateVoiceInterval = 10
 
