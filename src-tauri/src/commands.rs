@@ -41,15 +41,19 @@ pub fn set_raw_mascot(mascot: String, state: tauri::State<Mutex<String>>) {
 /// If err => returns string error.
 #[tauri::command]
 pub fn get_cameras() -> Result<Vec<String>, String> {
-    debug!("Handler get_cameras has been invoken");
-
-    match get_cams() {
+    let cams = match get_cams() {
         Ok(val) => Ok(val
             .iter()
             .map(|info: &nokhwa::utils::CameraInfo| info.human_name())
             .collect()),
         Err(err) => Err(err.to_string()),
+    };
+
+    if cams.is_ok() {
+        info!("Found cams: {:?}", cams);
     }
+
+    cams
 }
 
 /// Handler which receives index of camera and sets it as chosen.
@@ -121,7 +125,7 @@ pub fn set_camera_config(conf: CameraConfig, state: tauri::State<Devices>) -> Re
 /// If err => returns string error.
 #[tauri::command]
 pub fn get_microphones(state: tauri::State<Host>) -> Result<Vec<String>, String> {
-    match get_mikes(&*state) {
+    let mikes = match get_mikes(&*state) {
         Ok(mikes) => Ok(mikes
             .iter()
             .map(|mike| format!("{}", mike.1.name().unwrap()))
@@ -129,7 +133,13 @@ pub fn get_microphones(state: tauri::State<Host>) -> Result<Vec<String>, String>
         Err(err) => {
             return Err(err.to_string());
         }
+    };
+
+    if mikes.is_ok() {
+        info!("Microphones: {:?}", mikes);
     }
+
+    mikes
 }
 
 /// Handler which receives index of microphone and sets it as chosen.

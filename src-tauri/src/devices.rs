@@ -51,9 +51,10 @@ impl Devices {
     /// Initializes camera based on the config.
     pub fn set_up_camera(&self, config: &CameraConfig, camera: Camera) -> Result<(), String> {
         info!(
-            "Setting the camera №{:?} with config {:?}",
+            "Setting the camera №{:?}. {}, with config {:?}",
             camera.index(),
-            config
+            camera.info().human_name(),
+            config,
         );
 
         let mut conf_guard = self.config.blocking_lock();
@@ -136,6 +137,7 @@ pub fn set_mike(index: usize, host: &Host) -> Result<Microphone, DevicesError> {
     let devices = get_mikes(host)?;
 
     let device = &devices[index].1;
+    info!("Chosen microphone: {:?}", device.name());
 
     let conf = device.default_input_config().unwrap();
     info!("Default input stream config: {:?}", conf);
