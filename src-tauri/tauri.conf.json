@@ -65,8 +65,8 @@
         "icons/mascoty32.png",
         "icons/mascoty128.png",
         "icons/mascoty256.png",
-        "icons/masc-logo.icns",
-        "icons/mascoty.ico"
+        "icons/mascoty128.icns",
+        "icons/mascoty128.ico"
       ],
       "identifier": "org.mascoty.taurine",
       "longDescription": "",
