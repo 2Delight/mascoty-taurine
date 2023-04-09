@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { MascotContext } from "../../App";
 import IMascot from "../logic/IMascot";
 import MascotPart from "./MascotPart";
@@ -11,13 +11,16 @@ import ShadowPart from "./ShadowPart";
 import { get_mascot, get_raw_mascot, get_volume } from "../../utils/Commands";
 import { descriptRawEmotion } from "../../utils/EDescriptor";
 import "../../App.css";
+import { appWindow } from "@tauri-apps/api/window";
 
-const getMascotInterval = 1000
+const getMascotInterval = 10000
 const getVolumeInterval = 50
-const updateVoiceInterval = 20
+const updateVoiceInterval = 10
 
 export default function ShadowCanvas() {
     const [mc, setMc] = useState<IMascot>();
+    const [mcHeight, setMcHeight] = useState(0);
+    const [mcWidth, setMcWidth] = useState(0);
 
     var mascot: IMascot;
     var oldVol = 0
@@ -33,13 +36,28 @@ export default function ShadowCanvas() {
                 if ((a as IMascot).workingDir !== "") {
                     console.log("SET MASCOT")
                     console.log(a)
-                    for (let i = 0; i < a.emotions.length; i++) {
-                        emoIndexes[a.emotions[i].emotion] = i
-                        console.log(a.emotions[i].emotion)
+                    mascot = a
+                    let width = 0, height = 0
+                    for (let i = 0; i < mascot.emotions.length; i++) {
+                        emoIndexes[mascot.emotions[i].emotion] = i
+                        console.log(mascot.emotions[i].emotion)
+                        for (let j = 0; j < mascot.emotions[i].parts.length; j++) {
+                            if (mascot.emotions[i].parts[j].width + mascot.emotions[i].parts[j].positionX > width) {
+                                width = mascot.emotions[i].parts[j].width + mascot.emotions[i].parts[j].positionX
+                            }
+                            if (mascot.emotions[i].parts[j].height + mascot.emotions[i].parts[j].positionY > height) {
+                                height = mascot.emotions[i].parts[j].height + mascot.emotions[i].parts[j].positionY
+                            }
+                        }
                     }
                     setMc(a)
-                    mascot = a
+                    appWindow.setTitle(mascot.projectName + " ready for recording")
+                    setMcHeight(height * a.zoom / 100)
+                    setMcWidth(width * a.zoom / 100)
+                    // alert(height * a.zoom / 100 + " " + width * a.zoom / 100)
+                    // mascot = a
                     clearInterval(inteval)
+                    getData()
                 } else {
                     console.log("bad data")
                 }
@@ -77,11 +95,18 @@ export default function ShadowCanvas() {
     }
 
     const getVol = () => {
-        get_volume().then((data) => {
-            // vol = Number(data)
-            setVol(Number(data))
-            // console.log(vol)
-        })
+        if (mascot)
+            get_volume().then((data) => {
+                let volum = Number(data)
+                if (volum > mascot.maxMic) {
+                    volum = mascot.maxMic
+                }
+                if (volum < mascot.minMic) {
+                    volum = mascot.minMic
+                }
+                setVol(volum * mascot.shake / 100)
+                // console.log(vol)
+            })
     }
 
     const getData = () => {
@@ -163,35 +188,48 @@ export default function ShadowCanvas() {
         setMc((old) => structuredClone(mcc))
         mascot = mcc
     }
+    const [windowSize, setWindowSize] = useState([
+        window.innerWidth,
+        window.innerHeight,
+    ]);
 
+    useEffect(() => {
+        const handleWindowResize = () => {
+            setWindowSize([window.innerWidth, window.innerHeight]);
+        };
+
+        window.addEventListener('resize', handleWindowResize);
+
+        return () => {
+            window.removeEventListener('resize', handleWindowResize);
+        };
+    });
     return <div className="shadowPlace" style={{
         position: "absolute",
-        overflow:"hidden",
+        overflow: "hidden",
         height: "100%",
         width: "100%",
-        backgroundColor:"black",
-        margin:0,
-
+        backgroundColor: "black",
+        margin: 0,
     }}>
         <div style={{
             overflow: "hidden",
             height: "100%",
             backgroundColor: mc?.bgColor,
+            position: "relative",
         }}>
-            <div className="canvas"
-                style={{ position: "relative", }}
-            >
-                <div style={{
-                    position: "absolute",
-                    bottom: volume,
-                }}>
-                    {mc && mc.emotions.map((x, j) => {
-                        return x.parts.map((c, i) => {
-                            return <ShadowPart part={c} emoVisible={x.visibility} zoom={mc.zoom} key={j + "_" + i} />
-                        })
-                    }
-                    )}
-                </div>
+            <div style={{
+                position: "absolute",
+                width: "100%",
+                left: windowSize[0] / 2 - mcWidth / 2,
+                bottom: volume + mcHeight,
+            }}>
+                {mc && mc.emotions.map((x, j) => {
+                    return x.parts.map((c, i) => {
+                        return <ShadowPart part={c} emoVisible={x.visibility} zoom={mc.zoom} key={j + "_" + i} />
+                    })
+                }
+                )}
             </div>
         </div>
     </div>
