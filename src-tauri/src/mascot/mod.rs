@@ -1,7 +1,13 @@
-use crate::devices::Devices;
-use crate::emotions::Emotion;
+mod emotions;
+mod eyes;
+mod lips;
 
-use std::{time::{SystemTime, UNIX_EPOCH}};
+use crate::devices::Devices;
+use emotions::Emotion;
+use eyes::Eyes;
+use lips::Lips;
+
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use log::{debug, info};
 use nokhwa::{pixel_format::*, NokhwaError};
@@ -12,12 +18,12 @@ use tch::Tensor;
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Mascot {
     pub emotion: Emotion,
-    pub blink: bool,
-    pub lips: bool,
+    pub eyes: Eyes,
+    pub lips: Lips,
 }
 
 /// Transforms RGB image tensor to BW.
-/// 
+///
 /// It takes original 3-channel tensor and makes 1-channel tensor with mean vallues.
 pub(crate) fn to_bw(tensor: Tensor) -> Tensor {
     (tensor.index(&[Some(Tensor::of_slice(&[0i64])), None, None])
@@ -66,7 +72,7 @@ fn get_emotion(devices: &Devices, image_path: &str) -> Emotion {
         .unsqueeze(0)
         .apply(model)
         .squeeze();
-    info!("Model output: {:?}",output);
+    info!("Model output: {:?}", output);
 
     let emotion = Emotion::from_num(argmax(&output.iter::<f64>().unwrap().collect::<Vec<f64>>()));
     info!("Got emotion: {}", emotion);
@@ -84,7 +90,10 @@ pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     let frame = camera.frame()?;
 
     debug!("Getting path");
-    let path = tauri::api::path::document_dir().unwrap().join("MASCOTY").join("img.jpg");
+    let path = tauri::api::path::document_dir()
+        .unwrap()
+        .join("MASCOTY")
+        .join("img.jpg");
     let path = path.as_os_str().to_str().unwrap();
 
     debug!("Saving image");
@@ -95,8 +104,20 @@ pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
 
     let mascot = Mascot {
         emotion: get_emotion(devices, path),
-        blink: SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs() % 10 == 0,
-        lips: devices.get_volume() > 10,
+        eyes: match SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_secs()
+            % 10
+        {
+            0 => Eyes::Closed,
+            _ => Eyes::Opened,
+        },
+        lips: if devices.get_volume() > 10 {
+            Lips::Opened
+        } else {
+            Lips::Closed
+        },
     };
     info!("Mascot: {:?}", mascot);
 
