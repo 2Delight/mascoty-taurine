@@ -22,14 +22,14 @@ pub fn get_mascot(state: tauri::State<Devices>) -> Result<mascot::Mascot, String
 /// Gets mascot's source pathes.
 #[tauri::command]
 pub fn get_raw_mascot(state: tauri::State<Mutex<String>>) -> String {
-    debug!("Getting mascot JSON");
+    info!("Getting mascot JSON: {:?}", state);
     state.blocking_lock().clone()
 }
 
 /// Sets mascot's source pathes.
 #[tauri::command]
 pub fn set_raw_mascot(mascot: String, state: tauri::State<Mutex<String>>) {
-    debug!("Setting mascot JSON");
+    info!("Setting mascot JSON: {:?}", state);
     info!("Got mascot: {}", mascot);
     *state.blocking_lock() = mascot;
 }

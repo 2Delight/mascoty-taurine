@@ -102,9 +102,11 @@ impl Devices {
         
         let mike = self.microphone.blocking_lock();
         let nums = mike.receiver.blocking_lock();
-
         debug!("Microphone info lenght: {}", nums.len());
+
         let volume: f32 = nums.iter().map(|vol| vol.abs()).sum();
+        debug!("Non-normalized volume: {}", volume);
+        
         if volume < MAXIMUM_VOLUME {
             return (volume * 100f32 / MAXIMUM_VOLUME) as u8;
         }
