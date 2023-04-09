@@ -62,11 +62,18 @@
       },
       "externalBin": [],
       "icon": [
-        "icons/mascoty32.png",
-        "icons/mascoty128.png",
-        "icons/mascoty256.png",
-        "icons/mascoty128.icns",
-        "icons/mascoty128.ico"
+        "icons/mascoty_16.png",
+        "icons/mascoty_16@2x.png",
+        "icons/mascoty_32.png",
+        "icons/mascoty_32@2x.png",
+        "icons/mascoty_128.png",
+        "icons/mascoty_128@2x.png",
+        "icons/mascoty_256.png",
+        "icons/mascoty_256@2x.png",
+        "icons/mascoty_512.png",
+        "icons/mascoty_512@2x.png",
+        "icons/mascoty.ico",
+        "icons/mascoty.icns"
       ],
       "identifier": "org.mascoty.taurine",
       "longDescription": "",
