@@ -88,7 +88,7 @@
         "../windows/libtorch/lib/torch_cpu.dll",
         "../windows/libtorch/lib/c10.dll",
         "../macos/libtorch/lib/libtorch_cpu.dylib",
-        "../linux/libtorch/lib/libtorch_cpu.so "
+        "../linux/libtorch/lib/libtorch_cpu.so"
       ],
       "shortDescription": "",
       "targets": "all",
