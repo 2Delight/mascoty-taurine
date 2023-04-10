@@ -22,9 +22,12 @@ jobs:
       - name: Update Node.js
         run: npm install
 
+      - name: OOF
+        run: echo $LD_LIBRARY_PATH
+
+
       - name: Install Tauri Deps
         run: |
-          echo $LD_LIBRARY_PATH
           sudo apt-get update
 
           # Basic
