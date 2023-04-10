@@ -27,9 +27,9 @@ jobs:
       
       - name: Install LibTorch
         run: |
-          wget https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-1.13.1%2Bcpu.zip --output windows.zip
-          wget https://download.pytorch.org/libtorch/cpu/libtorch-macos-1.13.1.zip --output macos.zip
-          wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-1.13.1%2Bcpu.zip --output linux.zip
+          curl https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-1.13.1%2Bcpu.zip --output windows.zip
+          curl https://download.pytorch.org/libtorch/cpu/libtorch-macos-1.13.1.zip --output macos.zip
+          curl https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-1.13.1%2Bcpu.zip --output linux.zip
 
           unzip windows.zip -d windows
           unzip macos.zip -d macos
