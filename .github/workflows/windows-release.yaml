@@ -22,9 +22,6 @@ jobs:
       - name: Update Node.js
         run: npm install
 
-      - name: Create Dist Directory
-        run: mkdir dist
-
       - name: Tools
         run: choco install unzip
       

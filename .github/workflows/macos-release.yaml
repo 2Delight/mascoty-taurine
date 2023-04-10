@@ -21,9 +21,6 @@ jobs:
 
       - name: Update Node.js
         run: npm install
-
-      - name: Create Dist Directory
-        run: sudo mkdir dist
       
       - name: Install LibTorch
         run: |
