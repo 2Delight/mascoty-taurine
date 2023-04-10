@@ -14,7 +14,7 @@
 [linux-test]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-test.yaml/badge.svg
 [linux-release]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-release.yaml/badge.svg
 
-|OS       |Build                      |Test                      |Release                      |
+|OS       |Build (Pre-Release)        |Test                      |Release                      |
 |---------|---------------------------|--------------------------|-----------------------------|
 |Windows  |![Windows][windows-build]  |![Windows][windows-test]  |![Windows][windows-release]  |
 |MacOS    |![MacOS][macos-build]      |![MacOS][macos-test]      |![MacOS][macos-release]      |
