@@ -72,10 +72,10 @@ wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-de
 unzip libtorch-cxx11-abi-shared-with-deps-1.13.0+cpu.zip
 ```
 
-3. Add shared libraries
+3. Add shared libraries (we'll refer the place where you have unzipped Torch as `$TORCH_DIR`)
 
 ```
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/libtorch/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$TORCH_DIR/libtorch/lib
 sudo sh -c "echo $PWD/libtorch/lib >> /etc/ld.so.conf"
 sudo ldconfig
 sudo ldconfig -p
