@@ -85,10 +85,7 @@
         "signingIdentity": null
       },
       "resources": [
-        "../windows/libtorch/lib/torch_cpu.dll",
-        "../windows/libtorch/lib/c10.dll",
-        "../macos/libtorch/lib/libtorch_cpu.dylib",
-        "../linux/libtorch/lib/libtorch_cpu.so"
+        "./libtorch/lib/*"
       ],
       "shortDescription": "",
       "targets": "all",
