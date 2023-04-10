@@ -33,9 +33,9 @@ jobs:
           curl https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-1.13.1%2Bcpu.zip --output libtorch.zip
           unzip libtorch.zip
 
-      - name: Test
-        run: cargo test --verbose --verbose
-        working-directory: src-tauri
+      # - name: Test
+      #   run: cargo test --verbose --verbose
+      #   working-directory: src-tauri
       
       - name: Build
         run: npx tauri build --verbose

@@ -81,7 +81,7 @@
         "entitlements": null,
         "exceptionDomain": "",
         "frameworks": [
-          "../libtorch/lib/libtorch_cpu.dylib"
+          "../libtorch/lib/*"
         ],
         "providerShortName": null,
         "signingIdentity": null
