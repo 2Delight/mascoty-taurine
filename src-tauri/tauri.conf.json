@@ -85,7 +85,7 @@
         "signingIdentity": null
       },
       "resources": [
-        "../libtorch/lib"
+        "../libtorch"
       ],
       "shortDescription": "",
       "targets": "all",
