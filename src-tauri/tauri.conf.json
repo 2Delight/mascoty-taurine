@@ -60,7 +60,7 @@
       "deb": {
         "depends": [],
         "files": {
-          "/usr/lib": "./libtorch/lib/"
+          "/usr/lib/libtorch_cpu.so": "./libtorch/lib/libtorch_cpu.so"
         }
       },
       "externalBin": [],
