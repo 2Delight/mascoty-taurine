@@ -85,7 +85,7 @@
         "signingIdentity": null
       },
       "resources": [
-        "../libtorch"
+        "../libtorch/lib/libtorch_cpu.dylib"
       ],
       "shortDescription": "",
       "targets": "all",
