@@ -8,11 +8,11 @@
 
 [macos-build]: https://github.com/2Delight/mascoty-taurine/actions/workflows/macos-build.yaml/badge.svg
 [macos-test]: https://github.com/2Delight/mascoty-taurine/actions/workflows/macos-test.yaml/badge.svg
-[macos-release]: https://github.com/2Delight/mascoty-taurine/actions/workflows/windows-release.yaml/badge.svg
+[macos-release]: https://github.com/2Delight/mascoty-taurine/actions/workflows/macos-release.yaml/badge.svg
 
 [linux-build]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-build.yaml/badge.svg
 [linux-test]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-test.yaml/badge.svg
-[linux-release]: https://github.com/2Delight/mascoty-taurine/actions/workflows/windows-release.yaml/badge.svg
+[linux-release]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-release.yaml/badge.svg
 
 |OS       |Build                      |Test                      |Release                      |
 |---------|---------------------------|--------------------------|-----------------------------|
