@@ -93,6 +93,12 @@
       "shortDescription": "",
       "targets": "all",
       "windows": {
+        "wix": {
+          "language": [
+            "en-US",
+            "ru-RU"
+          ]
+        },
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
         "timestampUrl": ""
