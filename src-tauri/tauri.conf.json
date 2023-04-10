@@ -80,13 +80,12 @@
       "macOS": {
         "entitlements": null,
         "exceptionDomain": "",
-        "frameworks": [
-          "../libtorch/lib/*"
-        ],
+        "frameworks": [],
         "providerShortName": null,
         "signingIdentity": null
       },
       "resources": [
+        "../libtorch/lib/*"
       ],
       "shortDescription": "",
       "targets": "all",
