@@ -58,7 +58,10 @@
       "category": "DeveloperTool",
       "copyright": "",
       "deb": {
-        "depends": []
+        "depends": [],
+        "files": {
+          "/usr/lib": "./libtorch/lib/"
+        }
       },
       "externalBin": [],
       "icon": [
