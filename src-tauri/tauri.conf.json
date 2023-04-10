@@ -80,12 +80,13 @@
       "macOS": {
         "entitlements": null,
         "exceptionDomain": "",
-        "frameworks": [],
+        "frameworks": [
+          "../libtorch/lib/libtorch_cpu.dylib"
+        ],
         "providerShortName": null,
         "signingIdentity": null
       },
       "resources": [
-        "../libtorch/lib/libtorch_cpu.dylib"
       ],
       "shortDescription": "",
       "targets": "all",
