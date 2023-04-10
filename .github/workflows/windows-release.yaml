@@ -33,16 +33,6 @@ jobs:
           curl https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-1.13.1%2Bcpu.zip --output libtorch.zip
           unzip libtorch.zip
 
-      - name: Add LibTorch to PATH
-        run: |
-          $CURR = Get-Location
-          echo $CURR
-
-          $TORCH = "libtorch\lib"
-          $JOINED = Join-Path $CURR $TORCH
-          
-          echo "$JOINED" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-
       - name: Test
         run: cargo test --verbose --verbose
         working-directory: src-tauri

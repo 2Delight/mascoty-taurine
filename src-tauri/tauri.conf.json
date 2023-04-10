@@ -84,7 +84,9 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [],
+      "resources": [
+        "../libtorch/lib/*"
+      ],
       "shortDescription": "",
       "targets": "all",
       "windows": {
