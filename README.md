@@ -2,11 +2,23 @@
 
 ## Statuses
 
-|OS       |Build                                                                                                   |Test                                                                                                   |
-|---------|--------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
-|Windows  |![Windows](https://github.com/2Delight/mascoty-taurine/actions/workflows/windows-build.yaml/badge.svg)  |![Windows](https://github.com/2Delight/mascoty-taurine/actions/workflows/windows-test.yaml/badge.svg)  |
-|MacOS    |![MacOS](https://github.com/2Delight/mascoty-taurine/actions/workflows/macos-build.yaml/badge.svg)      |![MacOS](https://github.com/2Delight/mascoty-taurine/actions/workflows/macos-test.yaml/badge.svg)      |
-|Linux    |![Linux](https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-build.yaml/badge.svg)      |![Linux](https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-test.yaml/badge.svg)      |
+[windows-build]: https://github.com/2Delight/mascoty-taurine/actions/workflows/windows-build.yaml/badge.svg
+[windows-test]: https://github.com/2Delight/mascoty-taurine/actions/workflows/windows-test.yaml/badge.svg
+[windows-release]: https://github.com/2Delight/mascoty-taurine/actions/workflows/windows-release.yaml/badge.svg
+
+[macos-build]: https://github.com/2Delight/mascoty-taurine/actions/workflows/macos-build.yaml/badge.svg
+[macos-test]: https://github.com/2Delight/mascoty-taurine/actions/workflows/macos-test.yaml/badge.svg
+[macos-release]: https://github.com/2Delight/mascoty-taurine/actions/workflows/windows-release.yaml/badge.svg
+
+[linux-build]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-build.yaml/badge.svg
+[linux-test]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-test.yaml/badge.svg
+[linux-release]: https://github.com/2Delight/mascoty-taurine/actions/workflows/windows-release.yaml/badge.svg
+
+|OS       |Build                      |Test                      |Release                      |
+|---------|---------------------------|--------------------------|-----------------------------|
+|Windows  |![Windows][windows-build]  |![Windows][windows-test]  |![Windows][windows-release]  |
+|MacOS    |![MacOS][macos-build]      |![MacOS][macos-test]      |![MacOS][macos-release]      |
+|Linux    |![Linux][linux-build]      |![Linux][linux-test]      |![Linux][linux-release]      |
 
 ## Installation
 
