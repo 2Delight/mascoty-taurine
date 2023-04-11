@@ -60,7 +60,7 @@
       "deb": {
         "depends": [],
         "files": {
-          "/usr/local/lib/libtorch_cpu.so": "./libtorch/lib/libtorch_cpu.so"
+          "/usr/local/lib/libtorch_cpu.so": "./libtorch/lib/linux/libtorch_cpu.so"
         }
       },
       "externalBin": [],
@@ -83,12 +83,15 @@
       "macOS": {
         "entitlements": null,
         "exceptionDomain": "",
-        "frameworks": [],
+        "frameworks": [
+          "./libtorch/lib/libtorch_cpu.dylib"
+        ],
         "providerShortName": null,
         "signingIdentity": null
       },
       "resources": [
-        "./libtorch/lib/*"
+        "./libtorch/lib/torch_cpu.dll",
+        "./libtorch/lib/c10.dll"
       ],
       "shortDescription": "",
       "targets": "all",
