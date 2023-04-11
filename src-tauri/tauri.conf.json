@@ -89,10 +89,7 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [
-        "./libtorch/lib/torch_cpu.dll",
-        "./libtorch/lib/c10.dll"
-      ],
+      "resources": [],
       "shortDescription": "",
       "targets": "all",
       "windows": {
