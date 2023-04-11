@@ -83,13 +83,13 @@
       "macOS": {
         "entitlements": null,
         "exceptionDomain": "",
-        "frameworks": [
-          "./libtorch/lib/libtorch_cpu.dylib"
-        ],
+        "frameworks": [],
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [],
+      "resources": [
+        "./libtorch/lib/*"
+      ],
       "shortDescription": "",
       "targets": "all",
       "windows": {
