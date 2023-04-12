@@ -63,9 +63,7 @@
           "/usr/local/lib/libtorch_cpu.so": "./libtorch/lib/libtorch_cpu.so"
         }
       },
-      "externalBin": [
-        "./libtorch/lib/*"
-      ],
+      "externalBin": [],
       "icon": [
         "icons/mascoty_16.png",
         "icons/mascoty_16@2x.png",
