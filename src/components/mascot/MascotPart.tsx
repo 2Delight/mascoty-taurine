@@ -53,6 +53,7 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
         if (currentPos.x !== -1 && currentPos.y !== -1) {
             setLoading(false)
             console.log("updated pos")
+            // console.log(mascot?.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionX)
         }
     }, [currentPos])
 
@@ -169,9 +170,10 @@ export default function MascotPart({ partIndex, useFocus }: { partIndex: number,
         setCurrentPos({ x: dragElement.x, y: dragElement.y })
         if (mascot) {
             mascot.mascot = structuredClone(mascot.mascot)
-            mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionX = dragElement.x / zoom
-            mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionY = dragElement.y / zoom
+            mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionX = dragElement.x * 100 / zoom
+            mascot.mascot.emotions[mascot.mascot.selectedEmotion].parts[partIndex].positionY = dragElement.y * 100 / zoom
             mascot.setMascot(mascot.mascot)
+            console.log("saved part " + partIndex + " position")
         }
     };
 
