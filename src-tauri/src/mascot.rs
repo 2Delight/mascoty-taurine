@@ -4,7 +4,7 @@ use crate::emotions::Emotion;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use log::{debug, info};
-use nokhwa::{pixel_format::*, Buffer, NokhwaError};
+use nokhwa::{pixel_format::RgbFormat, NokhwaError};
 use serde::{Deserialize, Serialize};
 use tch::Tensor;
 
