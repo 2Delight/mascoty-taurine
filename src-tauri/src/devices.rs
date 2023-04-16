@@ -7,7 +7,7 @@ use cpal::{
     traits::{DeviceTrait, HostTrait, StreamTrait},
     Device, DevicesError, Host, Stream, SupportedStreamConfig,
 };
-use log::{debug, error, info};
+use log::{debug, error, info, trace};
 use nokhwa::{
     pixel_format::RgbFormat,
     utils::{
@@ -102,10 +102,10 @@ impl Devices {
         
         let mike = self.microphone.blocking_lock();
         let nums = mike.receiver.blocking_lock();
-        debug!("Microphone info lenght: {}", nums.len());
+        trace!("Microphone info lenght: {}", nums.len());
 
         let volume: f32 = nums.iter().map(|vol| vol.abs()).sum();
-        debug!("Non-normalized volume: {}", volume);
+        trace!("Non-normalized volume: {}", volume);
         
         if volume < MAXIMUM_VOLUME {
             return (volume * 100f32 / MAXIMUM_VOLUME) as u8;

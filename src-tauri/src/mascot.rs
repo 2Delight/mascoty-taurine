@@ -1,10 +1,10 @@
 use crate::devices::Devices;
 use crate::emotions::Emotion;
 
-use std::{time::{SystemTime, UNIX_EPOCH}};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use log::{debug, info};
-use nokhwa::{pixel_format::*, NokhwaError};
+use nokhwa::{pixel_format::*, Buffer, NokhwaError};
 use serde::{Deserialize, Serialize};
 use tch::Tensor;
 
@@ -17,7 +17,7 @@ pub struct Mascot {
 }
 
 /// Transforms RGB image tensor to BW.
-/// 
+///
 /// It takes original 3-channel tensor and makes 1-channel tensor with mean vallues.
 pub(crate) fn to_bw(tensor: Tensor) -> Tensor {
     (tensor.index(&[Some(Tensor::of_slice(&[0i64])), None, None])
@@ -49,30 +49,30 @@ pub(crate) fn get_cropped_corners(width: u32, height: u32) -> (u32, u32, u32, u3
 }
 
 /// Crops image.
-fn crop_image(path: &str) {
-    let mut img = image::open(path).unwrap();
-
+fn crop_image<'a, I: image::GenericImageView>(img: &'a mut I) -> image::SubImage<&'a mut I> {
     let points = get_cropped_corners(img.width(), img.height());
-    let img = image::imageops::crop(&mut img, points.0, points.1, points.2, points.3);
-
-    img.to_image().save(path).unwrap();
+    image::imageops::crop(img, points.0, points.1, points.2, points.3)
 }
 
 /// Gets emotion from input
-fn get_emotion(devices: &Devices, image_path: &str) -> Emotion {
+fn get_emotion(devices: &Devices, image: &str) -> Emotion {
     debug!("Using model");
     let model = &mut devices.config.blocking_lock().model;
-    let output = to_bw(tch::vision::imagenet::load_image_and_resize224(image_path).unwrap())
+    let output = to_bw(tch::vision::imagenet::load_image_and_resize224(image).unwrap())
         .unsqueeze(0)
         .apply(model)
         .squeeze();
-    info!("Model output: {:?}",output);
+    info!("Model output: {:?}", output);
 
     let emotion = Emotion::from_num(argmax(&output.iter::<f64>().unwrap().collect::<Vec<f64>>()));
     info!("Got emotion: {}", emotion);
 
     emotion
 }
+
+// fn get_image(frame: Buffer) -> Vec<u8> {
+
+// }
 
 /// Gets properties of mascot based on device input.
 pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
@@ -84,18 +84,27 @@ pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     let frame = camera.frame()?;
 
     debug!("Getting path");
-    let path = tauri::api::path::document_dir().unwrap().join("MASCOTY").join("img.jpg");
+    let path = tauri::api::path::document_dir()
+        .unwrap()
+        .join("MASCOTY")
+        .join("img.jpg");
     let path = path.as_os_str().to_str().unwrap();
 
-    debug!("Saving image");
-    let img = frame.decode_image::<RgbFormat>()?;
-    img.save(path).unwrap();
+    debug!("Decoding image");
+    let mut img = frame.decode_image::<RgbFormat>()?;
 
-    crop_image(path);
+    debug!("Cropping image");
+    let cropped_image = crop_image(&mut img).to_image();
+    cropped_image.save(path).unwrap();
 
     let mascot = Mascot {
         emotion: get_emotion(devices, path),
-        blink: SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs() % 10 == 0,
+        blink: SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_secs()
+            % 10
+            == 0,
         lips: devices.get_volume() > 10,
     };
     info!("Mascot: {:?}", mascot);
