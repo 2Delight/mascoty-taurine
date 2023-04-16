@@ -48,15 +48,15 @@ pub(crate) fn get_cropped_corners(width: u32, height: u32) -> (u32, u32, u32, u3
     ((width - height) / 2, 0, height, height)
 }
 
-/// Crops image.
-fn crop_image(path: &str) {
-    let mut img = image::open(path).unwrap();
+// /// Crops image.
+// fn crop_image(path: &str) {
+//     let mut img = image::open(path).unwrap();
 
-    let points = get_cropped_corners(img.width(), img.height());
-    let img = image::imageops::crop(&mut img, points.0, points.1, points.2, points.3);
+//     let points = get_cropped_corners(img.width(), img.height());
+//     let img = image::imageops::crop(&mut img, points.0, points.1, points.2, points.3);
 
-    img.to_image().save(path).unwrap();
-}
+//     img.to_image().save(path).unwrap();
+// }
 
 /// Gets emotion from input
 fn get_emotion(devices: &Devices, image_path: &str) -> Emotion {
@@ -91,7 +91,7 @@ pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     let img = frame.decode_image::<RgbFormat>()?;
     img.save(path).unwrap();
 
-    crop_image(path);
+    // crop_image(path);
 
     let mascot = Mascot {
         emotion: get_emotion(devices, path),

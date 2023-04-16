@@ -48,8 +48,8 @@ pub struct CameraConfig {
 /// let conf = mascoty_taurine::config::import_config();
 /// 
 /// let def_cam = mascoty_taurine::config::CameraConfig {
-///     height: 720,
-///     width: 1280,
+///     height: 360,
+///     width: 640,
 ///     fps: 30,
 /// };
 /// 
