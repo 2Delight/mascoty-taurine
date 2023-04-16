@@ -70,10 +70,6 @@ fn get_emotion(devices: &Devices, image: &str) -> Emotion {
     emotion
 }
 
-// fn get_image(frame: Buffer) -> Vec<u8> {
-
-// }
-
 /// Gets properties of mascot based on device input.
 pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     debug!("Getting input");
