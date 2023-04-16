@@ -58,7 +58,7 @@ fn crop_image<'a, I: image::GenericImageView>(img: &'a mut I) -> image::SubImage
 fn get_emotion(devices: &Devices, image: &str) -> Emotion {
     debug!("Using model");
     let model = &mut devices.config.blocking_lock().model;
-    let output = to_bw(tch::vision::imagenet::load_image_and_resize224(image).unwrap())
+    let output = to_bw(tch::vision::imagenet::load_image(image).unwrap())
         .unsqueeze(0)
         .apply(model)
         .squeeze();
@@ -94,8 +94,11 @@ pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     let mut img = frame.decode_image::<RgbFormat>()?;
 
     debug!("Cropping image");
-    let cropped_image = crop_image(&mut img).to_image();
-    cropped_image.save(path).unwrap();
+    img = crop_image(&mut img).to_image();
+
+    debug!("Resizing image");
+    img = image::imageops::resize(&img, 224, 224, image::imageops::FilterType::Gaussian);
+    img.save(path).unwrap();
 
     let mascot = Mascot {
         emotion: get_emotion(devices, path),

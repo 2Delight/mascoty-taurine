@@ -9,8 +9,8 @@ fn check_config_import() {
 
     let conf = import_config();
     let def_cam = CameraConfig {
-        height: 720,
-        width: 1280,
+        height: 480,
+        width: 640,
         fps: 30,
     };
     assert!(conf.camera == def_cam);
