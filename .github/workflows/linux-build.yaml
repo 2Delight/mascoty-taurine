@@ -67,4 +67,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: mascoty-taurine-build
-          path: src-tauri/target/release/bundle/appimage/*.deb
+          path: src-tauri/target/release/bundle/deb/*.deb
