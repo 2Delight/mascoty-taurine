@@ -39,11 +39,15 @@ Add `/M` flag to set it for all users (requires super user access)
 ### MacOS
 1. Install homebrew:
 
-`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+```sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
 
 2. Install LibTorch:
 
-`brew install pytorch`
+```sh
+brew install pytorch
+```
 
 3. Download MacOS release DMG installer (coming soon)
 
@@ -51,46 +55,46 @@ Add `/M` flag to set it for all users (requires super user access)
 
 1. Install all dependencies:
 
-```
+```sh
 sudo apt-get update
 
 # Basic
-sudo apt-get install curl
-sudo apt-get install wget
-sudo apt-get install build-essential
+sudo apt-get install curl \
+                     wget \
+                     build-essential
 
 # Tauri
-sudo apt-get install libwebkit2gtk-4.0-dev
-sudo apt-get install libssl-dev
-sudo apt-get install libgtk-3-dev
-sudo apt-get install libayatana-appindicator3-dev
-sudo apt-get install librsvg2-dev
+sudo apt-get install libwebkit2gtk-4.0-dev \
+                     libssl-dev \
+                     libgtk-3-dev \
+                     libayatana-appindicator3-dev \
+                     librsvg2-dev
 
 # Additional
-sudo apt-get install libxcb-shape0-dev
-sudo apt-get install libxcb-xfixes0-dev
-sudo apt-get install libxcb1-dev
-sudo apt-get install libxkbcommon-dev
-sudo apt-get install libwebkit2gtk-4.0
-sudo apt-get install libudev-dev
-sudo apt-get install libsdl2-dev
-sudo apt-get install libasound2-dev
+sudo apt-get install libxcb-shape0-dev \
+                     libxcb-xfixes0-dev
+                     libxcb1-dev \
+                     libxkbcommon-dev \
+                     libwebkit2gtk-4.0 \
+                     libudev-dev \
+                     libsdl2-dev \
+                     libasound2-dev
 ```
 
 2. Install LibTorch
 
-```
+```sh
 wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-1.13.0%2Bcpu.zip
 unzip libtorch-cxx11-abi-shared-with-deps-1.13.0+cpu.zip
 ```
 
 3. Add shared libraries (we'll refer the place where you have unzipped Torch as `$TORCH_DIR`)
 
-```
+```sh
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$TORCH_DIR/libtorch/lib
 sudo sh -c "echo $PWD/libtorch/lib >> /etc/ld.so.conf"
 sudo ldconfig
 sudo ldconfig -p
 ```
 
-4. Download Linux release AppImage installer (coming soon)
+4. Download Linux release Deb installer (coming soon)
