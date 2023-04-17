@@ -70,6 +70,16 @@ fn get_emotion(devices: &Devices, image: &str) -> Emotion {
     emotion
 }
 
+/// Returns mascot blink every secs_num seconds.
+fn is_blink(secs_num: u64) -> bool {
+    let secs_from_unix_epoch = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+
+    secs_from_unix_epoch % secs_num == 0
+}
+
 /// Gets properties of mascot based on device input.
 pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
     debug!("Getting input");
@@ -98,12 +108,7 @@ pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
 
     let mascot = Mascot {
         emotion: get_emotion(devices, path),
-        blink: SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .unwrap()
-            .as_secs()
-            % 10
-            == 0,
+        blink: is_blink(10),
         lips: devices.get_volume() > 10,
     };
     info!("Mascot: {:?}", mascot);
