@@ -92,7 +92,7 @@ unzip libtorch-cxx11-abi-shared-with-deps-1.13.0+cpu.zip
 
 ```sh
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$TORCH_DIR/libtorch/lib
-sudo sh -c "echo $PWD/libtorch/lib >> /etc/ld.so.conf"
+sudo sh -c "echo $TORCH_DIR/libtorch/lib >> /etc/ld.so.conf"
 sudo ldconfig
 sudo ldconfig -p
 ```
