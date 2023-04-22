@@ -8,8 +8,9 @@ use tch::CModule;
 /// Main app config which contains camera properties and model.
 /// ```
 /// use log::info;
+/// use mascoty_taurine::config::import_config;
 /// 
-/// let conf = mascoty_taurine::config::import_config();
+/// let conf = import_config();
 /// info!("{:?}", conf);
 /// ```
 pub struct Config {
@@ -28,8 +29,9 @@ impl std::fmt::Debug for Config {
 /// Camera config which includes width and height as resolution sides in px and fps as frames per second
 /// ```
 /// use log::info;
+/// use mascoty_taurine::config::CameraConfig;
 /// 
-/// let cam_conf = mascoty_taurine::config::CameraConfig {
+/// let cam_conf = CameraConfig {
 ///     height: 720,
 ///     width: 1080,
 ///     fps: 30,
@@ -45,9 +47,12 @@ pub struct CameraConfig {
 
 /// Imports camera config from config.yaml and model from model.pt
 /// ```
-/// let conf = mascoty_taurine::config::import_config();
+/// use mascoty_taurine::config::import_config;
+/// use mascoty_taurine::config::CameraConfig;
 /// 
-/// let def_cam = mascoty_taurine::config::CameraConfig {
+/// let conf = import_config();
+/// 
+/// let def_cam = CameraConfig {
 ///     height: 480,
 ///     width: 640,
 ///     fps: 30,
