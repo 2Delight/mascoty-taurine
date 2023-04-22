@@ -1,5 +1,5 @@
 use crate::devices::Devices;
-use crate::emotions::Emotion;
+use crate::emotion::Emotion;
 
 use std::time::{SystemTime, UNIX_EPOCH};
 

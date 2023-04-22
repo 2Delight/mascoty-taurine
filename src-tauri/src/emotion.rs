@@ -25,7 +25,7 @@ pub enum Emotion {
 impl Emotion {
     /// Converts number into emotion.
     /// ```
-    /// use mascoty_taurine::emotions::Emotion;
+    /// use mascoty_taurine::emotion::Emotion;
     /// 
     /// let emotion = Emotion::from_num(0);
     /// assert!(emotion == Emotion::Angry);
@@ -48,7 +48,7 @@ impl Emotion {
 
     /// Converts emotion into number.
     /// ```
-    /// use mascoty_taurine::emotions::Emotion;
+    /// use mascoty_taurine::emotion::Emotion;
     /// 
     /// let emotion = Emotion::Fear;
     /// assert!(emotion.to_num() == 2);

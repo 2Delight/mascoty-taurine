@@ -15,6 +15,6 @@ pub mod config;
 pub mod devices;
 pub mod mascot;
 pub mod utils;
-pub mod emotions;
+pub mod emotion;
 #[cfg(test)]
 mod tests;
