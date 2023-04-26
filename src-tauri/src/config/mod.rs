@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests;
 
-use log::{debug};
+use log::debug;
 use serde::{Deserialize, Serialize};
 use tch::CModule;
 
@@ -9,7 +9,7 @@ use tch::CModule;
 /// ```
 /// use log::info;
 /// use mascoty_taurine::config::import_config;
-/// 
+///
 /// let conf = import_config();
 /// info!("{:?}", conf);
 /// ```
@@ -30,7 +30,7 @@ impl std::fmt::Debug for Config {
 /// ```
 /// use log::info;
 /// use mascoty_taurine::config::CameraConfig;
-/// 
+///
 /// let cam_conf = CameraConfig {
 ///     height: 720,
 ///     width: 1080,
@@ -49,15 +49,15 @@ pub struct CameraConfig {
 /// ```
 /// use mascoty_taurine::config::import_config;
 /// use mascoty_taurine::config::CameraConfig;
-/// 
+///
 /// let conf = import_config();
-/// 
+///
 /// let def_cam = CameraConfig {
 ///     height: 480,
 ///     width: 640,
 ///     fps: 30,
 /// };
-/// 
+///
 /// assert!(conf.camera == def_cam);
 /// ```
 pub fn import_config() -> Config {

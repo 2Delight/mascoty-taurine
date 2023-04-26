@@ -3,10 +3,10 @@
     windows_subsystem = "windows"
 )]
 
+use mascoty_taurine::commands::*;
 use mascoty_taurine::config::import_config;
 use mascoty_taurine::devices::{get_cams, set_cam, set_mike, Devices};
 use mascoty_taurine::panic_error;
-use mascoty_taurine::{commands::*};
 
 use log::{debug, info};
 use simple_logger::SimpleLogger;
@@ -57,7 +57,7 @@ fn main() {
     mascoty_taurine::mascot::get_mascot(&devices).unwrap();
 
     let mascot_json = Mutex::new(String::new());
-    
+
     // Starting app.
     debug!("Building the app");
     tauri::Builder::default()

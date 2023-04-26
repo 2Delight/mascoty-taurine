@@ -1,24 +1,24 @@
 use std::fmt::{Debug, Display, Formatter, Result};
 
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 /// Represents 1 of 7 basic emotions supported by model.
 #[derive(Serialize, Deserialize, Default, PartialEq, Clone, Copy)]
 pub enum Emotion {
-    #[serde(rename="angry")]
+    #[serde(rename = "angry")]
     Angry = 0,
-    #[serde(rename="disgust")]
+    #[serde(rename = "disgust")]
     Disgust,
-    #[serde(rename="fear")]
+    #[serde(rename = "fear")]
     Fear,
-    #[serde(rename="happy")]
+    #[serde(rename = "happy")]
     Happy,
-    #[serde(rename="neutral")]
+    #[serde(rename = "neutral")]
     #[default]
     Neutral,
-    #[serde(rename="sad")]
+    #[serde(rename = "sad")]
     Sad,
-    #[serde(rename="surprise")]
+    #[serde(rename = "surprise")]
     Surprise,
 }
 
@@ -26,10 +26,10 @@ impl Emotion {
     /// Converts number into emotion.
     /// ```
     /// use mascoty_taurine::emotion::Emotion;
-    /// 
+    ///
     /// let emotion = Emotion::from_num(0);
     /// assert!(emotion == Emotion::Angry);
-    /// 
+    ///
     /// let emotion = Emotion::from_num(100);
     /// assert!(emotion == Emotion::Neutral);
     /// ```
@@ -49,7 +49,7 @@ impl Emotion {
     /// Converts emotion into number.
     /// ```
     /// use mascoty_taurine::emotion::Emotion;
-    /// 
+    ///
     /// let emotion = Emotion::Fear;
     /// assert!(emotion.to_num() == 2);
     /// ```

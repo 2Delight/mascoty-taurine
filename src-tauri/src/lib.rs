@@ -13,8 +13,8 @@
 pub mod commands;
 pub mod config;
 pub mod devices;
-pub mod mascot;
-pub mod utils;
 pub mod emotion;
+pub mod mascot;
 #[cfg(test)]
 mod tests;
+pub mod utils;

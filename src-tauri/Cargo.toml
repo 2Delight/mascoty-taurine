@@ -14,17 +14,17 @@ rust-version = "1.57"
 tauri-build = { version = "1.2", features = [] }
 
 [dependencies]
-serde = { version = "1.0.152", features = ["derive"] }
-serde_json = "1.0.91"
-serde_yaml = "0.9.17"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
 
-log = "0.4.17"
-simple_logger = "4.0.0"
+log = "0.4"
+simple_logger = "4.0"
 
-rand = "0.8.4"
+rand = "0.8"
 
-tch = "0.10.3"
-cpal = "0.15.2"
+tch = "0.10"
+cpal = "0.15"
 
 [dependencies.tauri]
 version = "1.2"
@@ -45,15 +45,15 @@ features = [ "window-all",
 ]
 
 [dependencies.tokio]
-version = "1.27.0"
+version = "1.27"
 features = ["sync"]
 
 [dependencies.nokhwa]
-version = "0.10.3"
+version = "0.10"
 features = ["input-native", "output-wgpu"]
 
 [dependencies.image]
-version = "0.24.5"
+version = "0.24"
 default-features = true
 features = ["jpeg"]
 

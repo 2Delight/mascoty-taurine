@@ -2,7 +2,6 @@ use crate::config::{CameraConfig, Config};
 
 use std::sync::Arc;
 
-use tokio::sync::Mutex;
 use cpal::{
     traits::{DeviceTrait, HostTrait, StreamTrait},
     Device, DevicesError, Host, Stream, SupportedStreamConfig,
@@ -16,6 +15,7 @@ use nokhwa::{
     },
 };
 use nokhwa::{query, Camera, NokhwaError};
+use tokio::sync::Mutex;
 
 /// Microphone input receiver.
 pub struct Microphone {
@@ -99,14 +99,14 @@ impl Devices {
     /// Gets current microphone volume.
     pub fn get_volume(&self) -> u8 {
         const MAXIMUM_VOLUME: f32 = 100f32;
-        
+
         let mike = self.microphone.blocking_lock();
         let nums = mike.receiver.blocking_lock();
         trace!("Microphone info lenght: {}", nums.len());
 
         let volume: f32 = nums.iter().map(|vol| vol.abs()).sum();
         trace!("Non-normalized volume: {}", volume);
-        
+
         if volume < MAXIMUM_VOLUME {
             return (volume * 100f32 / MAXIMUM_VOLUME) as u8;
         }
