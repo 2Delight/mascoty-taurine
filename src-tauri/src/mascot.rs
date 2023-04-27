@@ -19,7 +19,7 @@ pub struct Mascot {
 /// Transforms RGB image tensor to BW.
 ///
 /// It takes original 3-channel tensor and makes 1-channel tensor with mean vallues.
-pub(crate) fn to_bw(tensor: Tensor) -> Tensor {
+pub fn to_bw(tensor: Tensor) -> Tensor {
     (tensor.index(&[Some(Tensor::of_slice(&[0i64])), None, None])
         + tensor.index(&[Some(Tensor::of_slice(&[1i64])), None, None])
         + tensor.index(&[Some(Tensor::of_slice(&[2i64])), None, None]))
@@ -27,7 +27,7 @@ pub(crate) fn to_bw(tensor: Tensor) -> Tensor {
 }
 
 /// Gets index for largest value in tensor.
-pub(crate) fn argmax(tensor: &[f64]) -> u8 {
+pub fn argmax(tensor: &[f64]) -> u8 {
     let mut index = 0u8;
 
     for i in 0..tensor.len() {
