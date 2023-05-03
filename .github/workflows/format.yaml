@@ -16,6 +16,32 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install Deps
+        run: |
+          sudo apt-get update
+
+          # Basic
+          sudo apt-get install curl \
+                              wget \
+                              build-essential
+          
+          # Tauri
+          sudo apt-get install libwebkit2gtk-4.0-dev \
+                              libssl-dev \
+                              libgtk-3-dev \
+                              libayatana-appindicator3-dev \
+                              librsvg2-dev
+          
+          # Additional
+          sudo apt-get install libxcb-shape0-dev \
+                              libxcb-xfixes0-dev
+                              libxcb1-dev \
+                              libxkbcommon-dev \
+                              libwebkit2gtk-4.0 \
+                              libudev-dev \
+                              libsdl2-dev \
+                              libasound2-dev
+
       - name: Check Format
         run: cargo fmt --all -- --check
         working-directory: src-tauri

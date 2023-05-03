@@ -22,7 +22,7 @@ jobs:
       - name: Update Node.js
         run: npm install
 
-      - name: Install Tauri Deps
+      - name: Install Deps
         run: |
           sudo apt-get update
 

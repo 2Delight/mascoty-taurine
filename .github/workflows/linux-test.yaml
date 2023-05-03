@@ -25,7 +25,7 @@ jobs:
       - name: Create Dist Directory
         run: sudo mkdir dist
 
-      - name: Install Tauri Deps
+      - name: Install Deps
         run: |
           sudo apt-get update
 
