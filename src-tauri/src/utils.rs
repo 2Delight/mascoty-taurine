@@ -1,58 +1,35 @@
-/// Macro wich checks if there's an error, logs info and returns result if successful
+/// Macro used to make internals of Err part of enum a string.
+/// 
+/// Useful in tauri::command handlers.
 /// ```
-/// use log::{debug, error, info, warn};
-///
-/// let res: Result<(), ()> = Result::Ok(());
-/// let ans = mascoty_taurine::check_error!(res, "message you want to pass");
-///
-/// assert!(ans == ());
-/// ```
-#[macro_export]
-macro_rules! check_error {
-    ($e:expr, $s:expr $(,)?) => {
-        match $e {
-            Ok(val) => {
-                log::info!("Successfully complited {}", $s);
-                val
-            }
-            Err(err) => {
-                log::debug!("Error during {}: {:?}", $s, err);
-                return;
-            }
-        }
-    };
-}
-
-/// Macro wich panics if there's an error, logs info and returns result if successful
-/// ```
-/// use log::{debug, error, info, warn};
-///
-/// let res: Result<(), ()> = Result::Ok(());
-/// let ans = mascoty_taurine::panic_error!(res, "message you want to pass");
-///
-/// assert!(ans == ());
+/// use mascoty_taurine::stringify_result;
+/// 
+/// fn helper() -> Result<i32, i32> {
+///     Ok(0)
+/// }
+/// 
+/// #[tauri::command]
+/// fn handler() -> Result<(), String> {
+///     let val = stringify_result!(helper())?;
+///     // Work with value...
+///     Ok(())
+/// }
 /// ```
 #[macro_export]
-macro_rules! panic_error {
-    ($e:expr, $s:expr $(,)?) => {
+macro_rules! stringify_result {
+    ($e:expr $(,)?) => {
         match $e {
-            Ok(val) => {
-                log::info!("Successfully completed {}", $s);
-                val
-            }
-            Err(err) => {
-                log::error!("Error during {}: {:?}", $s, err);
-                panic!();
-            }
+            Ok(val) => Ok(val),
+            Err(err) => Err(err.to_string()),
         }
     };
 }
 
 /// HashMap initialization macro.
 /// ```
-/// use log::{debug, error, info, warn};
-///
-/// let d = mascoty_taurine::init_dict!{
+/// use mascoty_taurine::init_dict;
+/// 
+/// let d = init_dict!{
 ///     "test0".to_string() => "Test0",
 ///     "test1".to_string() => "Test1",
 /// };

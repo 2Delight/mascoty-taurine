@@ -1,25 +1,22 @@
-use mascoty_taurine::{check_error, init_dict, panic_error};
+use mascoty_taurine::{stringify_result, init_dict};
 
 #[test]
-fn check_panic_error_ok() {
-    let ok: Result<i32, &str> = Result::Ok(0);
-    assert!(panic_error!(ok, "ok") == 0);
+fn check_stringify_result_ok() {
+    let err: Result<u8, i32> = Ok(255u8);
+    match stringify_result!(err) {
+        Ok(val) => assert_eq!(val, 255u8),
+        Err(_) => panic!("test failed: expected ok"),
+    }
+    assert!(stringify_result!(err).unwrap() == 255u8);
 }
 
 #[test]
-#[should_panic]
-fn check_panic_error_err() {
-    let err: Result<i32, &str> = Result::Err("error");
-    assert!(panic_error!(err, "err") != 0);
-}
-
-#[test]
-fn check_check_error() {
-    let ok: Result<&str, &str> = Result::Ok("okay");
-    assert!(check_error!(ok, "ok") == "okay");
-
-    let err: Result<&str, &str> = Result::Err("error");
-    assert!(check_error!(err, "err") == "error");
+fn check_stringify_result_err() {
+    let err: Result<u8, i32> = Err(1000);
+    match stringify_result!(err) {
+        Ok(_) => panic!("test failed: expected err"),
+        Err(err) => assert_eq!(err, "1000".to_string()),
+    }
 }
 
 #[test]

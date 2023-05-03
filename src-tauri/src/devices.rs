@@ -17,6 +17,8 @@ use nokhwa::{
 use nokhwa::{query, Camera, NokhwaError};
 use tokio::sync::Mutex;
 
+use anyhow::Result;
+
 /// Microphone input receiver.
 pub struct Microphone {
     receiver: Arc<Mutex<Vec<f32>>>,
@@ -49,7 +51,7 @@ impl Devices {
     }
 
     /// Initializes camera based on the config.
-    pub fn set_up_camera(&self, config: &CameraConfig, camera: Camera) -> Result<(), String> {
+    pub fn set_up_camera(&self, config: &CameraConfig, camera: Camera) -> Result<()> {
         info!(
             "Setting the camera №{:?}. {}, with config {:?}",
             camera.index(),
@@ -135,13 +137,13 @@ pub fn get_mikes(host: &Host) -> Result<Vec<(usize, Device, SupportedStreamConfi
 }
 
 /// Initializes microphone based on index.
-pub fn set_mike(index: usize, host: &Host) -> Result<Microphone, DevicesError> {
+pub fn set_mike(index: usize, host: &Host) -> Result<Microphone> {
     let devices = get_mikes(host)?;
 
     let device = &devices[index].1;
     info!("Chosen microphone: {:?}", device.name());
 
-    let conf = device.default_input_config().unwrap();
+    let conf = device.default_input_config()?;
     info!("Default input stream config: {:?}", conf);
 
     let receiver = Arc::new(Mutex::new(Vec::new()));
@@ -157,9 +159,8 @@ pub fn set_mike(index: usize, host: &Host) -> Result<Microphone, DevicesError> {
     };
 
     let input_stream = device
-        .build_input_stream(&conf.config(), send_callback, err_callback, None)
-        .unwrap();
-    input_stream.play().unwrap();
+        .build_input_stream(&conf.config(), send_callback, err_callback, None)?;
+    input_stream.play()?;
 
     Ok(Microphone {
         receiver,

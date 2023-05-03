@@ -4,6 +4,7 @@ mod tests;
 use log::debug;
 use serde::{Deserialize, Serialize};
 use tch::CModule;
+use anyhow::Result;
 
 /// Main app config which contains camera properties and model.
 /// ```
@@ -50,7 +51,7 @@ pub struct CameraConfig {
 /// use mascoty_taurine::config::import_config;
 /// use mascoty_taurine::config::CameraConfig;
 ///
-/// let conf = import_config();
+/// let conf = import_config().unwrap();
 ///
 /// let def_cam = CameraConfig {
 ///     height: 480,
@@ -60,16 +61,15 @@ pub struct CameraConfig {
 ///
 /// assert!(conf.camera == def_cam);
 /// ```
-pub fn import_config() -> Config {
+pub fn import_config() -> Result<Config> {
     debug!("Deserializing YAML");
     let deserealizer = serde_yaml::Deserializer::from_str(std::include_str!("config.yaml"));
 
     let mut conf = Config {
-        camera: CameraConfig::deserialize(deserealizer).unwrap(),
-        model: tch::CModule::load_data(&mut std::io::Cursor::new(std::include_bytes!("model.pt")))
-            .unwrap(),
+        camera: CameraConfig::deserialize(deserealizer)?,
+        model: tch::CModule::load_data(&mut std::io::Cursor::new(std::include_bytes!("model.pt")))?,
     };
     conf.model.set_eval();
 
-    conf
+    Ok(conf)
 }

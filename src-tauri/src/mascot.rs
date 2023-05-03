@@ -4,9 +4,11 @@ use crate::emotion::Emotion;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use log::{debug, info};
-use nokhwa::{pixel_format::RgbFormat, NokhwaError};
+use nokhwa::{pixel_format::RgbFormat};
 use serde::{Deserialize, Serialize};
 use tch::Tensor;
+
+use anyhow::Result;
 
 /// Mascot properties.
 #[derive(Debug, Default, Serialize, Deserialize)]
@@ -55,33 +57,32 @@ fn crop_image<I: image::GenericImageView>(img: &mut I) -> image::SubImage<&mut I
 }
 
 /// Gets emotion from input
-fn get_emotion(devices: &Devices, image: &str) -> Emotion {
+fn get_emotion(devices: &Devices, image: &str) -> Result<Emotion> {
     debug!("Using model");
     let model = &mut devices.config.blocking_lock().model;
-    let output = to_bw(tch::vision::imagenet::load_image(image).unwrap())
+    let output = to_bw(tch::vision::imagenet::load_image(image)?)
         .unsqueeze(0)
         .apply(model)
         .squeeze();
     info!("Model output: {:?}", output);
 
-    let emotion = Emotion::from_num(argmax(&output.iter::<f64>().unwrap().collect::<Vec<f64>>()));
+    let emotion = Emotion::from_num(argmax(&output.iter::<f64>()?.collect::<Vec<f64>>()));
     info!("Got emotion: {}", emotion);
 
-    emotion
+    Ok(emotion)
 }
 
 /// Returns mascot blink every secs_num seconds.
-fn is_blink(secs_num: u64) -> bool {
+fn is_blink(secs_num: u64) -> Result<bool> {
     let secs_from_unix_epoch = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
+        .duration_since(UNIX_EPOCH)?
         .as_secs();
 
-    secs_from_unix_epoch % secs_num == 0
+    Ok(secs_from_unix_epoch % secs_num == 0)
 }
 
 /// Gets properties of mascot based on device input.
-pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
+pub fn get_mascot(devices: &Devices) -> Result<Mascot> {
     debug!("Getting input");
     debug!("Getting camera instance");
     let mut camera = devices.camera.blocking_lock();
@@ -104,11 +105,11 @@ pub fn get_mascot(devices: &Devices) -> Result<Mascot, NokhwaError> {
 
     debug!("Resizing image");
     img = image::imageops::resize(&img, 224, 224, image::imageops::FilterType::Gaussian);
-    img.save(path).unwrap();
+    img.save(path)?;
 
     let mascot = Mascot {
-        emotion: get_emotion(devices, path),
-        blink: is_blink(10),
+        emotion: get_emotion(devices, path)?,
+        blink: is_blink(10)?,
         lips: devices.get_volume() > 10,
     };
     info!("Mascot: {:?}", mascot);

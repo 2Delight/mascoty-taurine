@@ -1,6 +1,6 @@
 use crate::config::CameraConfig;
 use crate::devices::{get_cams, get_mikes, set_cam, set_mike, Devices};
-use crate::mascot;
+use crate::{mascot, stringify_result};
 
 use cpal::traits::DeviceTrait;
 use cpal::Host;
@@ -69,15 +69,12 @@ pub fn select_camera(
 ) -> Result<(), String> {
     debug!("Handler select_camera has been invoken");
 
-    let cams = get_cams().unwrap();
+    let cams = stringify_result!(get_cams())?;
     let ind = cams[index].index().clone();
 
-    let cam = match set_cam(ind, &conf) {
-        Ok(cam) => cam,
-        Err(err) => return Err(err.to_string()),
-    };
+    let cam = stringify_result!(set_cam(ind, &conf))?;
 
-    state.set_up_camera(&conf, cam)?;
+    stringify_result!(state.set_up_camera(&conf, cam))?;
 
     Ok(())
 }
@@ -125,18 +122,10 @@ pub fn set_camera_config(conf: CameraConfig, state: tauri::State<Devices>) -> Re
 /// If err => returns string error.
 #[tauri::command]
 pub fn get_microphones(state: tauri::State<Host>) -> Result<Vec<String>, String> {
-    let mikes = match get_mikes(&state) {
-        Ok(mikes) => Ok(mikes.iter().map(|mike| mike.1.name().unwrap()).collect()),
-        Err(err) => {
-            return Err(err.to_string());
-        }
-    };
-
-    if mikes.is_ok() {
-        info!("Microphones: {:?}", mikes);
-    }
-
-    mikes
+    Ok(stringify_result!(get_mikes(&state))?
+        .iter()
+        .map(|mike| mike.1.name().unwrap())
+        .collect())
 }
 
 /// Handler which receives index of microphone and sets it as chosen.

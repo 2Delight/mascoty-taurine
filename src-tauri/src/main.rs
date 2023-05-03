@@ -6,67 +6,47 @@
 use mascoty_taurine::commands::*;
 use mascoty_taurine::config::import_config;
 use mascoty_taurine::devices::{get_cams, set_cam, set_mike, Devices};
-use mascoty_taurine::panic_error;
 
 use log::{debug, info};
 use simple_logger::SimpleLogger;
 use tokio::sync::Mutex;
 
+use anyhow::Result;
+
 const DEFAULT_DEVICE_INDEX: usize = 0;
 
-fn main() {
+fn main() -> Result<()> {
     // Setting up the logger.
-    panic_error!(
-        SimpleLogger::new()
-            .with_level(log::LevelFilter::Debug)
-            .init(),
-        "setting up logger",
-    );
+    SimpleLogger::new()
+        .with_level(log::LevelFilter::Debug)
+        .init()?;
 
     // Importing config.
     debug!("Config parsing");
-    let conf = import_config();
+    let conf = import_config()?;
     info!("Config: {:?}", conf);
 
     // Setting up default camera.
     debug!("Getting default camera index");
-    let cam = panic_error!(
-        set_cam(
-            get_cams().unwrap()[DEFAULT_DEVICE_INDEX].index().clone(),
-            &conf.camera,
-        ),
-        "setting up camera",
-    );
-
-    let host = panic_error!(
-        cpal::host_from_id(cpal::available_hosts()[0]),
-        "host set up",
-    );
+    let cam = set_cam(
+        get_cams()?[DEFAULT_DEVICE_INDEX].index().clone(),
+        &conf.camera,
+    )?;
+    let host = cpal::host_from_id(cpal::available_hosts()[0])?;
 
     // Setting up default microphone.
     debug!("Getting default micro");
-    let mike = panic_error!(
-        set_mike(DEFAULT_DEVICE_INDEX, &host),
-        "setting up microphone",
-    );
-
-    // Creating devices.
-    debug!("Getting devices");
-    let devices = Devices::new(conf, cam, mike);
-
-    mascoty_taurine::mascot::get_mascot(&devices).unwrap();
-
-    let mascot_json = Mutex::new(String::new());
+    let mike = set_mike(DEFAULT_DEVICE_INDEX, &host)?;
 
     // Starting app.
     debug!("Building the app");
     tauri::Builder::default()
         // Adding devices to state.
-        .manage(devices)
+        .manage(Devices::new(conf, cam, mike))
         // Adding host to state.
         .manage(host)
         // Adding current mascot.
-        .manage(mascot_json)
+        .manage(Mutex::new(String::new()))
         .invoke_handler(tauri::generate_handler![
             get_mascot,
             get_cameras,
@@ -80,4 +60,6 @@ fn main() {
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+
+    Ok(())
 }
