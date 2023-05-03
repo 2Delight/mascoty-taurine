@@ -162,7 +162,7 @@ pub fn set_mike(index: usize, host: &Host) -> Result<Microphone, DevicesError> {
     input_stream.play().unwrap();
 
     Ok(Microphone {
-        receiver: receiver,
+        receiver,
         _stream: input_stream,
     })
 }
@@ -172,7 +172,7 @@ pub fn get_cams() -> Result<Vec<CameraInfo>, NokhwaError> {
     debug!("Getting camera list");
 
     let cams = query(ApiBackend::Auto)?;
-    if cams.len() == 0 {
+    if cams.is_empty() {
         return Err(NokhwaError::GeneralError(
             "Cannot find any connected camera".to_string(),
         ));

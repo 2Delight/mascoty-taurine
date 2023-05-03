@@ -15,7 +15,7 @@ pub fn get_mascot(state: tauri::State<Devices>) -> Result<mascot::Mascot, String
     debug!("Handler get_mascot has been invoken");
     match mascot::get_mascot(&state) {
         Ok(mascot) => Ok(mascot),
-        Err(err) => Err(format!("failed to get mascot: {}", err.to_string())),
+        Err(err) => Err(format!("failed to get mascot: {}", err)),
     }
 }
 
@@ -84,7 +84,7 @@ pub fn select_camera(
 
 /// Checks if value is in interval.
 fn is_in_interval(value: i32, left: i32, right: i32) -> bool {
-    return value > left && value < right;
+    value > left && value < right
 }
 
 /// Handler which updates configuration of selected camera.
@@ -125,10 +125,10 @@ pub fn set_camera_config(conf: CameraConfig, state: tauri::State<Devices>) -> Re
 /// If err => returns string error.
 #[tauri::command]
 pub fn get_microphones(state: tauri::State<Host>) -> Result<Vec<String>, String> {
-    let mikes = match get_mikes(&*state) {
+    let mikes = match get_mikes(&state) {
         Ok(mikes) => Ok(mikes
             .iter()
-            .map(|mike| format!("{}", mike.1.name().unwrap()))
+            .map(|mike| mike.1.name().unwrap())
             .collect()),
         Err(err) => {
             return Err(err.to_string());

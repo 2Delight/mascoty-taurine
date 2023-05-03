@@ -49,7 +49,7 @@ pub(crate) fn get_cropped_corners(width: u32, height: u32) -> (u32, u32, u32, u3
 }
 
 /// Crops image.
-fn crop_image<'a, I: image::GenericImageView>(img: &'a mut I) -> image::SubImage<&'a mut I> {
+fn crop_image<I: image::GenericImageView>(img: &mut I) -> image::SubImage<&mut I> {
     let points = get_cropped_corners(img.width(), img.height());
     image::imageops::crop(img, points.0, points.1, points.2, points.3)
 }
