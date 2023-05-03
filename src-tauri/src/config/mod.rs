@@ -1,10 +1,10 @@
 #[cfg(test)]
 mod tests;
 
+use anyhow::Result;
 use log::debug;
 use serde::{Deserialize, Serialize};
 use tch::CModule;
-use anyhow::Result;
 
 /// Main app config which contains camera properties and model.
 /// ```

@@ -4,7 +4,7 @@ use crate::emotion::Emotion;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use log::{debug, info};
-use nokhwa::{pixel_format::RgbFormat};
+use nokhwa::pixel_format::RgbFormat;
 use serde::{Deserialize, Serialize};
 use tch::Tensor;
 
@@ -74,9 +74,7 @@ fn get_emotion(devices: &Devices, image: &str) -> Result<Emotion> {
 
 /// Returns mascot blink every secs_num seconds.
 fn is_blink(secs_num: u64) -> Result<bool> {
-    let secs_from_unix_epoch = SystemTime::now()
-        .duration_since(UNIX_EPOCH)?
-        .as_secs();
+    let secs_from_unix_epoch = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
 
     Ok(secs_from_unix_epoch % secs_num == 0)
 }

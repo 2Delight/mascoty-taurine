@@ -1,13 +1,13 @@
 /// Macro used to make internals of Err part of enum a string.
-/// 
+///
 /// Useful in tauri::command handlers.
 /// ```
 /// use mascoty_taurine::stringify_result;
-/// 
+///
 /// fn helper() -> Result<i32, i32> {
 ///     Ok(0)
 /// }
-/// 
+///
 /// #[tauri::command]
 /// fn handler() -> Result<(), String> {
 ///     let val = stringify_result!(helper())?;
@@ -28,7 +28,7 @@ macro_rules! stringify_result {
 /// HashMap initialization macro.
 /// ```
 /// use mascoty_taurine::init_dict;
-/// 
+///
 /// let d = init_dict!{
 ///     "test0".to_string() => "Test0",
 ///     "test1".to_string() => "Test1",

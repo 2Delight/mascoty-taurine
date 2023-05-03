@@ -1,4 +1,4 @@
-use mascoty_taurine::{stringify_result, init_dict};
+use mascoty_taurine::{init_dict, stringify_result};
 
 #[test]
 fn check_stringify_result_ok() {

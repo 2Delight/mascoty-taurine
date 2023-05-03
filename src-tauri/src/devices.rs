@@ -158,8 +158,8 @@ pub fn set_mike(index: usize, host: &Host) -> Result<Microphone> {
         sender.blocking_lock().copy_from_slice(data);
     };
 
-    let input_stream = device
-        .build_input_stream(&conf.config(), send_callback, err_callback, None)?;
+    let input_stream =
+        device.build_input_stream(&conf.config(), send_callback, err_callback, None)?;
     input_stream.play()?;
 
     Ok(Microphone {
