@@ -1,0 +1,24 @@
+name: Formatting Check
+
+on:
+  push:
+    branches: ["master", "ci"]
+  pull_request:
+    branches: ["master", "ci"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Check Format
+        run: cargo fmt --all -- --check
+        working-directory: src-tauri
+    
+      - name: Check Warnings
+        run: cargo clippy -- -D warnings
