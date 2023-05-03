@@ -13,10 +13,7 @@ use std::string::String;
 #[tauri::command]
 pub fn get_mascot(state: tauri::State<Devices>) -> Result<mascot::Mascot, String> {
     debug!("Handler get_mascot has been invoken");
-    match mascot::get_mascot(&state) {
-        Ok(mascot) => Ok(mascot),
-        Err(err) => Err(format!("failed to get mascot: {}", err)),
-    }
+    stringify_result!(mascot::get_mascot(&state))
 }
 
 /// Gets mascot's source pathes.
@@ -41,19 +38,10 @@ pub fn set_raw_mascot(mascot: String, state: tauri::State<Mutex<String>>) {
 /// If err => returns string error.
 #[tauri::command]
 pub fn get_cameras() -> Result<Vec<String>, String> {
-    let cams = match get_cams() {
-        Ok(val) => Ok(val
-            .iter()
-            .map(|info: &nokhwa::utils::CameraInfo| info.human_name())
-            .collect()),
-        Err(err) => Err(err.to_string()),
-    };
-
-    if cams.is_ok() {
-        info!("Found cams: {:?}", cams);
-    }
-
-    cams
+    Ok(stringify_result!(get_cams())?
+        .iter()
+        .map(|info: &nokhwa::utils::CameraInfo| info.human_name())
+        .collect())
 }
 
 /// Handler which receives index of camera and sets it as chosen.
@@ -109,10 +97,7 @@ pub fn set_camera_config(conf: CameraConfig, state: tauri::State<Devices>) -> Re
         );
     }
 
-    match state.set_camera_settings(&conf) {
-        Ok(()) => Ok(()),
-        Err(err) => Err(err.to_string()),
-    }
+    stringify_result!(state.set_camera_settings(&conf))
 }
 
 /// Handler for getting list of available microphones.
@@ -139,10 +124,7 @@ pub fn select_microphone(
     host: tauri::State<Host>,
     state: tauri::State<Devices>,
 ) -> Result<(), String> {
-    state.update_microphone(match set_mike(index, &host) {
-        Ok(val) => val,
-        Err(err) => return Err(err.to_string()),
-    })
+    state.update_microphone(stringify_result!(set_mike(index, &host))?)
 }
 
 /// Gets current volume in interval [0; 100].
