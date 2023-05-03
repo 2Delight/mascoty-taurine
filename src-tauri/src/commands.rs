@@ -126,10 +126,7 @@ pub fn set_camera_config(conf: CameraConfig, state: tauri::State<Devices>) -> Re
 #[tauri::command]
 pub fn get_microphones(state: tauri::State<Host>) -> Result<Vec<String>, String> {
     let mikes = match get_mikes(&state) {
-        Ok(mikes) => Ok(mikes
-            .iter()
-            .map(|mike| mike.1.name().unwrap())
-            .collect()),
+        Ok(mikes) => Ok(mikes.iter().map(|mike| mike.1.name().unwrap()).collect()),
         Err(err) => {
             return Err(err.to_string());
         }
