@@ -46,7 +46,3 @@ jobs:
       - name: Test
         run: cargo test --verbose --verbose
         working-directory: src-tauri
-
-      - name: Check Format
-        run: cargo fmt --all -- --check
-        working-directory: src-tauri
