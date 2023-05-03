@@ -66,7 +66,7 @@ pub fn import_config() -> Config {
 
     let mut conf = Config {
         camera: CameraConfig::deserialize(deserealizer).unwrap(),
-        model: tch::CModule::load_data(&mut std::io::Cursor::new(std::include_bytes!("model.pt",)))
+        model: tch::CModule::load_data(&mut std::io::Cursor::new(std::include_bytes!("model.pt")))
             .unwrap(),
     };
     conf.model.set_eval();
