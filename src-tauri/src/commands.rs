@@ -11,9 +11,9 @@ use std::string::String;
 
 /// Handler for getting Mascot.
 #[tauri::command]
-pub fn get_mascot(state: tauri::State<Devices>) -> Result<mascot::Mascot, String> {
+pub fn get_mascot(devices: tauri::State<Devices>) -> Result<mascot::Mascot, String> {
     debug!("Handler get_mascot has been invoken");
-    stringify_result!(mascot::get_mascot(&state))
+    stringify_result!(mascot::get_mascot(&devices))
 }
 
 /// Gets mascot's source pathes.
@@ -53,7 +53,7 @@ pub fn get_cameras() -> Result<Vec<String>, String> {
 pub fn select_camera(
     index: usize,
     conf: CameraConfig,
-    state: tauri::State<Devices>,
+    devices: tauri::State<Devices>,
 ) -> Result<(), String> {
     debug!("Handler select_camera has been invoken");
 
@@ -62,7 +62,7 @@ pub fn select_camera(
 
     let cam = stringify_result!(set_cam(ind, &conf))?;
 
-    stringify_result!(state.set_up_camera(&conf, cam))?;
+    stringify_result!(devices.set_up_camera(&conf, cam))?;
 
     Ok(())
 }
@@ -78,7 +78,7 @@ fn is_in_interval(value: i32, left: i32, right: i32) -> bool {
 ///
 /// If err => returns string error.
 #[tauri::command]
-pub fn set_camera_config(conf: CameraConfig, state: tauri::State<Devices>) -> Result<(), String> {
+pub fn set_camera_config(conf: CameraConfig, devices: tauri::State<Devices>) -> Result<(), String> {
     debug!("Handler set_config has been invoken");
 
     if !is_in_interval(conf.fps as i32, 0, 31) {
@@ -97,7 +97,7 @@ pub fn set_camera_config(conf: CameraConfig, state: tauri::State<Devices>) -> Re
         );
     }
 
-    stringify_result!(state.set_camera_settings(&conf))
+    stringify_result!(devices.set_camera_settings(&conf))
 }
 
 /// Handler for getting list of available microphones.
@@ -106,8 +106,8 @@ pub fn set_camera_config(conf: CameraConfig, state: tauri::State<Devices>) -> Re
 ///
 /// If err => returns string error.
 #[tauri::command]
-pub fn get_microphones(state: tauri::State<Host>) -> Result<Vec<String>, String> {
-    Ok(stringify_result!(get_mikes(&state))?
+pub fn get_microphones(host: tauri::State<Host>) -> Result<Vec<String>, String> {
+    Ok(stringify_result!(get_mikes(&host))?
         .iter()
         .map(|mike| mike.1.name().unwrap())
         .collect())
@@ -122,13 +122,13 @@ pub fn get_microphones(state: tauri::State<Host>) -> Result<Vec<String>, String>
 pub fn select_microphone(
     index: usize,
     host: tauri::State<Host>,
-    state: tauri::State<Devices>,
+    devices: tauri::State<Devices>,
 ) -> Result<(), String> {
-    state.update_microphone(stringify_result!(set_mike(index, &host))?)
+    devices.update_microphone(stringify_result!(set_mike(index, &host))?)
 }
 
 /// Gets current volume in interval [0; 100].
 #[tauri::command]
-pub fn get_volume(state: tauri::State<Devices>) -> u8 {
-    state.get_volume()
+pub fn get_volume(devices: tauri::State<Devices>) -> u8 {
+    devices.get_volume()
 }
