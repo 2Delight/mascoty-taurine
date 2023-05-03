@@ -26,7 +26,9 @@ jobs:
         run: sudo mkdir dist
       
       - name: Install LibTorch
-        run: brew install pytorch
+        run: |
+          brew install pytorch
+          brew install libtorch
 
       - name: Test
         run: cargo test --verbose --verbose
