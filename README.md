@@ -1,5 +1,8 @@
 ![Mascoty Logo](https://github.com/2Delight/mascoty-taurine/blob/master/src/assets/mascoty_inline_logo.png?raw=true)
 
+[format]: https://github.com/2Delight/mascoty-taurine/actions/workflows/format.yaml/badge.svg
+![Format][format]
+
 ## Statuses
 
 [windows-build]: https://github.com/2Delight/mascoty-taurine/actions/workflows/windows-build.yaml/badge.svg
