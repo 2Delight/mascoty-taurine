@@ -107,10 +107,11 @@ pub fn set_camera_config(conf: CameraConfig, devices: tauri::State<Devices>) -> 
 /// If err => returns string error.
 #[tauri::command]
 pub fn get_microphones(host: tauri::State<Host>) -> Result<Vec<String>, String> {
-    Ok(stringify_result!(get_mikes(&host))?
+    let mikes = stringify_result!(get_mikes(&host))?;
+    stringify_result!(mikes
         .iter()
-        .map(|mike| mike.1.name().unwrap())
-        .collect())
+        .map(|mike| mike.1.name())
+        .collect::<Result<Vec<String>, _>>())
 }
 
 /// Handler which receives index of microphone and sets it as chosen.
