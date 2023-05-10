@@ -39,7 +39,13 @@ Add `/M` flag to set it for all users (requires super user access)
 
 4. Download Windows release MSI installer (coming soon)
 
-### MacOS
+### MacOS/Linux (via script)
+1. Run script via Bash or Perl:
+  - `./scripts/setup.sh`
+  - `perl scripts/setup.pl`
+3. Download release installer (coming soon)
+
+### MacOS (manually)
 1. Install homebrew:
 
 ```sh
@@ -54,7 +60,7 @@ brew install pytorch
 
 3. Download MacOS release DMG installer (coming soon)
 
-### Linux
+### Linux (manually)
 
 1. Install all dependencies:
 
