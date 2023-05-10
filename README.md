@@ -12,14 +12,14 @@
 [macos-build]: https://github.com/2Delight/mascoty-taurine/actions/workflows/macos-build.yaml/badge.svg
 [macos-test]: https://github.com/2Delight/mascoty-taurine/actions/workflows/macos-test.yaml/badge.svg
 [macos-release]: https://github.com/2Delight/mascoty-taurine/actions/workflows/macos-release.yaml/badge.svg
-[macos-perl]: https://github.com/2Delight/mascoty-taurine/actions/workflows/macos-perl.yaml/badge.svg
 [macos-bash]: https://github.com/2Delight/mascoty-taurine/actions/workflows/macos-bash.yaml/badge.svg
+[macos-perl]: https://github.com/2Delight/mascoty-taurine/actions/workflows/macos-perl.yaml/badge.svg
 
 [linux-build]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-build.yaml/badge.svg
 [linux-test]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-test.yaml/badge.svg
 [linux-release]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-release.yaml/badge.svg
-[linux-release]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-perl.yaml/badge.svg
-[linux-release]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-bash.yaml/badge.svg
+[linux-bash]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-bash.yaml/badge.svg
+[linux-perl]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-perl.yaml/badge.svg
 
 |OS       |Build (Pre-Release)        |Test                      |Release                      |Bash Setup            |Perl Setup             |
 |---------|---------------------------|--------------------------|-----------------------------|----------------------|-----------------------|
