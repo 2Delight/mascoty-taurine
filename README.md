@@ -23,7 +23,7 @@
 
 |OS       |Build (Pre-Release)        |Test                      |Release                      |Bash Setup            |Perl Setup             |
 |---------|---------------------------|--------------------------|-----------------------------|----------------------|-----------------------|
-|Windows  |![Windows][windows-build]  |![Windows][windows-test]  |![Windows][windows-release]  |Unavailable           |Currently unavailable  |
+|Windows  |![Windows][windows-build]  |![Windows][windows-test]  |![Windows][windows-release]  |Unavailable           |Currently Unavailable  |
 |MacOS    |![MacOS][macos-build]      |![MacOS][macos-test]      |![MacOS][macos-release]      |![MacOS][macos-bash]  |![MacOS][macos-perl]   |
 |Linux    |![Linux][linux-build]      |![Linux][linux-test]      |![Linux][linux-release]      |![Linux][linux-bash]  |![Linux][linux-perl]   |
 
