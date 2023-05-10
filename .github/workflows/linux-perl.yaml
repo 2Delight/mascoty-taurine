@@ -19,9 +19,6 @@ jobs:
       - uses: shogo82148/actions-setup-perl@v1
         with:
           perl-version: '5'
-
-    #   - name: Install Dependencies
-    #     run: cpanm --installdeps .
     
       - name: Run Script
         run: perl scripts/setup.pl
