@@ -85,7 +85,7 @@ sudo apt-get install libwebkit2gtk-4.0-dev \
 
 # Additional
 sudo apt-get install libxcb-shape0-dev \
-                     libxcb-xfixes0-dev
+                     libxcb-xfixes0-dev \
                      libxcb1-dev \
                      libxkbcommon-dev \
                      libwebkit2gtk-4.0 \

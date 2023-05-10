@@ -28,9 +28,9 @@ sub linux {
 
     print "Installing basic dependencies...\n";
     `
-    sudo apt-get install curl \
-                     wget \
-                     build-essential
+    sudo apt-get install curl
+    sudo apt-get install wget
+    sudo apt-get install build-essential
     `;
     if ($? != 0) {
         print "Failed to install basic dependencies\n";
@@ -39,11 +39,11 @@ sub linux {
 
     print "Installing tauri dependencies...\n";
     `
-    sudo apt-get install libwebkit2gtk-4.0-dev \
-                     libssl-dev \
-                     libgtk-3-dev \
-                     libayatana-appindicator3-dev \
-                     librsvg2-dev
+    sudo apt-get install libwebkit2gtk-4.0-dev
+    sudo apt-get install libssl-dev
+    sudo apt-get install libgtk-3-dev
+    sudo apt-get install libayatana-appindicator3-dev
+    sudo apt-get install librsvg2-dev
     `;
     if ($? != 0) {
         print "Failed to install tauri dependencies\n";
@@ -52,14 +52,14 @@ sub linux {
 
     print "Installing additional dependencies...\n";
     `
-    sudo apt-get install libxcb-shape0-dev \
-                     libxcb-xfixes0-dev
-                     libxcb1-dev \
-                     libxkbcommon-dev \
-                     libwebkit2gtk-4.0 \
-                     libudev-dev \
-                     libsdl2-dev \
-                     libasound2-dev
+    sudo apt-get install libxcb-shape0-dev
+    sudo apt-get install libxcb-xfixes0-dev
+    sudo apt-get install libxcb1-dev
+    sudo apt-get install libxkbcommon-dev
+    sudo apt-get install libwebkit2gtk-4.0
+    sudo apt-get install libudev-dev
+    sudo apt-get install libsdl2-dev
+    sudo apt-get install libasound2-dev
     `;
     if ($? != 0) {
         print "Failed to install additional dependencies\n";
@@ -76,9 +76,9 @@ sub linux {
 
     print "Adding shared libraries...\n";
     `
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$TORCH_DIR/libtorch/lib
-    sudo sh -c "echo $TORCH_DIR/libtorch/lib >> /etc/ld.so.conf"
-    sudo ldconfig
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$TORCH_DIR/libtorch/lib &&\
+    sudo sh -c "echo $TORCH_DIR/libtorch/lib >> /etc/ld.so.conf" &&\
+    sudo ldconfig &&\
     sudo ldconfig -p
     `;
     if ($? != 0) {
