@@ -1,0 +1,27 @@
+name: Linux Bash Setup
+
+on:
+  push:
+    branches: ["master", "ci"]
+  pull_request:
+    branches: ["master", "ci"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: '5'
+
+      - name: Install Dependencies
+        run: cpanm --installdeps .
+    
+      - name: Run Script
+        run: perl scripts/setup.pl

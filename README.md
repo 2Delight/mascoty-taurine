@@ -12,16 +12,20 @@
 [macos-build]: https://github.com/2Delight/mascoty-taurine/actions/workflows/macos-build.yaml/badge.svg
 [macos-test]: https://github.com/2Delight/mascoty-taurine/actions/workflows/macos-test.yaml/badge.svg
 [macos-release]: https://github.com/2Delight/mascoty-taurine/actions/workflows/macos-release.yaml/badge.svg
+[macos-perl]: https://github.com/2Delight/mascoty-taurine/actions/workflows/macos-perl.yaml/badge.svg
+[macos-bash]: https://github.com/2Delight/mascoty-taurine/actions/workflows/macos-bash.yaml/badge.svg
 
 [linux-build]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-build.yaml/badge.svg
 [linux-test]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-test.yaml/badge.svg
 [linux-release]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-release.yaml/badge.svg
+[linux-release]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-perl.yaml/badge.svg
+[linux-release]: https://github.com/2Delight/mascoty-taurine/actions/workflows/linux-bash.yaml/badge.svg
 
-|OS       |Build (Pre-Release)        |Test                      |Release                      |
-|---------|---------------------------|--------------------------|-----------------------------|
-|Windows  |![Windows][windows-build]  |![Windows][windows-test]  |![Windows][windows-release]  |
-|MacOS    |![MacOS][macos-build]      |![MacOS][macos-test]      |![MacOS][macos-release]      |
-|Linux    |![Linux][linux-build]      |![Linux][linux-test]      |![Linux][linux-release]      |
+|OS       |Build (Pre-Release)        |Test                      |Release                      |Bash Setup            |Perl Setup             |
+|---------|---------------------------|--------------------------|-----------------------------|----------------------|-----------------------|
+|Windows  |![Windows][windows-build]  |![Windows][windows-test]  |![Windows][windows-release]  |Unavailable           |Currently unavailable  |
+|MacOS    |![MacOS][macos-build]      |![MacOS][macos-test]      |![MacOS][macos-release]      |![MacOS][macos-bash]  |![MacOS][macos-perl]   |
+|Linux    |![Linux][linux-build]      |![Linux][linux-test]      |![Linux][linux-release]      |![Linux][linux-bash]  |![Linux][linux-perl]   |
 
 ## Installation
 
