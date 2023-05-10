@@ -1,4 +1,4 @@
-name: Linux Bash Setup
+name: MacOS Perl Setup
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      
+
       - uses: shogo82148/actions-setup-perl@v1
         with:
           perl-version: '5'
