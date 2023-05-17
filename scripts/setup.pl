@@ -16,15 +16,17 @@ sub macos {
     `curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh`;
     if ($? != 0) {
         output_red "Failed to install brew";
-        exit 1;
+        return 1;
     }
 
     print "Installing torch...\n";
     `brew install pytorch`;
     if ($? != 0) {
         output_red "Failed to install torch";
-        exit 1;
+        return 1;
     }
+
+    return 0;
 }
 
 sub linux {
@@ -32,7 +34,7 @@ sub linux {
     `sudo apt-get update`;
     if ($? != 0) {
         output_red "Failed to update apt";
-        exit 1;
+        return 1;
     }
 
     print "Installing basic dependencies...\n";
@@ -43,7 +45,7 @@ sub linux {
     `;
     if ($? != 0) {
         output_red "Failed to install basic dependencies";
-        exit 1;
+        return 1;
     }
 
     print "Installing tauri dependencies...\n";
@@ -56,7 +58,7 @@ sub linux {
     `;
     if ($? != 0) {
         output_red "Failed to install tauri dependencies";
-        exit 1;
+        return 1;
     }
 
     print "Installing additional dependencies...\n";
@@ -72,7 +74,7 @@ sub linux {
     `;
     if ($? != 0) {
         output_red "Failed to install additional dependencies";
-        exit 1;
+        return 1;
     }
 
     print "Installing torch...\n";
@@ -80,7 +82,7 @@ sub linux {
     system($install_command);
     if ($? != 0) {
         output_red "Failed to install torch";
-        exit 1;
+        return 1;
     }
 
     print "Adding shared libraries...\n";
@@ -92,8 +94,10 @@ sub linux {
     `;
     if ($? != 0) {
         output_red "Failed to add shared libraries";
-        exit 1;
+        return 1;
     }
+
+    return 0;
 }
 
 my $os = $Config{osname};
@@ -101,11 +105,17 @@ print "OS:", $os, "\n";
 
 if ( $os =~ /linux/ ) {
     print "Detected OS: Linux\n";
-    # linux();
+    my $status_code = linux();
+    if ($status_code != 0) {
+        exit $status_code;
+    }
 }
 elsif ( $os =~ /darwin/ ) {
     print "Detected OS: MacOS\n";
-    # macos();
+    my $status_code = macos();
+    if ($status_code != 0) {
+        exit $status_code;
+    }
 }
 else {
     output_red "Error: Unknown OS";

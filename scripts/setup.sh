@@ -16,21 +16,23 @@ function macos {
     echo "Installing brew..."
     if ! curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh; then
         output_red "Failed to install brew"
-        exit 1
+        return 1
     fi
 
     echo "Installing torch..."
     if ! brew install pytorch; then
         output_red "Failed to install torch"
-        exit 1
+        return 1
     fi
+
+    return 0
 }
 
 function linux {
     echo "Updating apt..."
     if ! sudo apt-get update; then
         output_red "Failed to update apt"
-        exit 1
+        return 1
     fi
 
     echo "Installing basic dependencies..."
@@ -38,7 +40,7 @@ function linux {
         wget \
         build-essential; then
         output_red "Failed to install basic dependencies"
-        exit 1
+        return 1
     fi
 
     echo "Installing tauri dependencies..."
@@ -48,7 +50,7 @@ function linux {
         libayatana-appindicator3-dev \
         librsvg2-dev; then
         output_red "Failed to install tauri dependencies"
-        exit 1
+        return 1
     fi
 
     echo "Installing additional dependencies..."
@@ -63,14 +65,14 @@ function linux {
             libasound2-dev
     then
         output_red "Failed to install additional dependencies"
-        exit 1
+        return 1
     fi
 
     echo "Installing torch..."
     if ! wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-1.13.0%2Bcpu.zip && #
         unzip libtorch-cxx11-abi-shared-with-deps-1.13.0+cpu.zip; then
         output_red "Failed to install torch"
-        exit 1
+        return 1
     fi
 
     echo "Adding shared libraries..."
@@ -79,19 +81,29 @@ function linux {
         sudo ldconfig &&                                                    #
         sudo ldconfig -p; then
         output_red "Failed to add shared libraries"
-        exit 1
+        return 1
     fi
+
+    return 0
 }
 
-OS="$OSTYPE"
+readonly OS="$OSTYPE"
 echo "$OS"
 
 if [[ "$OS" =~ "linux-gnu" ]]; then
     echo "Detected OS: Linux"
     linux
+    if [ "$?" -ne 0 ]; then
+        echo "OK"
+        exit "$?"
+    fi
 elif [[ "$OS" =~ "darwin" ]]; then
     echo "Detected OS: MacOS"
     macos
+    if [ "$?" -ne 0 ]; then
+        echo "OK"
+        exit "$?"
+    fi
 else
     output_red "Error: Unknown OS"
     exit 1
