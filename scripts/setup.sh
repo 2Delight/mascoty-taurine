@@ -86,10 +86,10 @@ function linux {
 OS="$OSTYPE"
 echo "$OS"
 
-if [[ "$OS" = "linux-gnu"* ]]; then
+if [[ "$OS" =~ "linux-gnu" ]]; then
     echo "Detected OS: Linux"
     linux
-elif [[ "$OS" = "darwin"* ]]; then
+elif [[ "$OS" =~ "darwin" ]]; then
     echo "Detected OS: MacOS"
     macos
 else
