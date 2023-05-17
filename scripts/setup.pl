@@ -1,19 +1,28 @@
 #!/usr/bin/env perl
 
 use Config;
+use Term::ANSIColor;
+
+sub output_green {
+    print colored(shift, 'green'), "\n";
+}
+
+sub output_red {
+    print colored(shift, 'red'), "\n";
+}
 
 sub macos {
     print "Installing brew...\n";
     `curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh`;
     if ($? != 0) {
-        print "Failed to install brew\n";
+        output_red "Failed to install brew";
         exit 1;
     }
 
     print "Installing torch...\n";
     `brew install pytorch`;
     if ($? != 0) {
-        print "Failed to install torch\n";
+        output_red "Failed to install torch";
         exit 1;
     }
 }
@@ -22,7 +31,7 @@ sub linux {
     print "Updating apt...\n";
     `sudo apt-get update`;
     if ($? != 0) {
-        print "Failed to update apt\n";
+        output_red "Failed to update apt";
         exit 1;
     }
 
@@ -33,7 +42,7 @@ sub linux {
     sudo apt-get install build-essential
     `;
     if ($? != 0) {
-        print "Failed to install basic dependencies\n";
+        output_red "Failed to install basic dependencies";
         exit 1;
     }
 
@@ -46,7 +55,7 @@ sub linux {
     sudo apt-get install librsvg2-dev
     `;
     if ($? != 0) {
-        print "Failed to install tauri dependencies\n";
+        output_red "Failed to install tauri dependencies";
         exit 1;
     }
 
@@ -62,7 +71,7 @@ sub linux {
     sudo apt-get install libasound2-dev
     `;
     if ($? != 0) {
-        print "Failed to install additional dependencies\n";
+        output_red "Failed to install additional dependencies";
         exit 1;
     }
 
@@ -70,7 +79,7 @@ sub linux {
     $install_command = "wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-1.13.0%2Bcpu.zip && unzip libtorch-cxx11-abi-shared-with-deps-1.13.0+cpu.zip";
     system($install_command);
     if ($? != 0) {
-        print "Failed to install torch\n";
+        output_red "Failed to install torch";
         exit 1;
     }
 
@@ -82,7 +91,7 @@ sub linux {
     sudo ldconfig -p
     `;
     if ($? != 0) {
-        print "Failed to add shared libraries\n";
+        output_red "Failed to add shared libraries";
         exit 1;
     }
 }
@@ -92,17 +101,16 @@ print "OS:", $os, "\n";
 
 if ( $os =~ /linux/ ) {
     print "Detected OS: Linux\n";
-    linux();
+    # linux();
 }
 elsif ( $os =~ /darwin/ ) {
     print "Detected OS: MacOS\n";
-    macos();
+    # macos();
 }
 else {
-    print "Unknown OS\n";
+    output_red "Error: Unknown OS";
     exit 1;
 }
 
-print("Successfully installed Mascoty dependencies!");
-
+output_green "Successfully installed Mascoty dependencies!";
 exit 0;

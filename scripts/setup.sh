@@ -1,15 +1,27 @@
 #!/usr/bin/env bash
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+function output_green {
+    echo -e "${GREEN}${1}${NC}"
+}
+
+function output_red {
+    echo -e "${RED}${1}${NC}"
+}
+
 function macos {
     echo "Installing brew..."
     if ! curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh; then
-        echo "Failed to install brew\n"
+        output_red "Failed to install brew"
         exit 1
     fi
 
     echo "Installing torch..."
     if ! brew install pytorch; then
-        echo "Failed to install torch"
+        output_red "Failed to install torch"
         exit 1
     fi
 }
@@ -17,7 +29,7 @@ function macos {
 function linux {
     echo "Updating apt..."
     if ! sudo apt-get update; then
-        echo "Failed to update apt"
+        output_red "Failed to update apt"
         exit 1
     fi
 
@@ -25,7 +37,7 @@ function linux {
     if ! sudo apt-get install curl \
         wget \
         build-essential; then
-        echo "Failed to install basic dependencies"
+        output_red "Failed to install basic dependencies"
         exit 1
     fi
 
@@ -35,7 +47,7 @@ function linux {
         libgtk-3-dev \
         libayatana-appindicator3-dev \
         librsvg2-dev; then
-        echo "Failed to install tauri dependencies"
+        output_red "Failed to install tauri dependencies"
         exit 1
     fi
 
@@ -50,14 +62,14 @@ function linux {
             libsdl2-dev \
             libasound2-dev
     then
-        echo "Failed to install additional dependencies"
+        output_red "Failed to install additional dependencies"
         exit 1
     fi
 
     echo "Installing torch..."
     if ! wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-1.13.0%2Bcpu.zip && #
         unzip libtorch-cxx11-abi-shared-with-deps-1.13.0+cpu.zip; then
-        echo "Failed to install torch"
+        output_red "Failed to install torch"
         exit 1
     fi
 
@@ -66,24 +78,24 @@ function linux {
         sudo sh -c "echo $TORCH_DIR/libtorch/lib >> /etc/ld.so.conf" &&     #
         sudo ldconfig &&                                                    #
         sudo ldconfig -p; then
-        echo "Failed to add shared libraries"
+        output_red "Failed to add shared libraries"
         exit 1
     fi
 }
 
-os="$OSTYPE"
+OS="$OSTYPE"
+echo "$OS"
 
-echo $os
-
-if [[ $os == "linux-gnu"* ]]; then
+if [[ "$OS" = "linux-gnu"* ]]; then
     echo "Detected OS: Linux"
     linux
-elif [[ $os == "darwin"* ]]; then
+elif [[ "$OS" = "darwin"* ]]; then
     echo "Detected OS: MacOS"
     macos
 else
-    echo "Error: Unknown OS"
+    output_red "Error: Unknown OS"
     exit 1
 fi
 
+output_green "Successfully installed Mascoty dependencies!"
 exit 0
