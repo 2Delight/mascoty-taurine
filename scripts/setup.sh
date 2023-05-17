@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+set -e
+set -o nounset
+
 readonly NC='\033[0m'
 
 function output_green {
@@ -93,17 +96,9 @@ echo "$OS"
 if [[ "$OS" =~ "linux-gnu" ]]; then
     echo "Detected OS: Linux"
     linux
-    if [ "$?" -ne 0 ]; then
-        echo "OK"
-        exit "$?"
-    fi
 elif [[ "$OS" =~ "darwin" ]]; then
     echo "Detected OS: MacOS"
     macos
-    if [ "$?" -ne 0 ]; then
-        echo "OK"
-        exit "$?"
-    fi
 else
     output_red "Error: Unknown OS"
     exit 1
