@@ -24,6 +24,8 @@ simple_logger = "4.0"
 rand = "0.8"
 
 tch = "0.10"
+image = "0.24"
+
 cpal = "0.15"
 anyhow = "1.0"
 
@@ -51,12 +53,7 @@ features = ["sync"]
 
 [dependencies.nokhwa]
 version = "0.10"
-features = ["input-native", "output-wgpu"]
-
-[dependencies.image]
-version = "0.24"
-default-features = true
-features = ["jpeg"]
+features = ["input-native"]
 
 [features]
 # by default Tauri runs in production mode
