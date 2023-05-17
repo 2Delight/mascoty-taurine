@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-NC='\033[0m'
+readonly NC='\033[0m'
 
 function output_green {
-    echo -e "${GREEN}${1}${NC}"
+    local -r green='\033[0;32m'
+    echo -e "${green}${1}${NC}"
 }
 
 function output_red {
-    echo -e "${RED}${1}${NC}"
+    local -r red='\033[0;31m'
+    echo -e "${red}${1}${NC}"
 }
 
 function macos {
