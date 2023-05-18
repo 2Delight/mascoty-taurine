@@ -79,7 +79,7 @@ function linux {
     fi
 
     echo "Adding shared libraries..."
-    if ! export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$TORCH_DIR/libtorch/lib && #
+    if ! export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}"$TORCH_DIR/libtorch/lib && #
         sudo sh -c "echo $TORCH_DIR/libtorch/lib >> /etc/ld.so.conf" &&     #
         sudo ldconfig &&                                                    #
         sudo ldconfig -p; then
