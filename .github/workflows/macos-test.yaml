@@ -26,10 +26,10 @@ jobs:
         run: mkdir dist
       
       - name: Setup Environment
-        run: source ./scripts/setup.sh
+        run: ./scripts/setup.sh
 
       - name: LTPT
-        run: echo $LIBTORCH_USE_PYTORCH
+        run: export LIBTORCH_USE_PYTORCH=1
 
       - name: Test
         run: cargo test --verbose --verbose

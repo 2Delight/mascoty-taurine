@@ -90,8 +90,6 @@ function linux {
     return 0
 }
 
-export LIBTORCH_USE_PYTORCH=1
-
 readonly OS="$OSTYPE"
 echo "$OS"
 
