@@ -80,7 +80,7 @@ function linux {
 
     echo "Adding shared libraries..."
     if ! export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}${PWD}/libtorch/lib" && #
-        sudo sh -c "echo $TORCH_DIR/libtorch/lib >> /etc/ld.so.conf" &&     #
+        sudo sh -c "echo ${PWD}/libtorch/lib >> /etc/ld.so.conf" &&     #
         sudo ldconfig &&                                                    #
         sudo ldconfig -p; then
         output_red "Failed to add shared libraries"
