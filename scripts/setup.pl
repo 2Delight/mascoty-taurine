@@ -87,7 +87,7 @@ sub linux {
 
     print "Adding shared libraries...\n";
     `
-    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}${PWD}/libtorch/lib" &&\
+    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${PWD}/libtorch/lib &&\
     sudo sh -c "echo ${PWD}/libtorch/lib >> /etc/ld.so.conf" &&\
     sudo ldconfig &&\
     sudo ldconfig -p
