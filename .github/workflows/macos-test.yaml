@@ -26,7 +26,7 @@ jobs:
         run: mkdir dist
       
       - name: Setup Environment
-        run: sudo ./scripts/setup.sh
+        run: ./scripts/setup.sh
 
       - name: Test
         run: cargo test --verbose --verbose
