@@ -22,8 +22,11 @@ jobs:
       - name: Update Node.js
         run: npm install
 
-      - name: Install LibTorch
-        run: brew install pytorch
+      - name: Create Dist Directory
+        run: sudo mkdir dist
+
+      - name: Setup Environment
+        run: ./scripts/setup.sh
 
       - name: Build
         run: npx tauri build --verbose
