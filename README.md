@@ -47,7 +47,7 @@ Add `/M` flag to set it for all users (requires super user access)
 1. Run script via Bash or Perl:
   - `./scripts/setup.sh`
   - `perl scripts/setup.pl`
-3. Download release installer (coming soon)
+2. Download release installer (coming soon)
 
 ### MacOS (manually)
 1. Install homebrew:
