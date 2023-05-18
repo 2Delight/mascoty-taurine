@@ -21,4 +21,4 @@ jobs:
           perl-version: '5'
     
       - name: Run Script
-        run: perl scripts/setup.pl
+        run: sudo perl scripts/setup.pl

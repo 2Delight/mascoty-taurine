@@ -20,7 +20,7 @@ jobs:
         run: mkdir dist
 
       - name: Setup Environment
-        run: ./scripts/setup.sh
+        run: sudo ./scripts/setup.sh
 
       - name: Check Format
         run: cargo fmt --all -- --check
