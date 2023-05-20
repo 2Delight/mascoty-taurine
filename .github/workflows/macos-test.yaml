@@ -28,9 +28,6 @@ jobs:
       - name: Setup Environment
         run: ./scripts/setup.sh
 
-      - name: LTPT
-        run: export LIBTORCH_USE_PYTORCH=1
-
       - name: Test
         run: cargo test --verbose --verbose
         working-directory: src-tauri

@@ -22,9 +22,9 @@ pub struct Mascot {
 ///
 /// It takes original 3-channel tensor and makes 1-channel tensor with mean vallues.
 pub fn to_bw(tensor: Tensor) -> Tensor {
-    (tensor.index(&[Some(Tensor::from_slice(&[0i64])), None, None])
-        + tensor.index(&[Some(Tensor::from_slice(&[1i64])), None, None])
-        + tensor.index(&[Some(Tensor::from_slice(&[2i64])), None, None]))
+    (tensor.index(&[Some(Tensor::of_slice(&[0i64])), None, None])
+        + tensor.index(&[Some(Tensor::of_slice(&[1i64])), None, None])
+        + tensor.index(&[Some(Tensor::of_slice(&[2i64])), None, None]))
         / 3f64
 }
 
