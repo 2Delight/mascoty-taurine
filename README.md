@@ -111,3 +111,9 @@ sudo ldconfig -p
 ```
 
 4. Download Linux release Deb installer (coming soon)
+
+## Developers
+
+- [Simon](https://github.com/montaglue) - TechLead of backend and ML. Software architect
+- [Oleg](https://github.com/offluck) - Main backend developer
+- [Michael](https://github.com/b4n4nus) - Main frontend developer
