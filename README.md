@@ -111,3 +111,8 @@ sudo ldconfig -p
 ```
 
 4. Download Linux release Deb installer (coming soon)
+
+## Team
+
+- [Oleg](https://github.com/offluck) - Main backend and infrastructure developer
+- [Michael](https://github.com/b4n4nus) - Main frontend developer
